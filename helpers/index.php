@@ -1,8 +1,22 @@
+
 <?php
 
+//  INICIO DE SESIÓN
 session_start();
 
-include_once("ConfigFactory.php");
-$configFactory = new ConfigFactory();
+//  CARGA DE DEPENDENCIAS
+include_once 'vendor/autoload.php';
 
-$router = $configFactory->getClase('router');
+include_once("ConfigFactory.php");
+
+$configFactory = new ConfigFactory();
+$router = $configFactory->getClase('Router'); 
+
+$controllerParam = $_GET['controller'] ?? ''; 
+$methodParam = $_GET['method'] ?? '';
+
+// EJECUCIÓN DEL ROUTER
+
+$router->executeController($controllerParam, $methodParam);
+
+?>
