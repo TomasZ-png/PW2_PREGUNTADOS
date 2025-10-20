@@ -1,14 +1,18 @@
 <?php
 
 include_once ("MyDatabase.php");
+include_once("../helpers/IncludeFileRenderer.php");
+include_once('../helpers/Router.php');
+include_once('../controllers/LoginController.php');
 
 class ConfigFactory{
-
     private $clases;
 
     public function __construct(){
         $this->clases['MyDatabase'] = new MyDatabase();
         $this->clases['Router'] = new Router($this, '', '');
+        $this->clases['IncludeFileRenderer'] = new IncludeFileRenderer();
+        $this->clases['LoginController'] = new LoginController($this->clases['MyDatabase'], $this->clases['IncludeFileRenderer']);
     }
 
     public function getClase($nombreClase){

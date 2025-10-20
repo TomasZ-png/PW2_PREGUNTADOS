@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/f5fae917-0440-4a7a-b117-b81b3285620b/console.sql" value="f5fae917-0440-4a7a-b117-b81b3285620b" />
+    <file url="file://$PROJECT_DIR$/core/preguntados_db.sql" value="3e191d5a-9040-443a-b589-48003d9266d2" />
+    <file url="file://$PROJECT_DIR$/model/LoginModel.php" value="f5fae917-0440-4a7a-b117-b81b3285620b" />
+  </component>
+</project>
