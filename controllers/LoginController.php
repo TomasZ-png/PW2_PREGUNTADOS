@@ -34,10 +34,27 @@ private $loginModel;
                 }
             }
 
-
-
         }
-        $this->renderer->renderWoHeader("login.html");
+        $this->renderer->renderWoHeader("login");
+    }
+
+    public function registrarse(){
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $nombre = $_POST["name"];
+            $fecha_nac = $_POST["fecha_nac"];
+            $sexo = $_POST["sexo"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+            $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : "";
+
+            if(empty($nombre) || empty($fecha_nac) || empty($sexo) || empty($email) || empty($password)){
+                echo "Los campos son obligatorios menos la foto";
+            } else {
+
+                $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
+            }
+        }
+        $this->renderer->renderWoHeader("registrarse");
     }
 
 }

@@ -12,3 +12,6 @@ CREATE TABLE usuario(
     foto_perfil VARCHAR(255),
     rol VARCHAR(50) NOT NULL
 );
+
+INSERT INTO usuario (nombre_completo, correo, password, anio_nacimiento, sexo, foto_perfil, rol)
+VALUES ('admin', 'admin@test.com', 1234, '', '', '', 'ADMIN');
