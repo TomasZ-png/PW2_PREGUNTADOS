@@ -1,9 +1,8 @@
 <?php
 
-// ASEGÚRATE DE INCLUIR TODAS LAS CLASES
 include_once ("MyDatabase.php");
-include_once ("LoginModel.php");
-include_once ("LoginController.php");
+include_once ("../model/modelLogin.php");
+include_once ("../controller/LoginController.php");
 include_once ("Router.php");
 include_once ("MustacheRenderer.php"); 
 class ConfigFactory{
@@ -11,14 +10,12 @@ class ConfigFactory{
     private $clases;
 
     public function __construct(){
-        $db = new MyDatabase();
-        
         // 1. UTILIDADES
-        $this->clases['MyDatabase'] = $db;
-        $this->clases['Renderer'] = new MustacheRenderer('vista/'); // Ruta a la carpeta de vistas
+        $this->clases['MyDatabase'] = new MyDatabase();
+        $this->clases['Renderer'] = new MustacheRenderer('vista/');
         
         // 2. MODELO (Necesita la conexión a DB)
-        $this->clases['LoginModel'] = new LoginModel($db);
+        $this->clases['LoginModel'] = new LoginModel($this->clases['MyDatabase']);
         
         // 3. CONTROLADOR (Necesita su modelo y el renderer)
         $this->clases['LoginController'] = new LoginController(

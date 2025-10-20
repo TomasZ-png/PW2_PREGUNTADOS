@@ -2,13 +2,15 @@
 
 class LoginController
 {
-    private $model;
+
+    private $conexion;
+    private $loginModel;
     private $renderer;
 
-    public function __construct($model, $renderer)
-    {
-        $this->model = $model;
+    public function __construct($conexion, $renderer){
         $this->renderer = $renderer;
+        $this->conexion = $conexion;
+        $this->loginModel = new LoginModel($this->conexion);
     }
 
     public function base()
