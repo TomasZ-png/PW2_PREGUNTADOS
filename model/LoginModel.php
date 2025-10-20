@@ -11,22 +11,28 @@ class LoginModel
     }
 
     public function login($correo, $password){
-        $stmt = $this->conexion->prepare("SELECT * FROM usuario WHERE correo = ? and password = ?");
-        $stmt->bind_param("ss", $correo, $password);
+        $stmt = $this->conexion->prepare("SELECT * FROM usuario WHERE correo = ?");
+        $stmt->bind_param("s", $correo);
         $stmt->execute();
         $result = ($stmt->get_result())->fetch_assoc();
 
-        return $result;
+        if($result && password_verify($password, $result['password'])){
+            return $result;
+        }
+
+        return false;
     }
 
 
     public function registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil){
         $errores = [];
 
+        $registrado = false;
+
         // == VALIDACIONES DE INPUT DELÑ FORM ==
 
         if (empty($nombre) || empty($fecha_nac) || empty($sexo) || empty($email) || empty($password) || !isset($_FILES["user_photo"])) {
-            $errores[] = "<p class='errores'>Todos los campos son obligatorios.</p>";
+            $errores[] = "<p class='errores'>*Todos los campos son obligatorios.</p>";
         } else {
 
             if (strlen($nombre) < 3 || strlen($nombre) > 20) {
@@ -42,7 +48,7 @@ class LoginModel
             $regex_contrasenia = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w\-.]{8,}$/";
 
             if (!preg_match($regex_contrasenia, $password)) {
-                $errores[] = "<p class='errores'>Contraseña no valida (Al menos 8 caracteres, una mayuscula y un numero)</p>";
+                $errores[] = "<p class='errores'>*Contraseña no valida (Al menos 8 caracteres, una mayuscula y un numero)</p>";
             }
 
             // obtenemos la fecha actual, ingresamos la fecha del form.
@@ -110,7 +116,7 @@ class LoginModel
             $usuarioExistente = $stmt->get_result();
 
             if ($usuarioExistente->num_rows > 0) {
-                echo "El usuario con el correo ingresado ya existe";
+                echo "<p class='errores'>El usuario con el correo ingresado ya existe</p>";
                 return;
             }
 
@@ -140,8 +146,10 @@ class LoginModel
                 $_SESSION['rol'] = $result2['rol'];
 
                 echo "Usuario registrado correctamente.";
+                $registrado = true;
             } else {
                 echo "Error al registrar usuario.";
             }
+        return $registrado;
     }
 }

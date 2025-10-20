@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../views/css/loginStyles.css">
     <title>Login</title>
 </head>
 <body>
 
-<div>
+<div class="form-container">
 <h1>Bienvenido!</h1>
 <form action="index.php?controller=LoginController&method=registrarse" method="post" enctype="multipart/form-data">
     <label for="name">Nombre completo</label>
@@ -15,10 +16,10 @@
     <input type="date" name="fecha_nac" id="fecha_nac" placeholder="Nombre completo">
     <label for="sexo">Sexo</label>
     <select name="sexo" id="sexo">
-        <option disabled selected>-- Seleccione su sexo --</option>
-        <option>Masculino</option>
-        <option>Femenino</option>
-        <option>Prefiero no cargarlo</option>
+        <option value="" disabled selected>-- Seleccione su sexo --</option>
+        <option value="masculino">Masculino</option>
+        <option value="femenino">Femenino</option>
+        <option value="no-aclarado">Prefiero no cargarlo</option>
     </select>
     <label for="email">Correo</label>
     <input type="text" name="email" id="email" placeholder="Email">

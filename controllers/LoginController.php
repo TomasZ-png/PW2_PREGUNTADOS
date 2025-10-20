@@ -14,7 +14,19 @@ private $loginModel;
         $this->loginModel = new LoginModel($this->conexion);
     }
 
+    private function usuarioLogueado(){
+        return isset($_SESSION['id_usuario']);
+    }
+
     public function login(){
+
+        $this->renderer->renderWoHeader("login");
+
+        if($this->usuarioLogueado()){
+            header("Location: index.php?controller=HomeController&method=mostrarHome");
+            exit();
+        }
+
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $correo = $_POST["email"];
             $password = $_POST["password"];
@@ -29,32 +41,45 @@ private $loginModel;
                     $_SESSION["id_usuario"] = $resultado['id_usuario'];
                     $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
                     echo "Logueado Correctamente";
+                    header("Location: index.php?controller=HomeController&method=mostrarHome");
+                    exit();
                 } else {
-                    echo "Correo o contraseña incorrectos";
+                    echo "<p class='errores'>*Correo o contraseña incorrectos</p>";
                 }
             }
-
         }
-        $this->renderer->renderWoHeader("login");
     }
 
     public function registrarse(){
+
+        if($this->usuarioLogueado()){
+            header("Location: index.php?controller=HomeController&method=mostrarHome");
+            exit();
+        }
+
         $this->renderer->renderWoHeader("registrarse");
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $nombre = $_POST["name"];
             $fecha_nac = $_POST["fecha_nac"];
-            $sexo = $_POST["sexo"];
+            $sexo = isset($_POST["sexo"]) ? $_POST["sexo"] : "";
             $email = $_POST["email"];
             $password = $_POST["password"];
             $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : null;
 
-            $errores = [];
 
-            $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
+            $registrado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
 
+            if($registrado){
+                header("Location: index.php?controller=HomeController&method=mostrarHome");
+            }
         }
-
     }
 
+
+    public function logout(){
+        session_destroy();
+        header("Location: index.php?controller=LoginController&method=login");
+        exit();
+    }
 }
