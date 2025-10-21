@@ -9,7 +9,7 @@
 
 <div class="form-container">
 <h1>Bienvenido!</h1>
-<form action="index.php?controller=LoginController&method=registrarse" method="post" enctype="multipart/form-data">
+<form action="<?= BASE_URL ?>LoginController/registrarse" method="post" enctype="multipart/form-data">
     <label for="name">Nombre completo</label>
     <input type="text" name="name" id="name" placeholder="Nombre completo">
     <label for="fecha_nac">Fecha de nacimiento</label>
@@ -29,7 +29,7 @@
     <input type="file" name="user_photo" id="foto-perfil">
     <button type="submit">Registrarse</button>
 </form>
-    <p>Ya tenes una cuenta? <a href="index.php?controller=LoginController&method=login">Inicia sesion</a></p>
+    <p>Ya tenes una cuenta? <a href="<?= BASE_URL ?>LoginController/login">Inicia sesion</a></p>
 </div>
 </body>
 </html>

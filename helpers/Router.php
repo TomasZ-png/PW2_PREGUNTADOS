@@ -22,7 +22,7 @@ class Router{
         $controller = $this->configFactory->getClase($controllerParam);
 
         if($controller == null){
-            header('');
+            header('location: /PROYECTO_PREGUNTADOS/');
             exit();
         }
 

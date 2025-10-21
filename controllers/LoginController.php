@@ -22,7 +22,7 @@ private $loginModel;
         $this->renderer->renderWoHeader("login");
 
         if($this->usuarioLogueado()){
-            header("Location: index.php?controller=HomeController&method=mostrarHome");
+            header("Location: ". BASE_URL . "HomeController/mostrarHome");
             exit();
         }
 
@@ -40,7 +40,7 @@ private $loginModel;
                     $_SESSION["id_usuario"] = $resultado['id_usuario'];
                     $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
                     echo "Logueado Correctamente";
-                    header("Location: index.php?controller=HomeController&method=mostrarHome");
+                    header("Location: ". BASE_URL . "HomeController/mostrarHome");
                     exit();
                 } else {
                     echo "<p class='errores'>*Correo o contraseña incorrectos</p>";
@@ -52,7 +52,7 @@ private $loginModel;
     public function registrarse(){
 
         if($this->usuarioLogueado()){
-            header("Location: index.php?controller=HomeController&method=mostrarHome");
+            header("Location: HomeController/mostrarHome");
             exit();
         }
 
@@ -73,7 +73,7 @@ private $loginModel;
                 $_SESSION["nombre_usuario"] = $resultado['nombre_completo'];
                 $_SESSION["id_usuario"] = $resultado['id_usuario'];
                 $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
-                header("Location: index.php?controller=HomeController&method=mostrarHome");
+                header("Location: ". BASE_URL . "HomeController/mostrarHome");
             }
         }
 
@@ -82,7 +82,7 @@ private $loginModel;
 
     public function logout(){
         session_destroy();
-        header("Location: index.php?controller=LoginController&method=login");
+        header("Location: ". BASE_URL . "LoginController/login");
         exit();
     }
 }
