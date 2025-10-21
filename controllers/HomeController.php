@@ -26,8 +26,6 @@ class HomeController
             header('location: index.php?controller=LoginController&method=login');
         }
 
-        echo password_hash('1234', PASSWORD_DEFAULT);
-
         $this->renderer->renderWoHeader("home");
     }
 

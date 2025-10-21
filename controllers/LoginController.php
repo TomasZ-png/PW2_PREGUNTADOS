@@ -19,7 +19,6 @@ private $loginModel;
     }
 
     public function login(){
-
         $this->renderer->renderWoHeader("login");
 
         if($this->usuarioLogueado()){
@@ -68,12 +67,16 @@ private $loginModel;
             $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : null;
 
 
-            $registrado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
+            $resultado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
 
-            if($registrado){
+            if($resultado != null){
+                $_SESSION["nombre_usuario"] = $resultado['nombre_completo'];
+                $_SESSION["id_usuario"] = $resultado['id_usuario'];
+                $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
                 header("Location: index.php?controller=HomeController&method=mostrarHome");
             }
         }
+
     }
 
 

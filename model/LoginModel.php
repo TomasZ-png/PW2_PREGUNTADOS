@@ -27,7 +27,7 @@ class LoginModel
     public function registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil){
         $errores = [];
 
-        $registrado = false;
+        $registrado = null;
 
         // == VALIDACIONES DE INPUT DELÑ FORM ==
 
@@ -132,7 +132,7 @@ class LoginModel
             $result = $stmt2->execute();
 
             if ($result) {
-                $id_usuario = $this->conexion->getConexion()->insert_id;
+                $this->conexion->getConexion()->insert_id;
 
                 $stmt3 = $this->conexion->prepare("
                 SELECT id_usuario, nombre_completo, rol FROM usuario WHERE correo = ?");
@@ -141,12 +141,8 @@ class LoginModel
                 $stmt3->execute();
                 $result2 = $stmt3->get_result()->fetch_assoc();
 
-                $_SESSION['id'] = $id_usuario;
-                $_SESSION['nombre'] = $result2['nombre_completo'];
-                $_SESSION['rol'] = $result2['rol'];
-
                 echo "Usuario registrado correctamente.";
-                $registrado = true;
+                $registrado = $result2;
             } else {
                 echo "Error al registrar usuario.";
             }
