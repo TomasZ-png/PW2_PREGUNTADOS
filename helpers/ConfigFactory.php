@@ -1,10 +1,10 @@
 <?php
 
 include_once("MyDatabase.php");
-include_once("../helpers/IncludeFileRenderer.php");
-include_once('../helpers/Router.php');
-include_once('../controllers/LoginController.php');
-include_once('../controllers/HomeController.php');
+include_once(__DIR__ . "/IncludeFileRenderer.php");
+include_once(__DIR__ . '/Router.php');
+include_once(__DIR__ . '/../controllers/LoginController.php');
+include_once(__DIR__.'/../controllers/HomeController.php');
 
 class ConfigFactory{
     private $clases;

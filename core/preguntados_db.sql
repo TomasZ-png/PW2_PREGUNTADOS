@@ -13,5 +13,7 @@ CREATE TABLE usuario(
     rol VARCHAR(50) NOT NULL
 );
 
+-- la contraseña del admin es 1234
+
 INSERT INTO usuario (nombre_completo, correo, password, anio_nacimiento, sexo, foto_perfil, rol)
-VALUES ('admin', 'admin@test.com', 1234, '', '', '', 'ADMIN');
+VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', '', '', '', 'ADMIN');

@@ -1,6 +1,6 @@
 <?php
 
-include_once("../model/LoginModel.php");
+include_once(__DIR__."/../model/LoginModel.php");
 
 class LoginController{
 

@@ -1,6 +1,6 @@
 <?php
 
-include_once("../model/HomeModel.php");
+include_once(__DIR__."/../model/HomeModel.php");
 
 class HomeController
 {
@@ -25,6 +25,8 @@ class HomeController
         if(!$this->usuarioLogueado()){
             header('location: index.php?controller=LoginController&method=login');
         }
+
+        echo password_hash('1234', PASSWORD_DEFAULT);
 
         $this->renderer->renderWoHeader("home");
     }

@@ -2,7 +2,9 @@
 
 session_start();
 
-include_once("ConfigFactory.php");
+include_once(__DIR__ . "/config/config.php");
+
+include_once("../PROYECTO_PREGUNTADOS/helpers/ConfigFactory.php");
 $configFactory = new ConfigFactory();
 
 $router = $configFactory->getClase('Router');
