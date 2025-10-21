@@ -1,2 +1,2 @@
 <?php
-const BASE_URL = "/php/PROYECTO_PREGUNTADOS/";
+const BASE_URL = "http://localhost:8012/PROYECTO_PREGUNTADOS/";

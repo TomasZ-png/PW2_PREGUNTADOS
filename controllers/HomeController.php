@@ -23,7 +23,7 @@ class HomeController
     public function mostrarHome(){
 
         if(!$this->usuarioLogueado()){
-            header('location: index.php?controller=LoginController&method=login');
+            header("Location: ". BASE_URL . "LoginController/login");
         }
 
         $this->renderer->renderWoHeader("home");

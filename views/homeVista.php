@@ -9,7 +9,7 @@
 
 <h1>Bienvenido al home!</h1>
 
-<a href="index.php?controller=LoginController&method=logout">Cerrar Sesion</a>
+<a href="<?= BASE_URL ?>LoginController/logout">Cerrar Sesion</a>
 
 </body>
 </html>
