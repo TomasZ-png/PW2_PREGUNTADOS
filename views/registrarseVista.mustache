@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="<?= BASE_URL ?>public/css/loginStyles.css">
+    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/loginStyles.css">
     <title>Login</title>
 </head>
 <body>
 
 <div class="form-container">
 <h1>Bienvenido!</h1>
-<form action="<?= BASE_URL ?>LoginController/registrarse" method="post" enctype="multipart/form-data">
+<form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarseForm" method="post" enctype="multipart/form-data">
     <label for="name">Nombre completo</label>
     <input type="text" name="name" id="name" placeholder="Nombre completo">
     <label for="fecha_nac">Fecha de nacimiento</label>
@@ -29,7 +29,12 @@
     <input type="file" name="user_photo" id="foto-perfil">
     <button type="submit">Registrarse</button>
 </form>
-    <p>Ya tenes una cuenta? <a href="<?= BASE_URL ?>LoginController/login">Inicia sesion</a></p>
+
+    {{#errores}}
+        <p class="errores">{{errores}}</p>
+    {{/errores}}
+
+    <p>Ya tenes una cuenta? <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/loginForm">Inicia sesion</a></p>
 </div>
 </body>
 </html>

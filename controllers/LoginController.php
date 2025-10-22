@@ -14,24 +14,23 @@ private $loginModel;
         $this->loginModel = new LoginModel($this->conexion);
     }
 
-    private function usuarioLogueado(){
-        return isset($_SESSION['id_usuario']);
+    public function loginForm(){
+        $this->renderer->render('login');
+    }
+
+    public function registrarseForm(){
+        $this->renderer->render('registrarse');
     }
 
     public function login(){
-        $this->renderer->renderWoHeader("login");
-
-        if($this->usuarioLogueado()){
-            header("Location: ". BASE_URL . "HomeController/mostrarHome");
-            exit();
-        }
+        $this->redirectToHome();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $correo = $_POST["email"];
             $password = $_POST["password"];
 
             if(empty($correo) || empty($password)){
-                echo "<p class='errores'>*Todos los campos son obligatorios</p>";
+                $this->renderer->render('login', ['passOrEmailEmpty' => '*Todos los campos son obligatorios']);
             } else {
                 $resultado = $this->loginModel->login($correo, $password);
 
@@ -43,20 +42,16 @@ private $loginModel;
                     header("Location: ". BASE_URL . "HomeController/mostrarHome");
                     exit();
                 } else {
-                    echo "<p class='errores'>*Correo o contraseña incorrectos</p>";
+                    $this->renderer->render('login', ['passOrEmailWrong' => '*Correo o contraseña incorrectos']);
                 }
             }
         }
     }
 
     public function registrarse(){
+        $this->redirectToHome();
 
-        if($this->usuarioLogueado()){
-            header("Location: HomeController/mostrarHome");
-            exit();
-        }
-
-        $this->renderer->renderWoHeader("registrarse");
+//        $this->renderer->renderWoHeader("registrarse");
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $nombre = $_POST["name"];
@@ -66,23 +61,30 @@ private $loginModel;
             $password = $_POST["password"];
             $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : null;
 
-
             $resultado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
 
             if($resultado != null){
                 $_SESSION["nombre_usuario"] = $resultado['nombre_completo'];
                 $_SESSION["id_usuario"] = $resultado['id_usuario'];
                 $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
-                header("Location: ". BASE_URL . "HomeController/mostrarHome");
+                $this->redirectToHome();
+            } else {
+                $this->renderer->render('login', ['error' => 'Error al registrarse']);
             }
         }
-
     }
-
 
     public function logout(){
         session_destroy();
         header("Location: ". BASE_URL . "LoginController/login");
         exit();
     }
+
+    private function redirectToHome(){
+        if(isset($_SESSION['id_usuario'])){
+            header("Location: ". BASE_URL . "HomeController/mostrarHome");
+            exit();
+        }
+    }
+
 }
