@@ -27,28 +27,24 @@ class LoginModel
     public function registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil){
         $errores = [];
 
-        $registrado = null;
-
         // == VALIDACIONES DE INPUT DELÑ FORM ==
 
         if (empty($nombre) || empty($fecha_nac) || empty($sexo) || empty($email) || empty($password) || !isset($_FILES["user_photo"])) {
-            $errores[] = "<p class='errores'>*Todos los campos son obligatorios.</p>";
+            $errores[] = "*Todos los campos son obligatorios.";
         } else {
 
             if (strlen($nombre) < 3 || strlen($nombre) > 20) {
-                $errores[] = "<p class='errores'>*El nombre debe tener al menos 3 caracteres</p>";
+                $errores[] = "*El nombre debe tener al menos 3 caracteres";
             }
 
             $regex_correo = "/^[\w\-.]+@[\w\-]+(\.[a-zA-Z]{2,4}){1,2}$/";
-
             if (!preg_match($regex_correo, $email)) {
-                $errores[] = "<p class='errores'>*Correo no valido</p>";
+                $errores[] = "*Correo no valido";
             }
 
             $regex_contrasenia = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w\-.]{8,}$/";
-
             if (!preg_match($regex_contrasenia, $password)) {
-                $errores[] = "<p class='errores'>*Contraseña no valida (Al menos 8 caracteres, una mayuscula y un numero)</p>";
+                $errores[] = "*Contraseña no valida (Al menos 8 caracteres, una mayuscula y un numero)";
             }
 
             // obtenemos la fecha actual, ingresamos la fecha del form.
@@ -56,15 +52,14 @@ class LoginModel
             $fecha_ingresada = $fecha_nac;
             $fecha_ingresada_timestamp = strtotime($fecha_ingresada);
             if ($fecha_actual < $fecha_ingresada_timestamp) {
-                $errores[] = "<p class='errores'>*No puede ingresar una fecha posterior a la del dia de hoy.</p>";
+                $errores[] = "*No puede ingresar una fecha posterior a la del dia de hoy.";
             }
         }
 
-        // == VERIFICAMOS SI HUBIERON ERRORES, SI LOS HAY CORTAMOS EL FLUJO ==
+        // == VERIFICAMOS SI HUBIERON ERRORES, SI LOS HAY LOS AGREGAMOS PARA EL RETURN FINAL ==
 
             if (!empty($errores)) {
-                echo implode("<br>", $errores);
-                return;
+                return ['exito' => false, 'errores' => $errores];
             }
 
             // == VALIDACIONES DE LA IMAGEN ==
@@ -77,22 +72,18 @@ class LoginModel
                 $tamanioImagen = $_FILES["user_photo"]["size"];
                 $nombreTemporal = $_FILES["user_photo"]["tmp_name"];
 
-                $erroresImagen = [];
-
-
                 $tamanio_max = 5 * 1024 * 1024;
                 if ($tamanioImagen > $tamanio_max) {
-                    $erroresImagen[] = "La imagen no puede superar los 5 MB";
+                    $errores[] = "*La imagen no puede superar los 5 MB";
                 }
 
                 $extensiones_permitidas = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
                 if (!in_array($tipoImagen, $extensiones_permitidas)) {
-                    $erroresImagen[] = "El tipo de imagen no es permitido";
+                    $errores[] = "*El tipo de imagen no es permitido";
                 }
 
-                if (!empty($erroresImagen)) {
-                    echo implode("<br>", $erroresImagen);
-                    return;
+                if (!empty($errores)) {
+                    return ['exito' => false, 'errores' => $errores];
                 }
 
                 $directorio = __DIR__ . "/../src/img/user-img/";
@@ -103,8 +94,7 @@ class LoginModel
                 $rutaDeImagen = $directorio . $nombreFinalImagen;
 
                 if (!move_uploaded_file($nombreTemporal, $rutaDeImagen)) {
-                    echo "<p class='errores'>Error al guardar la imagen.</p>";
-                    return;
+                    return ['exito' => false, 'errores' => ['No se pudo subir la imagen']];
                 }
             }
 
@@ -116,8 +106,7 @@ class LoginModel
             $usuarioExistente = $stmt->get_result();
 
             if ($usuarioExistente->num_rows > 0) {
-                echo "<p class='errores'>El usuario con el correo ingresado ya existe</p>";
-                return;
+                return ['exito' => false, 'errores' => ["El usuario con el correo ingresado ya existe"]];
             }
 
             // ===== REGISTRAMOS EL USUARIO =====
@@ -139,13 +128,11 @@ class LoginModel
 
                 $stmt3->bind_param("s", $email);
                 $stmt3->execute();
-                $result2 = $stmt3->get_result()->fetch_assoc();
+                $usuario = $stmt3->get_result()->fetch_assoc();
 
-                echo "Usuario registrado correctamente.";
-                $registrado = $result2;
+                return ['exito' => true, 'usuario' => $usuario];
             } else {
-                echo "Error al registrar usuario.";
+                return ['exito' => false, 'errores' => ['No se pudo registrar el usuario']];
             }
-        return $registrado;
     }
 }

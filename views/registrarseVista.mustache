@@ -9,7 +9,7 @@
 
 <div class="form-container">
 <h1>Bienvenido!</h1>
-<form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarseForm" method="post" enctype="multipart/form-data">
+<form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarse" method="post" enctype="multipart/form-data">
     <label for="name">Nombre completo</label>
     <input type="text" name="name" id="name" placeholder="Nombre completo">
     <label for="fecha_nac">Fecha de nacimiento</label>
@@ -31,10 +31,10 @@
 </form>
 
     {{#errores}}
-        <p class="errores">{{errores}}</p>
+        <p class="errores">{{.}}</p>
     {{/errores}}
 
-    <p>Ya tenes una cuenta? <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/loginForm">Inicia sesion</a></p>
+    <p>Ya tenes una cuenta? <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/login">Inicia sesion</a></p>
 </div>
 </body>
 </html>

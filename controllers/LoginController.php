@@ -45,13 +45,13 @@ private $loginModel;
                     $this->renderer->render('login', ['passOrEmailWrong' => '*Correo o contraseña incorrectos']);
                 }
             }
+        } else {
+            $this->loginForm();
         }
     }
 
     public function registrarse(){
         $this->redirectToHome();
-
-//        $this->renderer->renderWoHeader("registrarse");
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $nombre = $_POST["name"];
@@ -63,14 +63,17 @@ private $loginModel;
 
             $resultado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
 
-            if($resultado != null){
-                $_SESSION["nombre_usuario"] = $resultado['nombre_completo'];
-                $_SESSION["id_usuario"] = $resultado['id_usuario'];
-                $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
+            if($resultado['exito']){
+                $usuario = $resultado['usuario'];
+                $_SESSION["nombre_usuario"] = $usuario['nombre_completo'];
+                $_SESSION["id_usuario"] = $usuario['id_usuario'];
+                $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
                 $this->redirectToHome();
             } else {
-                $this->renderer->render('login', ['error' => 'Error al registrarse']);
+                $this->renderer->render('registrarse', ['errores' => $resultado['errores']]);
             }
+        } else {
+            $this->registrarseForm();
         }
     }
 
