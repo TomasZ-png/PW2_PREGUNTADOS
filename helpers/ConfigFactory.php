@@ -16,9 +16,8 @@ class ConfigFactory{
         $this->renderer = new MustacheRenderer('views');
         $this->clases['MyDatabase'] = new MyDatabase();
         $this->clases['Router'] = new Router($this, 'HomeController', 'mostrarHome');
-        $this->clases['IncludeFileRenderer'] = new IncludeFileRenderer();
         $this->clases['LoginController'] = new LoginController($this->clases['MyDatabase'], $this->renderer);
-        $this->clases['HomeController'] = new HomeController($this->clases['MyDatabase'], $this->clases['IncludeFileRenderer']);
+        $this->clases['HomeController'] = new HomeController($this->clases['MyDatabase'], $this->renderer);
 
     }
 

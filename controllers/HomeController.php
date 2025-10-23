@@ -2,8 +2,7 @@
 
 include_once(__DIR__."/../model/HomeModel.php");
 
-class HomeController
-{
+class HomeController{
 
     private $conexion;
     private $renderer;
@@ -15,19 +14,23 @@ class HomeController
         $this->homeModel = new HomeModel($this->conexion);
     }
 
-
-    private function usuarioLogueado(){
-        return isset($_SESSION['id_usuario']);
+    private function renderHome(){
+        $this->renderer->render('home');
     }
 
     public function mostrarHome(){
 
-        if(!$this->usuarioLogueado()){
-            header("Location: ". BASE_URL . "LoginController/login");
-        }
+        $this->redirectToLogin();
 
-        $this->renderer->renderWoHeader("home");
+        $this->renderHome();
     }
 
+
+    private function redirectToLogin(){
+        if(!isset($_SESSION['id_usuario'])){
+            header("Location: ". BASE_URL . "LoginController/login");
+            exit();
+        }
+    }
 
 }
