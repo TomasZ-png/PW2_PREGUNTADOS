@@ -35,6 +35,10 @@ class MyDatabase
         }
     }
 
+    public function prepare($string){
+        return $this->conexion->prepare($string);
+    }
+
     public function getConexion(){
         return $this->conexion;
     }

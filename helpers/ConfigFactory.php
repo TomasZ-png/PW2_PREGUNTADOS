@@ -1,34 +1,34 @@
 <?php
 
-include_once ("MyDatabase.php");
-include_once ("../model/modelLogin.php");
-include_once ("../controller/LoginController.php");
-include_once ("Router.php");
-include_once ("MustacheRenderer.php"); 
-class ConfigFactory{
+include_once("MyDatabase.php");
+include_once(__DIR__ . "/IncludeFileRenderer.php");
+include_once(__DIR__ . '/Router.php');
+include_once(__DIR__ . '/../controllers/LoginController.php');
+include_once(__DIR__.'/../controllers/HomeController.php');
+include_once(__DIR__.'/../helpers/MustacheRenderer.php');
+include_once(__DIR__.'/../vendor/mustache/src/Mustache/Autoloader.php');
+include_once(__DIR__.'/../controllers/PartidaController.php'); 
+include_once(__DIR__.'/../model/PartidaModel.php'); 
 
+
+class ConfigFactory{
     private $clases;
+    private $renderer;
 
     public function __construct(){
-        // 1. UTILIDADES
+        Mustache_Autoloader::register();
+        $this->renderer = new MustacheRenderer('views');
         $this->clases['MyDatabase'] = new MyDatabase();
-        $this->clases['Renderer'] = new MustacheRenderer('vista/');
+        $this->clases['Router'] = new Router($this, 'HomeController', 'mostrarHome');
+        $this->clases['LoginController'] = new LoginController($this->clases['MyDatabase'], $this->renderer);
+        $this->clases['HomeController'] = new HomeController($this->clases['MyDatabase'], $this->renderer);
         
-        // 2. MODELO (Necesita la conexión a DB)
-        $this->clases['LoginModel'] = new LoginModel($this->clases['MyDatabase']);
-        
-        // 3. CONTROLADOR (Necesita su modelo y el renderer)
-        $this->clases['LoginController'] = new LoginController(
-            $this->clases['LoginModel'],
-            $this->clases['Renderer']
-        );
-        
-        // 4. ROUTER (Necesita valores por defecto)
-        // Por defecto, carga el LoginController y su método loginForm
-        $this->clases['Router'] = new Router($this, 'LoginController', 'loginForm');
+        $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']); 
+        $this->clases['PartidaController'] = new PartidaController($this->clases['PartidaModel'], $this->renderer);
     }
 
     public function getClase($nombreClase){
         return isset($this->clases[$nombreClase]) ? $this->clases[$nombreClase] : null;
     }
+
 }
