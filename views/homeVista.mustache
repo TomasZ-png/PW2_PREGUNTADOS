@@ -2,16 +2,31 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/loginStyles.css">
+    <title>Home</title>
+    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/homeStyles.css">
 </head>
 <body>
 
-<h1>Bienvenido al home!</h1>
+{{#usuario}}
+<h1>Bienvenido! {{nombre_completo}}</h1>
+{{/usuario}}
 
 <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/iniciar">Jugar</a>
 
 <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/logout">Cerrar Sesion</a>
 
+<div class="ranking-container">
+    <h2>Ranking Global</h2>
+    <div class="users-ranking-container">
+        <ul>
+            {{#usuarios}}
+                <li>
+                    <img src="http://localhost:8012/PROYECTO_PREGUNTADOS/public/img/user-img/{{foto_perfil}}" alt="Foto de {{nombre_completo}}" >
+                    {{nombre_completo}} - {{puntaje_global}} puntos
+                </li>
+            {{/usuarios}}
+        </ul>
+    </div>
+</div>
 </body>
 </html>
