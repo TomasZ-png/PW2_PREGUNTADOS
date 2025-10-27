@@ -1,0 +1,6 @@
+{
+    "require": {
+        "mustache/mustache": "^3.0",
+      "ext-mysqli": "*"
+    }
+}

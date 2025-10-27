@@ -7,11 +7,13 @@ class HomeController{
     private $conexion;
     private $renderer;
     private $homeModel;
+    private $usuarioModel;
 
     public function __construct($conexion, $renderer){
         $this->conexion = $conexion;
         $this->renderer = $renderer;
         $this->homeModel = new HomeModel($this->conexion);
+        $this->usuarioModel = new UsuarioModel($this->conexion);
     }
 
     private function renderHome(){
@@ -22,7 +24,13 @@ class HomeController{
 
         $this->redirectToLogin();
 
-        $this->renderHome();
+        $id_usuario = $_SESSION['id_usuario'] ? $_SESSION['id_usuario'] : null;
+
+        $usuario = $this->homeModel->obtenerUsuario($id_usuario);
+
+        $usuarios = $this->usuarioModel->listarUsuarios();
+
+        return $this->renderer->render("home", ['usuarios' => $usuarios, 'usuario' => $usuario]);
     }
 
 

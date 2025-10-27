@@ -112,8 +112,8 @@ class LoginModel
             // ===== REGISTRAMOS EL USUARIO =====
 
             $stmt2 = $this->conexion->prepare("
-            INSERT INTO usuario (nombre_completo, correo, password, anio_nacimiento, sexo, foto_perfil, rol)
-            VALUES (?, ?, ?, ?, ?, ?, 'USER')");
+            INSERT INTO usuario (nombre_completo, correo, password, anio_nacimiento, sexo, foto_perfil, rol, puntaje_global)
+            VALUES (?, ?, ?, ?, ?, ?, 'USER', 0)");
 
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 

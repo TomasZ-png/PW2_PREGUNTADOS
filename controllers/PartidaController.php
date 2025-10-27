@@ -1,47 +1,139 @@
 <?php
+include_once(__DIR__."/../model/UsuarioModel.php");
 
-include_once(__DIR__."/../model/PartidaModel.php");
-
-class PartidaController{
-
-    private $conexion;
+class PartidaController
+{
+    private $model;
+    private $usuarioModel;
     private $renderer;
-    private $partidaModel;
+    private $basePath = '/PROYECTO_PREGUNTADOS/';
+    private $conexion;
 
-    public function __construct($conexion, $renderer){
-        $this->conexion = $conexion;
+    public function __construct($partidaModel, $renderer, $conexion)
+    {
+        $this->model = $partidaModel;
         $this->renderer = $renderer;
-        $this->partidaModel = new PartidaModel($this->conexion);
+        $this->conexion = $conexion;
+        $this->usuarioModel = new UsuarioModel($this->conexion);
     }
-
-    private function inicarPartidaRender(){
-        $this->renderer->render("partida");
-    }
-
-    private function cargarCategoria(){
-        $categorias = $this->partidaModel->iniciarPartidaCategoria();
-        $clave_categoria_a_usar = array_rand($categorias);
-        return $categorias[$clave_categoria_a_usar];
-    }
-
-    public function iniciarPartida(){
-        $this->redirectToLogin();
-
-        $categorias_usadas = [];
-
-        $categoria = $this->cargarCategoria();
-
-        $preguntas = $this->partidaModel->generarPreguntasPorCategoria($categoria);
-
-        echo $categoria;
-    }
-
-    private function redirectToLogin(){
-        if(!isset($_SESSION['id_usuario'])){
-            header("Location: ". BASE_URL . "LoginController/login");
-            exit();
+    
+    // Redirige al inicio si no hay partida, o a jugar si ya hay una.
+    public function base()
+    {
+        if (!isset($_SESSION['id_usuario'])) {
+             // Redirigir al login si no hay usuario logueado
+             $this->redirectToLogin();
+        } else if (!isset($_SESSION['partidaId'])) {
+            $this->iniciar();
+        } else {
+            $this->jugar();
         }
     }
 
-    private function redirectToHome(){}
+    // Crea un nuevo registro de partida
+    public function iniciar(){
+//        $this->base();
+
+        $idJugador = $_SESSION['id_usuario'];
+        
+        $partidaId = $this->model->iniciarPartida($idJugador);
+
+        $_SESSION['partidaId'] = $partidaId;
+        
+        $this->redirectToRoute('PartidaController', 'jugar');
+    }
+
+    // Muestra la pregunta actual o finaliza el juego
+    public function jugar()
+    {
+        if (!isset($_SESSION['partidaId'])) {
+            $this->redirectToRoute('PartidaController', 'iniciar');
+        }
+        
+        $partidaId = $_SESSION['partidaId'];
+        $estado = $this->model->getEstadoPartida($partidaId);
+        
+        if ($estado['estado_partida'] === 'PERDIDA') {
+            $this->finalizar($estado);
+            return;
+        }
+
+        $categoriasGanadas = array_filter(explode(',', $estado['categorias_ganadas']));
+        
+        // La ruleta: obtener la siguiente pregunta
+        $pregunta = $this->model->obtenerPreguntaAleatoria($categoriasGanadas);
+        
+        if (!$pregunta) {
+            // El jugador ganó todas las categorías disponibles
+            $this->finalizar(['estado_partida' => 'GANADA', 'puntaje_final' => $estado['puntaje_final']]);
+            return;
+        }
+
+        $datos = [
+            'pregunta' => $pregunta['pregunta'],
+            'categoria' => $pregunta['categoria'],
+            'puntaje' => $estado['puntaje_final'],
+            'respuestas' => $pregunta['respuestas'],
+            'feedback' => $_SESSION['feedback'] ?? null // Para mostrar el resultado de la ronda anterior
+        ];
+
+        // Limpiar feedback después de mostrarlo
+        unset($_SESSION['feedback']);
+
+        $this->renderer->render("jugarPartida", $datos);
+    }
+    
+    // Procesa la respuesta del jugador
+    public function responder()
+    {
+        if (!isset($_SESSION['partidaId']) || !isset($_POST['respuestaId'])) {
+            $this->redirectToRoute('PartidaController', 'jugar');
+        }
+        
+        $partidaId = $_SESSION['partidaId'];
+        $idRespuesta = $_POST['respuestaId'];
+
+        $esCorrecta = $this->model->verificarRespuesta($partidaId, $idRespuesta);
+
+        if ($esCorrecta) {
+            $_SESSION['feedback'] = "¡Respuesta Correcta! Has ganado la categoría.";
+        } else {
+            $_SESSION['feedback'] = "¡Respuesta Incorrecta! Fin de la partida.";
+        }
+        
+        $this->redirectToRoute('PartidaController', 'jugar');
+    }
+
+    private function finalizar($estado)
+    {
+        $mensaje = $estado['estado_partida'] === 'PERDIDA' ? 
+                   "¡Juego Terminado! Respuesta Incorrecta. Intenta de nuevo." : 
+                   "¡Felicidades! ¡Has Ganado el Juego al completar todas las categorías!";
+        
+        $datos = [
+            'mensaje' => $mensaje,
+            'puntaje' => $estado['puntaje_final']
+        ];
+
+        $id_usuario = $_SESSION['id_usuario'];
+
+        $this->usuarioModel->sumarPuntosUsuario($id_usuario, $datos['puntaje']);
+
+        unset($_SESSION['partidaId']);
+        
+        $this->renderer->render("resultadoPartida", $datos);
+    }
+    
+    // --- Utilidades ---
+
+    private function redirectToLogin(){
+        if(!isset($_SESSION['id_usuario'])){
+            $this->redirectToRoute('LoginController', 'login');
+        }
+    }
+
+    private function redirectToRoute($controller, $method){
+        header("Location: " . $this->basePath . "$controller/$method");
+        exit();
+    }
 }

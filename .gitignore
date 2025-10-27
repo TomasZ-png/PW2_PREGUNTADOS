@@ -1,0 +1,7 @@
+# Ignorar la carpeta de dependencias de Composer
+/vendor/
+
+# Ignorar logs, archivos de caché y configuración local
+/cache/
+/logs/
+/config.ini # Si este archivo tiene credenciales sensibles
