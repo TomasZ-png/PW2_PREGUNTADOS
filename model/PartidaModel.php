@@ -39,7 +39,7 @@ class PartidaModel
         $categoriaSeleccionada = $resultadoCategoria[0]['categoria'];
 
         // 2. Obtener una Pregunta aleatoria de esa categoría
-        $sqlPregunta = "SELECT id_pregunta, pregunta, categoria FROM pregunta 
+        $sqlPregunta = "SELECT id_pregunta, pregunta, categoria, puntaje FROM pregunta 
                         WHERE categoria = '$categoriaSeleccionada'
                         ORDER BY RAND() LIMIT 1";
         
@@ -65,7 +65,7 @@ class PartidaModel
     public function verificarRespuesta($idPartida, $idRespuesta)
     {
         // 1. Verificar si la respuesta seleccionada es la correcta
-        $sqlVerif = "SELECT r.es_correcta, p.categoria
+        $sqlVerif = "SELECT r.es_correcta, p.categoria, p.puntaje
                      FROM respuesta r JOIN pregunta p ON r.id_pregunta = p.id_pregunta
                      WHERE r.id_respuesta = $idRespuesta";
                      
@@ -75,11 +75,12 @@ class PartidaModel
 
         $esCorrecta = $resultado[0]['es_correcta'] == 1;
         $categoriaPregunta = $resultado[0]['categoria'];
+        $puntajePregunta = $resultado[0]['puntaje'];
 
         // 2. Actualizar Partida
         if ($esCorrecta) {
             // Se asume 5 puntos por pregunta, basado en tus inserciones SQL
-            $sqlAct = "UPDATE partida SET puntaje_final = puntaje_final + 5, 
+            $sqlAct = "UPDATE partida SET puntaje_final = puntaje_final + $puntajePregunta, 
                        categorias_ganadas = CONCAT(categorias_ganadas, '$categoriaPregunta,') 
                        WHERE id_partida = $idPartida";
             $this->conexion->query($sqlAct);
