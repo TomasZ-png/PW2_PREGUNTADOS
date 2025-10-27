@@ -1,16 +1,20 @@
 <?php
-// Asegúrate de incluir el modelo en el ConfigFactory, no aquí.
+include_once(__DIR__."/../model/UsuarioModel.php");
 
 class PartidaController
 {
     private $model;
+    private $usuarioModel;
     private $renderer;
-    private $basePath = '/PROYECTO_PREGUNTADOS/'; // Usa tu carpeta real
+    private $basePath = '/PROYECTO_PREGUNTADOS/';
+    private $conexion;
 
-    public function __construct($partidaModel, $renderer)
+    public function __construct($partidaModel, $renderer, $conexion)
     {
         $this->model = $partidaModel;
         $this->renderer = $renderer;
+        $this->conexion = $conexion;
+        $this->usuarioModel = new UsuarioModel($this->conexion);
     }
     
     // Redirige al inicio si no hay partida, o a jugar si ya hay una.
@@ -18,7 +22,7 @@ class PartidaController
     {
         if (!isset($_SESSION['id_usuario'])) {
              // Redirigir al login si no hay usuario logueado
-             $this->redirectToRoute('LoginController', 'login');
+             $this->redirectToLogin();
         } else if (!isset($_SESSION['partidaId'])) {
             $this->iniciar();
         } else {
@@ -27,10 +31,10 @@ class PartidaController
     }
 
     // Crea un nuevo registro de partida
-    public function iniciar()
-    {
-        // Asumiendo que el ID del usuario logueado es el ID del jugador
-        $idJugador = $_SESSION['id_usuario'] ?? 1; 
+    public function iniciar(){
+//        $this->base();
+
+        $idJugador = $_SESSION['id_usuario'];
         
         $partidaId = $this->model->iniciarPartida($idJugador);
 
@@ -72,7 +76,7 @@ class PartidaController
             'respuestas' => $pregunta['respuestas'],
             'feedback' => $_SESSION['feedback'] ?? null // Para mostrar el resultado de la ronda anterior
         ];
-        
+
         // Limpiar feedback después de mostrarlo
         unset($_SESSION['feedback']);
 
@@ -110,16 +114,25 @@ class PartidaController
             'mensaje' => $mensaje,
             'puntaje' => $estado['puntaje_final']
         ];
-        
-        // Limpiar la sesión de la partida actual
+
+        $id_usuario = $_SESSION['id_usuario'];
+
+        $this->usuarioModel->sumarPuntosUsuario($id_usuario, $datos['puntaje']);
+
         unset($_SESSION['partidaId']);
         
         $this->renderer->render("resultadoPartida", $datos);
     }
     
     // --- Utilidades ---
-    private function redirectToRoute($controller, $method)
-    {
+
+    private function redirectToLogin(){
+        if(!isset($_SESSION['id_usuario'])){
+            $this->redirectToRoute('LoginController', 'login');
+        }
+    }
+
+    private function redirectToRoute($controller, $method){
         header("Location: " . $this->basePath . "$controller/$method");
         exit();
     }

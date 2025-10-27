@@ -11,7 +11,8 @@ CREATE TABLE usuario(
     anio_nacimiento INT,
     sexo VARCHAR(20),
     foto_perfil VARCHAR(255),
-    rol VARCHAR(50) NOT NULL
+    rol VARCHAR(50) NOT NULL,
+    puntaje_global INT
 );
 
 -- INSERTO DE USUARIO ADMIN (ID: 1)
