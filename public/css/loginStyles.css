@@ -1,52 +1,118 @@
+:root{
+    --bg-color-page: #73B4FE;
+    --bg-color-btn: #4548AD;
+    --bg-color-btn-hover: #191B6B;
+
+    font-size: 16px;
+
+    --size-sm: 0.5rem;
+    --size-m: 1rem;
+    --size-g: 1.5rem;
+    --size-xg: 2rem;
+    --size-xxg: 3.5rem;
+
+    --border-color: #ccc;
+    --bg-color-hover: #73B4FE;
+    --primary-color: #000;
+    --secondary-color: #ccc;
+}
+
 *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a{
+    color: black;
 }
 
-body{
-    width: 100%;
+#form-container{
+    font-size: 0;
+}
+
+#left-container, #right-container{
+    display:  inline-block;
+    vertical-align: top;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    width: 50%;
 }
 
-.form-container{
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-    border: #c6c6c6 solid 1px;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 2px 2px 4px rgba(198, 198, 198, 0.59);
+#right-container{
+    background-color: var(--bg-color-page);
+    background-image: url("/PROYECTO_PREGUNTADOS/public/img/ilustracion.png");
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
-.form-container h1{
+form{
+    width: 400px;
+    margin: var(--size-xxg) auto;
+    font-size: var(--size-m);
+}
+
+#logo-conteiner{
     text-align: center;
-    margin: 20px 0;
 }
 
-.form-container form{
-    display: flex;
-    flex-direction: column;
+#logo-conteiner img{
+    width: 100px;
 }
 
-.form-container form input, button, select{
-    border: #c5c5c5 solid 1px;
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
+#title-conteiner h1{
+    font-size: var(--size-xxg);
+    text-align: center;
+    padding: var(--size-g);
 }
 
-button{
+#inputs-conteiner label{
+    display: block;
+    padding: var(--size-sm) 0;
+    font-weight: bolder;
+}
+
+#inputs-conteiner input[type=text],
+#inputs-conteiner input[type=password]{
+    display: block;
+    padding: var(--size-sm);
+    outline: none;
+    width: 100%;
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+}
+
+#inputs-conteiner input[type=text]:hover,
+#inputs-conteiner input[type=password]:hover{
+    border: solid 1px  var(--bg-color-hover);
+}
+
+#inputs-conteiner input[type=text]:focus,
+#inputs-conteiner input[type=password]:focus{
+    border: solid 1px  var(--bg-color-hover);
+}
+
+#buttons-conteiner {
+    text-align: center;
+    padding: var(--size-g) 0;
+}
+
+.btn{
+    border: 0;
+    border-radius: 4px;
+    background-color: var(--bg-color-btn);
+    color: white;
     cursor: pointer;
+    padding: var(--size-sm);
+    width: 100%;
 }
 
-.errores{
-    color: red;
-    background-color: #fac3c3;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
+.btn:hover{
+    background-color: var(--bg-color-btn-hover);
+}
+
+#registrar-conteiner{
+    color: var(--secondary-color);
+    padding: var(--size-sm) 0;
+    text-align: center;
 }
