@@ -24,7 +24,13 @@ class ConfigFactory{
         $this->clases['HomeController'] = new HomeController($this->clases['MyDatabase'], $this->renderer);
         
         $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']); 
-        $this->clases['PartidaController'] = new PartidaController($this->clases['PartidaModel'], $this->renderer);
+        
+        // ¡LÍNEA CORREGIDA! Pasamos los 3 argumentos que espera el PartidaController
+        $this->clases['PartidaController'] = new PartidaController(
+            $this->clases['PartidaModel'], 
+            $this->renderer,
+            $this->clases['MyDatabase'] 
+        );
     }
 
     public function getClase($nombreClase){
