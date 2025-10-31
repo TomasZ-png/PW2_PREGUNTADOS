@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Home - Preguntados</title>
-    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/homeStyles.css">
-</head>
 <body>
-
 {{#usuario}}
 <h1>Bienvenido! {{nombre_completo}}</h1>
 {{/usuario}}
@@ -14,11 +6,9 @@
 <h2>¡Es hora de poner a prueba tu conocimiento!</h2>
 
 <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/iniciar" class="btn-jugar">
-    Ir a Jugar Partida
+    Jugar
 </a>
 <br><br>
-
-<a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/logout">Cerrar Sesión</a>
 
 <div class="ranking-container">
     <h2>Ranking Global</h2>
@@ -27,11 +17,14 @@
             {{#usuarios}}
                 <li>
                     <img src="http://localhost:8012/PROYECTO_PREGUNTADOS/public/img/user-img/{{foto_perfil}}" alt="Foto de {{nombre_completo}}" >
-                    {{nombre_completo}} - {{puntaje_global}} puntos
+                    {{nombre_completo}} - Record: {{puntaje_maximo_obtenido}}
                 </li>
             {{/usuarios}}
         </ul>
     </div>
 </div>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
-</html>
