@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/homeStyles.css">
+    <title>Home - Preguntados</title>
+    <link rel="stylesheet" href="{{basePath}}public/css/loginStyles.css">
 </head>
 <body>
 
@@ -12,8 +12,15 @@
 {{/usuario}}
 
 <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/iniciar">Jugar</a>
+<h1>¡Bienvenido al home!</h1>
+<h2>¡Es hora de poner a prueba tu conocimiento!</h2>
 
-<a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/logout">Cerrar Sesion</a>
+<a href="{{basePath}}PartidaController/iniciar" class="btn-jugar">
+    Ir a Jugar Partida
+</a>
+<br><br>
+
+<a href="{{basePath}}LoginController/logout">Cerrar Sesión</a>
 
 <div class="ranking-container">
     <h2>Ranking Global</h2>

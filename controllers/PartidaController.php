@@ -1,5 +1,7 @@
 <?php
+// Asegúrate de que las rutas son correctas
 include_once(__DIR__."/../model/UsuarioModel.php");
+include_once(__DIR__."/../model/PartidaModel.php");
 
 class PartidaController
 {
@@ -9,30 +11,32 @@ class PartidaController
     private $basePath = '/PROYECTO_PREGUNTADOS/';
     private $conexion;
 
+    // CONSTRUCTOR: Asegúrate de que tu ConfigFactory te inyecte estos 3:
     public function __construct($partidaModel, $renderer, $conexion)
     {
         $this->model = $partidaModel;
         $this->renderer = $renderer;
         $this->conexion = $conexion;
+        // Asumiendo que UsuarioModel ya está incluido o disponible
         $this->usuarioModel = new UsuarioModel($this->conexion);
     }
     
-    // Redirige al inicio si no hay partida, o a jugar si ya hay una.
-    public function base()
+    public function mostrarHome()
     {
         if (!isset($_SESSION['id_usuario'])) {
-             // Redirigir al login si no hay usuario logueado
-             $this->redirectToLogin();
-        } else if (!isset($_SESSION['partidaId'])) {
-            $this->iniciar();
+            $this->redirectToLogin();
         } else {
-            $this->jugar();
+             // Inicia la partida si no hay una activa (o va al login si no hay sesión)
+            $this->redirectToRoute('PartidaController', 'iniciar');
         }
     }
 
-    // Crea un nuevo registro de partida
     public function iniciar(){
-//        $this->base();
+        // Previene iniciar una partida si ya hay una activa
+        if (isset($_SESSION['partidaId'])) {
+            $this->redirectToRoute('PartidaController', 'jugar');
+            return;
+        }
 
         $idJugador = $_SESSION['id_usuario'];
         
@@ -48,34 +52,39 @@ class PartidaController
     {
         if (!isset($_SESSION['partidaId'])) {
             $this->redirectToRoute('PartidaController', 'iniciar');
+            return;
         }
         
         $partidaId = $_SESSION['partidaId'];
         $estado = $this->model->getEstadoPartida($partidaId);
         
+        // El juego termina si el estado es PERDIDA
         if ($estado['estado_partida'] === 'PERDIDA') {
             $this->finalizar($estado);
             return;
         }
 
-        $categoriasGanadas = array_filter(explode(',', $estado['categorias_ganadas']));
+        // Obtener IDs de preguntas jugadas (la cadena de IDs)
+        $preguntasJugadas = $estado['preguntas_jugadas'];
         
-        // La ruleta: obtener la siguiente pregunta
-        $pregunta = $this->model->obtenerPreguntaAleatoria($categoriasGanadas);
+        // Obtener la siguiente pregunta que no haya sido jugada
+        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas);
         
         if (!$pregunta) {
-            // El jugador ganó todas las categorías disponibles
-            $this->finalizar(['estado_partida' => 'GANADA', 'puntaje_final' => $estado['puntaje_final']]);
+            // Caso: El jugador ha respondido TODAS las preguntas de la BD (Fin por completar)
+            $this->finalizar(['estado_partida' => 'TERMINADO', 'puntaje_final' => $estado['puntaje_final']]);
             return;
         }
 
         $datos = [
-            'pregunta' => $pregunta['pregunta'],
-            'categoria' => $pregunta['categoria'],
-            'puntaje' => $estado['puntaje_final'],
-            'respuestas' => $pregunta['respuestas'],
-            'feedback' => $_SESSION['feedback'] ?? null // Para mostrar el resultado de la ronda anterior
-        ];
+    'pregunta' => $pregunta['pregunta'],
+    'categoria' => $pregunta['categoria'],
+    'puntaje' => $estado['puntaje_final'],
+    'respuestas' => $pregunta['respuestas'],
+    'feedback' => $_SESSION['feedback'] ?? null,
+    'basePath' => $this->basePath
+];
+
 
         // Limpiar feedback después de mostrarlo
         unset($_SESSION['feedback']);
@@ -88,6 +97,7 @@ class PartidaController
     {
         if (!isset($_SESSION['partidaId']) || !isset($_POST['respuestaId'])) {
             $this->redirectToRoute('PartidaController', 'jugar');
+            return;
         }
         
         $partidaId = $_SESSION['partidaId'];
@@ -95,10 +105,15 @@ class PartidaController
 
         $esCorrecta = $this->model->verificarRespuesta($partidaId, $idRespuesta);
 
+        // Obtener el estado después de la verificación para el feedback
+        $estado = $this->model->getEstadoPartida($partidaId);
+
         if ($esCorrecta) {
-            $_SESSION['feedback'] = "¡Respuesta Correcta! Has ganado la categoría.";
+            $_SESSION['feedback'] = "¡Respuesta Correcta! Sigue sumando puntos.";
+            // Si es correcta, el modelo la marcó, se redirige a jugar para la siguiente
         } else {
-            $_SESSION['feedback'] = "¡Respuesta Incorrecta! Fin de la partida.";
+            // Si es incorrecta, el modelo la marcó como 'PERDIDA' y guardó el puntaje.
+            $_SESSION['feedback'] = "¡Respuesta Incorrecta! Fin de la partida. Puntaje obtenido: " . $estado['puntaje_final'] . " puntos.";
         }
         
         $this->redirectToRoute('PartidaController', 'jugar');
@@ -106,21 +121,32 @@ class PartidaController
 
     private function finalizar($estado)
     {
-        $mensaje = $estado['estado_partida'] === 'PERDIDA' ? 
-                   "¡Juego Terminado! Respuesta Incorrecta. Intenta de nuevo." : 
-                   "¡Felicidades! ¡Has Ganado el Juego al completar todas las categorías!";
-        
-        $datos = [
-            'mensaje' => $mensaje,
-            'puntaje' => $estado['puntaje_final']
-        ];
-
+        $puntajeFinal = $estado['puntaje_final'];
         $id_usuario = $_SESSION['id_usuario'];
 
-        $this->usuarioModel->sumarPuntosUsuario($id_usuario, $datos['puntaje']);
+        // Se actualiza el puntaje global del usuario con el puntaje obtenido
+        $this->usuarioModel->sumarPuntosUsuario($id_usuario, $puntajeFinal);
 
-        unset($_SESSION['partidaId']);
+        // El puntaje máximo ya se actualizó en el PartidaModel si la partida terminó por fallo.
+
+        $mensaje = $estado['estado_partida'] === 'PERDIDA' ?
+                    "¡Juego Terminado! Fallaste una pregunta." :
+                    "¡Increíble! Has respondido todas las preguntas de la base de datos.";
         
+        $puntajeMaximo = $this->usuarioModel->getPuntajeMaximo($id_usuario);
+
+        $datos = [
+    'mensaje' => $mensaje,
+    'puntaje' => $puntajeFinal,
+    'puntajeMaximo' => $puntajeMaximo,
+    'basePath' => $this->basePath
+];
+
+
+        // Limpiar sesión y renderizar
+        unset($_SESSION['partidaId']);
+        unset($_SESSION['feedback']);
+
         $this->renderer->render("resultadoPartida", $datos);
     }
     
