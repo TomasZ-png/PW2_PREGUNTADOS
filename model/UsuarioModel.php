@@ -8,6 +8,18 @@ class UsuarioModel
         $this->conexion = $conexion;
     }
 
+
+    public function listarUsuarios(){
+        $stmt = $this->conexion->prepare("SELECT nombre_completo, foto_perfil, puntaje_global
+                                          FROM usuario 
+                                          WHERE rol = 'USER' 
+                                          ORDER BY puntaje_global DESC");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+        return $usuarios;
+    }
+
     // Nuevo método para obtener el puntaje máximo del usuario
     public function getPuntajeMaximo($id_usuario)
     {
