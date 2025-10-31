@@ -10,10 +10,10 @@ class UsuarioModel
 
 
     public function listarUsuarios(){
-        $stmt = $this->conexion->prepare("SELECT nombre_completo, foto_perfil, puntaje_global
+        $stmt = $this->conexion->prepare("SELECT nombre_completo, foto_perfil, puntaje_maximo_obtenido
                                           FROM usuario 
                                           WHERE rol = 'USER' 
-                                          ORDER BY puntaje_global DESC");
+                                          ORDER BY puntaje_maximo_obtenido DESC");
         $stmt->execute();
         $result = $stmt->get_result();
         $usuarios = $result->fetch_all(MYSQLI_ASSOC);
