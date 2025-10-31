@@ -1,9 +1,11 @@
-<div class="w3-container w3-center w3-margin">
-    <div class="w3-card w3-padding-64 w3-deep-purple w3-text-white">
-        <h2 class="w3-xxlarge">{{mensaje}}</h2>
-        <p class="w3-xlarge">Puntaje Final: {{puntaje}}</p>
-        <hr>
-        <a href="/PROYECTO_PREGUNTADOS/PartidaController/iniciar" class="w3-button w3-white w3-text-deep-purple w3-large w3-margin-top">Jugar de Nuevo</a>
-        <a href="/PROYECTO_PREGUNTADOS/HomeController/mostrarHome" class="w3-button w3-white w3-text-deep-purple w3-large w3-margin-top">Volver al Inicio</a>
+<div class="resultado-card">
+    <h1>{{mensaje}}</h1>
+    
+    <div class="puntajes">
+        <p>Puntaje Final Obtenido: <span class="puntaje-final">{{puntaje}}</span></p>
+        <p>Tu Puntaje Máximo Personal: <span class="puntaje-maximo">{{puntajeMaximo}}</span></p>
     </div>
+    
+    <a href="{{basePath}}PartidaController/iniciar" class="btn-primary">Jugar de Nuevo</a>
+    <a href="{{basePath}}HomeController/mostrarHome" class="btn-secondary">Volver al Home</a>
 </div>
