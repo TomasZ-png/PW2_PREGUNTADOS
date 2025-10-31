@@ -1,30 +1,20 @@
-<div class="w3-container w3-center w3-margin">
-    
-    {{#feedback}}
-        <div class="w3-panel w3-green w3-padding-16 w3-margin-bottom">
-            <h4>{{feedback}}</h4>
-        </div>
-    {{/feedback}}
+<h2>Partida Activa - Puntaje: {{puntaje}}</h2>
 
-    <div class="w3-row w3-card w3-padding w3-margin-bottom w3-blue-grey">
-        <div class="w3-col s12">Puntaje Actual: 🏅 {{puntaje}}</div>
-    </div>
+{{#feedback}}
+    <div style="color: green; font-weight: bold; margin-bottom: 10px;">{{feedback}}</div>
+{{/feedback}}
+
+<div class="pregunta-card">
+    <p class="categoria">Categoría: <strong>{{categoria}}</strong></p>
+    <h3 class="pregunta">{{pregunta}}</h3>
     
-    <div class="w3-card w3-padding w3-light-grey w3-display-inline-block" style="min-width:350px">
-        <h3 class="w3-tag w3-red">{{categoria}}</h3>
-        <p class="w3-xlarge w3-serif w3-margin-top">{{pregunta}}</p>
-        
-        <form method="POST" action="/PROYECTO_PREGUNTADOS/PartidaController/responder">
+    <form action="{{basePath}}PartidaController/responder" method="POST">
+        <div class="respuestas-grid">
             {{#respuestas}}
-                <p>
-                    <button class="w3-button w3-block w3-blue w3-hover-deep-blue w3-margin-bottom" 
-                            type="submit" 
-                            name="respuestaId" 
-                            value="{{id_respuesta}}">
-                        {{respuesta}}
-                    </button>
-                </p>
+            <button type="submit" name="respuestaId" value="{{id_respuesta}}" class="btn-respuesta">
+                {{respuesta}}
+            </button>
             {{/respuestas}}
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

@@ -12,7 +12,9 @@ CREATE TABLE usuario(
     sexo VARCHAR(20),
     foto_perfil VARCHAR(255),
     rol VARCHAR(50) NOT NULL,
-    puntaje_global INT
+    puntaje_global INT,
+    -- NUEVO CAMPO PARA EL RANKING
+    puntaje_maximo_obtenido INT DEFAULT 0
 );
 
 -- INSERTO DE USUARIO ADMIN (ID: 1)
@@ -22,15 +24,16 @@ VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO
 INSERT INTO usuario (nombre_completo, correo, password, rol)
 VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'JUGADOR');
 
--- TABLA PARTIDA (CORREGIDA para incluir id_jugador y campos de seguimiento)
+-- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(
     id_partida INT AUTO_INCREMENT PRIMARY KEY,
-    id_jugador INT NOT NULL, -- <<<<<< ESTA ES LA COLUMNA FALTANTE
-    estado_partida VARCHAR(10), -- Se cambia 'resultado' a 'estado_partida'
-    puntaje_final DOUBLE, -- Se cambia 'puntajeGanado' a 'puntaje_final'
-    categorias_ganadas VARCHAR(255), -- Nuevo campo para registrar categorías completadas
+    id_jugador INT NOT NULL,
+    estado_partida VARCHAR(10), -- 'ACTIVA' o 'PERDIDA'
+    puntaje_final INT DEFAULT 0,
+    -- COLUMNA MODIFICADA: Guarda IDs de preguntas jugadas (separados por comas)
+    preguntas_jugadas VARCHAR(1000) DEFAULT '',
     fecha_creacion DATE,
-    fecha_fin DATETIME, -- Nuevo campo para registrar el fin
+    fecha_fin DATETIME,
     FOREIGN KEY (id_jugador) REFERENCES usuario(id_usuario)
 );
 
@@ -193,3 +196,125 @@ INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('China', 24), ('Corea del
 -- P25
 INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Michael Phelps', 25, 1);
 INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Usain Bolt', 25), ('Simone Biles', 25), ('Carl Lewis', 25);
+
+-- agrego 20 preguntas
+
+-- P26
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿En qué año llegó el hombre a la Luna?', '-', 'HISTORIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('1969', 26, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('1972', 26), ('1959', 26), ('1980', 26);
+
+-- P27
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué civilización construyó las pirámides de Egipto?', '-', 'HISTORIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Egipcia', 27, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Maya', 27), ('Inca', 27), ('Romana', 27);
+
+-- P28
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué país tiene la Torre Eiffel?', '-', 'GEOGRAFIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Francia', 28, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Italia', 28), ('España', 28), ('Alemania', 28);
+
+-- P29
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Cuál es el país más grande del mundo?', '-', 'GEOGRAFIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Rusia', 29, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('China', 29), ('Canadá', 29), ('Estados Unidos', 29);
+
+-- P30
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué océano se encuentra entre África y Australia?', '-', 'GEOGRAFIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Océano Índico', 30, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Océano Atlántico', 30), ('Océano Pacífico', 30), ('Océano Ártico', 30);
+
+-- P31
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Quién pintó "La noche estrellada"?', '-', 'ARTE', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Vincent van Gogh', 31, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Claude Monet', 31), ('Salvador Dalí', 31), ('Diego Rivera', 31);
+
+-- P32
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿En qué museo se encuentra "La Mona Lisa"?', '-', 'ARTE', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Museo del Louvre', 32, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Museo del Prado', 32), ('Museo de Arte Moderno', 32), ('Galería Uffizi', 32);
+
+-- P33
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué movimiento artístico inició Dalí?', '-', 'ARTE', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Surrealismo', 33, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Cubismo', 33), ('Impresionismo', 33), ('Barroco', 33);
+
+-- P34
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué elemento químico tiene el símbolo O?', '-', 'CIENCIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Oxígeno', 34, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Oro', 34), ('Osmio', 34), ('Ozono', 34);
+
+-- P35
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Cuál es la velocidad de la luz?', '-', 'CIENCIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('300.000 km/s', 35, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('150.000 km/s', 35), ('1.000 km/s', 35), ('3.000 km/s', 35);
+
+-- P36
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué planeta es conocido como el planeta rojo?', '-', 'CIENCIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Marte', 36, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Venus', 36), ('Júpiter', 36), ('Saturno', 36);
+
+-- P37
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Cuántos huesos tiene el cuerpo humano adulto?', '-', 'CIENCIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('206', 37, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('210', 37), ('198', 37), ('250', 37);
+
+-- P38
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué deporte practica Roger Federer?', '-', 'DEPORTES', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Tenis', 38, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Golf', 38), ('Fútbol', 38), ('Bádminton', 38);
+
+-- P39
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Cuántos aros tiene el símbolo olímpico?', '-', 'DEPORTES', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('5', 39, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('4', 39), ('6', 39), ('7', 39);
+
+-- P40
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿En qué deporte se utiliza un bate y una pelota?', '-', 'DEPORTES', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Béisbol', 40, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Fútbol', 40), ('Hockey', 40), ('Tenis', 40);
+
+-- P41
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Qué país ganó el Mundial 2014?', '-', 'DEPORTES', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Alemania', 41, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Brasil', 41), ('Argentina', 41), ('España', 41);
+
+-- P42
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Cuál es el país más poblado del mundo?', '-', 'GEOGRAFIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('China', 42, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('India', 42), ('Estados Unidos', 42), ('Indonesia', 42);
+
+-- P43
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Quién escribió "Don Quijote de la Mancha"?', '-', 'ARTE', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Miguel de Cervantes', 43, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Lope de Vega', 43), ('Garcilaso de la Vega', 43), ('Quevedo', 43);
+
+-- P44
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿Cuál es el metal más ligero?', '-', 'CIENCIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Litio', 44, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Plata', 44), ('Aluminio', 44), ('Cobre', 44);
+
+-- P45
+INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
+('¿En qué continente está Egipto?', '-', 'GEOGRAFIA', 5, CURDATE());
+INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('África', 45, 1);
+INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Asia', 45), ('Europa', 45), ('Oceanía', 45);
