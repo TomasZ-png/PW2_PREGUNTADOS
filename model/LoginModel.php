@@ -86,7 +86,7 @@ class LoginModel
                     return ['exito' => false, 'errores' => $errores];
                 }
 
-                $directorio = __DIR__ . "/../src/img/user-img/";
+                $directorio = __DIR__ . "/../public/img/user-img/";
                 if (!is_dir($directorio)) mkdir($directorio, 0777, true);
 
                 $extensionArchivo = strtolower(pathinfo($nombreImagen, PATHINFO_EXTENSION));

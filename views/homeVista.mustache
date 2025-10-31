@@ -5,10 +5,9 @@
 
 <h2>¡Es hora de poner a prueba tu conocimiento!</h2>
 
-<a href="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/iniciar" class="btn-jugar">
+<a href="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/iniciar" class="btn-jugar btn btn-outline-success">
     Jugar
 </a>
-<br><br>
 
 <div class="ranking-container">
     <h2>Ranking Global</h2>
@@ -17,7 +16,7 @@
             {{#usuarios}}
                 <li>
                     <img src="http://localhost:8012/PROYECTO_PREGUNTADOS/public/img/user-img/{{foto_perfil}}" alt="Foto de {{nombre_completo}}" >
-                    {{nombre_completo}} - Record: {{puntaje_maximo_obtenido}}
+                    <strong>{{nombre_completo }} </strong> - Record: {{puntaje_maximo_obtenido}} pts.
                 </li>
             {{/usuarios}}
         </ul>
