@@ -71,10 +71,10 @@ class PartidaModel
         if (empty($resultado)) { return false; }
 
         $esCorrecta = $resultado[0]['es_correcta'] == 1;
-$idPregunta = $resultado[0]['id_pregunta'];
-$puntajePregunta = (int) $resultado[0]['puntaje']; // <<< CORRECCIÓN: CAST A INT
-$puntajeActual = (int) $resultado[0]['puntaje_actual']; // <<< CORRECCIÓN: CAST A INT
-$idJugador = $resultado[0]['id_jugador'];
+        $idPregunta = $resultado[0]['id_pregunta'];
+        $puntajePregunta = (int) $resultado[0]['puntaje']; // <<< CORRECCIÓN: CAST A INT
+        $puntajeActual = (int) $resultado[0]['puntaje_actual']; // <<< CORRECCIÓN: CAST A INT
+        $idJugador = $resultado[0]['id_jugador'];
 
 
         // 2. Actualizar Partida
@@ -86,8 +86,20 @@ $idJugador = $resultado[0]['id_jugador'];
                         WHERE id_partida = $idPartida";
             $this->conexion->query($sqlAct);
 
+            // actualizamos la cantidad de veces acertadas
+            $actualizarCantidadContestadas = "UPDATE pregunta
+                                              SET cant_acertadas = COALESCE(cant_acertadas, 0) + 1
+                                              WHERE id_pregunta = $idPregunta";
+            $this->conexion->query($actualizarCantidadContestadas);
         } else {
             // Incorrecta: FIN DE PARTIDA.
+
+            // actualizamos la cantidad de veces acertadas
+            $actualizarCantidadErroneas = "UPDATE pregunta
+                                              SET cant_erroneas = COALESCE(cant_acertadas, 0) + 1
+                                              WHERE id_pregunta = $idPregunta";
+            $this->conexion->query($actualizarCantidadErroneas);
+
             $puntajeFinalObtenido = $puntajeActual; // El puntaje actual es el final (no suma la fallida)
 
             $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido
