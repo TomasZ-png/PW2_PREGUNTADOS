@@ -10,6 +10,7 @@ include_once(__DIR__.'/../vendor/mustache/src/Mustache/Autoloader.php');
 include_once(__DIR__.'/../controllers/PartidaController.php'); 
 include_once(__DIR__.'/../model/PartidaModel.php');
 include_once(__DIR__.'/../model/UsuarioModel.php');
+include_once(__DIR__.'/../model/PreguntaModel.php');
 
 class ConfigFactory{
     private $clases;
@@ -22,8 +23,8 @@ class ConfigFactory{
         $this->clases['Router'] = new Router($this, 'HomeController', 'mostrarHome');
         $this->clases['LoginController'] = new LoginController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['HomeController'] = new HomeController($this->clases['MyDatabase'], $this->renderer);
-        
-        $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']); 
+        $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']);
+        $this->clases['PreguntaModel'] = new PreguntaModel($this->clases['MyDatabase']);
 
         // ¡LÍNEA CORREGIDA! Pasamos los 3 argumentos que espera el PartidaController
         $this->clases['PartidaController'] = new PartidaController(

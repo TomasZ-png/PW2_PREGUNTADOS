@@ -68,8 +68,16 @@ class PartidaController
         $preguntasJugadas = $estado['preguntas_jugadas'];
         
         // Obtener la siguiente pregunta que no haya sido jugada
-        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas);
-        
+
+        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID']);
+
+        if($pregunta == null){
+            $this->finalizar(['estado_partida' => 'TERMINADO_POR_RECARGA', 'puntaje_final' => $estado['puntaje_final']]);
+            return;
+        }
+
+        $_SESSION['preguntaID'] = $pregunta['id_pregunta'];
+
         if (!$pregunta) {
             // Caso: El jugador ha respondido TODAS las preguntas de la BD (Fin por completar)
             $this->finalizar(['estado_partida' => 'TERMINADO', 'puntaje_final' => $estado['puntaje_final']]);
@@ -110,12 +118,16 @@ class PartidaController
 
         if ($esCorrecta) {
             $_SESSION['feedback'] = "¡Respuesta Correcta! Sigue sumando puntos.";
+            unset($_SESSION['preguntaID']);
             // Si es correcta, el modelo la marcó, se redirige a jugar para la siguiente
         } else {
             // Si es incorrecta, el modelo la marcó como 'PERDIDA' y guardó el puntaje.
             $_SESSION['feedback'] = "¡Respuesta Incorrecta! Fin de la partida. Puntaje obtenido: " . $estado['puntaje_final'] . " puntos.";
+            unset($_SESSION['preguntaID']);
         }
-        
+
+
+
         $this->redirectToRoute('PartidaController', 'jugar');
     }
 
@@ -129,10 +141,19 @@ class PartidaController
 
         // El puntaje máximo ya se actualizó en el PartidaModel si la partida terminó por fallo.
 
-        $mensaje = $estado['estado_partida'] === 'PERDIDA' ?
-                    "¡Juego Terminado! Fallaste una pregunta." :
-                    "¡Increíble! Has respondido todas las preguntas de la base de datos.";
-        
+//        $mensaje = $estado['estado_partida'] === 'PERDIDA' ?
+//                    "¡Juego Terminado! Fallaste una pregunta." :
+//                    "¡Increíble! Has respondido todas las preguntas de la base de datos.";
+
+        if ($estado['estado_partida'] === 'PERDIDA') {
+            $mensaje = "¡Juego Terminado! Fallaste una pregunta.";
+        } elseif ($estado['estado_partida'] === 'TERMINADO_POR_RECARGA') {
+            $mensaje = "Perdiste la partida por recargar la página o salir del juego.";
+        } else {
+            $mensaje = "¡Increíble! Has respondido todas las preguntas de la base de datos.";
+        }
+
+
         $puntajeMaximo = $this->usuarioModel->getPuntajeMaximo($id_usuario);
 
         $datos = [
@@ -142,10 +163,10 @@ class PartidaController
     'basePath' => $this->basePath
 ];
 
-
         // Limpiar sesión y renderizar
         unset($_SESSION['partidaId']);
         unset($_SESSION['feedback']);
+        unset($_SESSION['preguntaID']);
 
         $this->renderer->render("resultadoPartida", $datos);
     }

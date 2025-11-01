@@ -4,14 +4,14 @@
     <div style="color: green; font-weight: bold; margin-bottom: 10px;">{{feedback}}</div>
 {{/feedback}}
 
-<div class="pregunta-card">
+<div class="pregunta-card p-5 border border-3 rounded">
     <p class="categoria">Categoría: <strong>{{categoria}}</strong></p>
     <h3 class="pregunta">{{pregunta}}</h3>
     
     <form action="{{basePath}}PartidaController/responder" method="POST">
-        <div class="respuestas-grid">
+        <div class="respuestas-grid d-flex flex-column">
             {{#respuestas}}
-            <button type="submit" name="respuestaId" value="{{id_respuesta}}" class="btn btn-secondary">
+            <button type="submit" name="respuestaId" value="{{id_respuesta}}" class="btn btn-secondary mt-2">
                 {{respuesta}}
             </button>
             {{/respuestas}}
