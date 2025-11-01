@@ -28,8 +28,13 @@ class PartidaModel
     }
 
     // Obtiene una pregunta aleatoria que NO haya sido jugada en esta partida.
-    public function obtenerPreguntaAleatoria($preguntasJugadas)
+    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta)
     {
+
+        if(isset($idPregunta)){
+            return null;
+        }
+
         // $preguntasJugadas viene de la BD como 'id1,id2,id3,...'
         $preguntasExcluir = empty($preguntasJugadas) ? '0' : rtrim($preguntasJugadas, ',');
 
