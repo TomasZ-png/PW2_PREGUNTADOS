@@ -7,6 +7,22 @@
 </head>
 
 <body>
+<div class="animated-bg">
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
 <div id="form-container">
     <div id="left-container">
             <div id="logo-conteiner">
@@ -24,15 +40,21 @@
             <div id="inputs-conteiner">
                 <label for="name">Nombre completo</label>
                 <input type="text" name="name" id="name" placeholder="Nombre completo">
-                <label for="fecha_nac">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nac" id="fecha_nac" placeholder="Fecha de nacimiento">
-                <label for="sexo">Sexo</label>
-                <select name="sexo" id="sexo">
-                    <option value="" disabled selected>-- Seleccione su sexo --</option>
-                    <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
-                    <option value="no-aclarado">Prefiero no cargarlo</option>
-                </select>
+                <div class="flex">
+                    <div class="flex-column">
+                        <label for="fecha_nac">Fecha de nacimiento</label>
+                        <input type="date" name="fecha_nac" id="fecha_nac" placeholder="Fecha de nacimiento">
+                    </div>
+                    <div class="flex-column">
+                        <label for="sexo">Sexo</label>
+                        <select name="sexo" id="sexo">
+                            <option value="" disabled selected>-- Seleccione su sexo --</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="no-aclarado">Prefiero no cargarlo</option>
+                        </select>
+                    </div>
+                </div>
                 <label for="email">Correo</label>
                 <input type="text" name="email" id="email" placeholder="Email">
                 <label for="password">Contraseña</label>
