@@ -4,6 +4,7 @@ class PartidaModel
 {
     private $conexion;
     private $usuarioModel; // Usado para actualizar el puntaje máximo
+    private $preguntaModel;
 
     // El constructor debe inyectar la conexión y crear el modelo de usuario.
     public function __construct($conexion)
@@ -11,6 +12,7 @@ class PartidaModel
         $this->conexion = $conexion;
         // Asumiendo que UsuarioModel ya está incluido o disponible
         $this->usuarioModel = new UsuarioModel($this->conexion);
+        $this->preguntaModel = new PreguntaModel($this->conexion);
     }
 
     // Inicia una nueva partida
@@ -91,6 +93,9 @@ class PartidaModel
                                               SET cant_acertadas = COALESCE(cant_acertadas, 0) + 1
                                               WHERE id_pregunta = $idPregunta";
             $this->conexion->query($actualizarCantidadContestadas);
+
+            //actualizamos la dificultad de la pregunta
+            $this->preguntaModel->actualizarDificultadPregunta($idPregunta);
         } else {
             // Incorrecta: FIN DE PARTIDA.
 
@@ -99,6 +104,8 @@ class PartidaModel
                                               SET cant_erroneas = COALESCE(cant_acertadas, 0) + 1
                                               WHERE id_pregunta = $idPregunta";
             $this->conexion->query($actualizarCantidadErroneas);
+            $this->preguntaModel->actualizarDificultadPregunta($idPregunta);
+
 
             $puntajeFinalObtenido = $puntajeActual; // El puntaje actual es el final (no suma la fallida)
 
