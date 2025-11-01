@@ -1,55 +1,50 @@
-:root{
-    --bg-color-page: #73B4FE;
-    --bg-color-btn: #4548AD;
-    --bg-color-btn-hover: #191B6B;
 
-    font-size: 16px;
-
-    --size-sm: 0.5rem;
-    --size-m: 1rem;
-    --size-g: 1.5rem;
-    --size-xg: 2rem;
-    --size-xxg: 3.5rem;
-
-    --border-color: #ccc;
-    --bg-color-hover: #73B4FE;
-    --primary-color: #000;
-    --secondary-color: #ccc;
-}
 
 *{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
+
 a{
     color: black;
 }
 
+body{
+    background-color: #73B4FE;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+}
+
 #form-container{
     font-size: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
 }
 
-#left-container, #right-container{
-    display:  inline-block;
-    vertical-align: top;
-    height: 100vh;
-    width: 50%;
-}
-
-#right-container{
-    background-color: var(--bg-color-page);
-    background-image: url("/PROYECTO_PREGUNTADOS/public/img/ilustracion.png");
-    background-size: 70%;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
-form{
+.right-container{
+    background-color: #e3e3e3;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
     width: 400px;
-    margin: var(--size-xxg) auto;
-    font-size: var(--size-m);
+}
+
+.right-container form{
+    width: 100%;
+}
+
+.right-container h1{
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 20px 0;
 }
 
 #logo-conteiner{
@@ -57,62 +52,51 @@ form{
 }
 
 #logo-conteiner img{
-    width: 100px;
+    width: 300px;
 }
 
-#title-conteiner h1{
-    font-size: var(--size-xxg);
-    text-align: center;
-    padding: var(--size-g);
+.glass {
+    background: rgba(255, 255, 255, 0.45); /* color semi-transparente */
+    backdrop-filter: blur(10px);          /* difumina lo de atrás */
+    -webkit-backdrop-filter: blur(10px);  /* soporte Safari */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+#inputs-conteiner{
+    display: flex;
+    flex-direction: column;
+}
+
+#inputs-conteiner input, select{
+    padding: 10px;
+    color: black;
+    margin-bottom: 20px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
 }
 
 #inputs-conteiner label{
-    display: block;
-    padding: var(--size-sm) 0;
-    font-weight: bolder;
+    font-size: 1rem;
+    margin-bottom: 5px;
 }
 
-#inputs-conteiner input[type=text],
-#inputs-conteiner input[type=password]{
-    display: block;
-    padding: var(--size-sm);
-    outline: none;
-    width: 100%;
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
+.errores, p{
+    font-size: 1rem;
+    margin: 10px 0;
 }
 
-#inputs-conteiner input[type=text]:hover,
-#inputs-conteiner input[type=password]:hover{
-    border: solid 1px  var(--bg-color-hover);
-}
-
-#inputs-conteiner input[type=text]:focus,
-#inputs-conteiner input[type=password]:focus{
-    border: solid 1px  var(--bg-color-hover);
-}
-
-#buttons-conteiner {
-    text-align: center;
-    padding: var(--size-g) 0;
-}
-
-.btn{
-    border: 0;
-    border-radius: 4px;
-    background-color: var(--bg-color-btn);
-    color: white;
+#buttons-conteiner button{
+    background-color: #e3e3e3;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    padding: var(--size-sm);
     width: 100%;
+    padding: 10px;
 }
 
-.btn:hover{
-    background-color: var(--bg-color-btn-hover);
-}
-
-#registrar-conteiner{
-    color: var(--secondary-color);
-    padding: var(--size-sm) 0;
-    text-align: center;
+.errores{
+    color: red;
 }

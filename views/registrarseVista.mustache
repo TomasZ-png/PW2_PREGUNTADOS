@@ -9,16 +9,17 @@
 <body>
 <div id="form-container">
     <div id="left-container">
-
-        <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarse" method="post" enctype="multipart/form-data">
-
             <div id="logo-conteiner">
-                <img src="/PROYECTO_PREGUNTADOS/public/img/mascota_preguntados.png" width="400">
+                <img src="/PROYECTO_PREGUNTADOS/public/img/preguntame-logo.png" width="400">
             </div>
+    </div>
 
+    <div class="right-container glass">
             <div id="title-conteiner">
                 <h1>Bienvenido!</h1>
             </div>
+        <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarse" method="post" enctype="multipart/form-data">
+
 
             <div id="inputs-conteiner">
                 <label for="name">Nombre completo</label>
@@ -40,6 +41,10 @@
                 <input type="file" name="user_photo" id="foto-perfil">
             </div>
 
+            {{#errores}}
+                <p class="errores">{{.}}</p>
+            {{/errores}}
+
             <div id="buttons-conteiner">
                 <button type="submit" class="btn">Registrarse</button>
             </div>
@@ -50,13 +55,7 @@
         </form>
     </div>
 
-    <div id="right-container">
-        estoy en el right
-    </div>
 
-    {{#errores}}
-        <p class="errores">{{.}}</p>
-    {{/errores}}
 </div>
 </body>
 </html>
