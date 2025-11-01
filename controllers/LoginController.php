@@ -15,11 +15,11 @@ private $loginModel;
     }
 
     public function loginForm(){
-        $this->renderer->render('login');
+        $this->renderer->renderWoHaF('login');
     }
 
     public function registrarseForm(){
-        $this->renderer->render('registrarse');
+        $this->renderer->renderWoHaF('registrarse');
     }
 
     public function login(){
@@ -30,7 +30,7 @@ private $loginModel;
             $password = $_POST["password"];
 
             if(empty($correo) || empty($password)){
-                $this->renderer->render('login', ['passOrEmailEmpty' => '*Todos los campos son obligatorios']);
+                $this->renderer->renderWoHaF('login', ['passOrEmailEmpty' => '*Todos los campos son obligatorios']);
             } else {
                 $resultado = $this->loginModel->login($correo, $password);
 
@@ -42,7 +42,7 @@ private $loginModel;
                     header("Location: ". BASE_URL . "HomeController/mostrarHome");
                     exit();
                 } else {
-                    $this->renderer->render('login', ['passOrEmailWrong' => '*Correo o contraseña incorrectos']);
+                    $this->renderer->renderWoHaF('login', ['passOrEmailWrong' => '*Correo o contraseña incorrectos']);
                 }
             }
         } else {
@@ -70,7 +70,7 @@ private $loginModel;
                 $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
                 $this->redirectToHome();
             } else {
-                $this->renderer->render('registrarse', ['errores' => $resultado['errores']]);
+                $this->renderer->renderWoHaF('registrarse', ['errores' => $resultado['errores']]);
             }
         } else {
             $this->registrarseForm();
