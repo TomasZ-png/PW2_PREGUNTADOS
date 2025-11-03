@@ -1,0 +1,87 @@
+/* ===== FONDO ===== */
+.conteneodr-body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: radial-gradient(circle at 50% 50%, #001a6b, #000f3a);
+    color: #fff;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    padding-top: 150px;
+}
+
+/* ===== CONTENEDOR ===== */
+.resultado-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    text-align: center;
+    padding: 3rem 4rem;
+    max-width: 600px;
+    width: 90%;
+    z-index: 10;
+}
+
+/* ===== TITULO ===== */
+.resultado-card h1 {
+    font-size: 2rem;
+    color: #00e0ff;
+    margin-bottom: 1.5rem;
+}
+
+/* ===== PUNTAJES ===== */
+.puntajes {
+    margin-bottom: 2rem;
+}
+
+.puntajes p {
+    margin: 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.puntaje-final {
+    color: #00ffb3;
+    font-weight: bold;
+}
+
+.puntaje-maximo {
+    color: #ffc400;
+    font-weight: bold;
+}
+
+/* ===== BOTONES ===== */
+.btn {
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    margin: 0 0.5rem;
+}
+
+.btn-success {
+    background: linear-gradient(90deg, #00ffb3, #00e0ff);
+    color: #000;
+}
+
+.btn-success:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00ffb3;
+}
+
+.btn-warning {
+    background: #ffc400;
+    color: #000;
+}
+
+.btn-warning:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ffc400;
+}
+
+

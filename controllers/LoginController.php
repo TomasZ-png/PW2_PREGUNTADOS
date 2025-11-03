@@ -85,7 +85,7 @@ private $loginModel;
 
     private function redirectToHome(){
         if(isset($_SESSION['id_usuario'])){
-            header("Location: ". BASE_URL . "HomeController/mostrarHome");
+            header("Location: ". BASE_URL);
             exit();
         }
     }

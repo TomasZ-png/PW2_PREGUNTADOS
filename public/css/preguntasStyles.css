@@ -1,0 +1,91 @@
+/* ======= ESTILO GENERAL ======= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at center, #2a2aff, #12124b);
+    color: #fff;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 90px;
+}
+
+/* ======= TITULO PRINCIPAL ======= */
+h2 {
+    color: #00eaff;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* ======= FEEDBACK ======= */
+div[style*="color: green"] {
+    color: #00ff88 !important;
+    font-size: 1.1rem;
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* ======= TARJETA DE PREGUNTA ======= */
+.pregunta-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    padding: 40px;
+}
+
+/* ======= CATEGORÍA ======= */
+.categoria {
+    color: #ffea00;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* ======= PREGUNTA ======= */
+.pregunta {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+/* ======= BOTONES DE RESPUESTA ======= */
+.respuestas-grid button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 2px solid #00eaff;
+    border-radius: 12px;
+    padding: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.respuestas-grid button:hover {
+    background-color: #00eaff;
+    color: #0a0a23;
+    transform: scale(1.05);
+}
+
+/* ======= EFECTO DE APARICIÓN ======= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: 600px) {
+    .pregunta-card {
+        width: 90%;
+        padding: 25px;
+    }
+
+    .pregunta {
+        font-size: 1.2rem;
+    }
+}
