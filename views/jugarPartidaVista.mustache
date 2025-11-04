@@ -22,8 +22,6 @@
     <div class="barra" id="barra"></div>
 </div>
 
-
-
 {{#feedback}}
     <div style="color: green; font-weight: bold; margin-bottom: 10px;">{{feedback}}</div>
 {{/feedback}}
@@ -43,33 +41,39 @@
     </form>
 </div>
 <script>
-    let tiempoRestante = 10; // segundos
+    let tiempoRestante = 10;
+
+
     const cronometro = document.getElementById("cronometro");
     const barra = document.getElementById("barra");
 
-    // Actualiza cada segundo
     const intervalo = setInterval(() => {
+
         tiempoRestante--;
         cronometro.textContent = tiempoRestante;
 
-        // Calcular porcentaje restante
-        const porcentaje = ((tiempoRestante / 10) * 100) - 10;
+
+
+        const porcentaje = ((tiempoRestante / 10) * 100);
         barra.style.width = porcentaje + "%";
 
-        // Cambiar color cuando se acerca al final
         if (tiempoRestante <= 3) {
-            barra.style.backgroundColor = "#E53935"; // rojo
+            barra.style.backgroundColor = "#E53935";
         } else if (tiempoRestante <= 6) {
-            barra.style.backgroundColor = "#FFB300"; // amarillo
+            barra.style.backgroundColor = "#FFB300";
         }
 
-        // Cuando llega a 0, redirige
-        if (tiempoRestante <= 0) {
+        if (tiempoRestante <= -0.000000000000001) {
+
             clearInterval(intervalo);
-            window.location.href = "http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/responder/1";
+            const botones = document.querySelectorAll('button[name="respuestaId"]');
+
+            if (botones.length > 0) {
+                const randomIndex = Math.floor(Math.random() * botones.length);
+                botones[randomIndex].click();
+            }
         }
     }, 1000);
 </script>
-
 </body>
 </html>
