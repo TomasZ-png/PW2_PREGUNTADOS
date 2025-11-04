@@ -13,6 +13,78 @@
 </head>
 <h2>Partida Activa - Puntaje: {{puntaje}}</h2>
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Partida</title>
+    <style>
+        #cronometro {
+            font-size: 3em;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .barra-container {
+            width: 300px;
+            height: 20px;
+            border: 2px solid #555;
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .barra {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 100%;
+            transition: width 1s linear;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Partida en curso</h2>
+<div id="cronometro">10</div>
+
+<div class="barra-container">
+    <div class="barra" id="barra"></div>
+</div>
+
+<script>
+    let tiempoRestante = 10; // segundos
+    const cronometro = document.getElementById("cronometro");
+    const barra = document.getElementById("barra");
+
+    // Actualiza cada segundo
+    const intervalo = setInterval(() => {
+        tiempoRestante--;
+        cronometro.textContent = tiempoRestante;
+
+        // Calcular porcentaje restante
+        const porcentaje = (tiempoRestante / 10) * 100;
+        barra.style.width = porcentaje + "%";
+
+        // Cambiar color cuando se acerca al final
+        if (tiempoRestante <= 3) {
+            barra.style.backgroundColor = "#E53935"; // rojo
+        } else if (tiempoRestante <= 6) {
+            barra.style.backgroundColor = "#FFB300"; // amarillo
+        }
+
+        // Cuando llega a 0, redirige
+            if (tiempoRestante <= 0) {
+                clearInterval(intervalo);
+                window.location.href = "http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/responder/1";
+        }
+    }, 1000);
+</script>
+
+
+</body>
+</html>
+
+
 {{#feedback}}
     <div style="color: green; font-weight: bold; margin-bottom: 10px;">{{feedback}}</div>
 {{/feedback}}
