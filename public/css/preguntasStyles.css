@@ -72,6 +72,28 @@ div[style*="color: green"] {
     transform: scale(1.05);
 }
 
+#cronometro {
+    font-size: 3em;
+    font-weight: bold;
+    color: #222;
+}
+
+.barra-container {
+    width: 300px;
+    height: 20px;
+    border: 2px solid #555;
+    border-radius: 10px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+.barra {
+    height: 100%;
+    background-color: #4CAF50;
+    width: 100%;
+    transition: width 1s linear;
+}
+
 /* ======= EFECTO DE APARICIÓN ======= */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }

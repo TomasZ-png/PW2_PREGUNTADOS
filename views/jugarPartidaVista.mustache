@@ -13,6 +13,15 @@
 </head>
 <h2>Partida Activa - Puntaje: {{puntaje}}</h2>
 
+<body>
+
+<h2>Partida en curso</h2>
+<div id="cronometro">10</div>
+
+<div class="barra-container">
+    <div class="barra" id="barra"></div>
+</div>
+
 {{#feedback}}
     <div style="color: green; font-weight: bold; margin-bottom: 10px;">{{feedback}}</div>
 {{/feedback}}
@@ -21,7 +30,7 @@
     <p class="categoria">Categoría: <strong>{{categoria}}</strong></p>
     <h3 class="pregunta">{{pregunta}}</h3>
     
-    <form action="{{basePath}}PartidaController/responder" method="POST">
+    <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/responder" method="POST">
         <div class="respuestas-grid d-flex flex-column">
             {{#respuestas}}
             <button type="submit" name="respuestaId" value="{{id_respuesta}}" class="btn btn-secondary mt-2">
@@ -31,4 +40,38 @@
         </div>
     </form>
 </div>
+<script>
+    let tiempoRestante = 10;
+
+    const cronometro = document.getElementById("cronometro");
+    const barra = document.getElementById("barra");
+
+    const intervalo = setInterval(() => {
+
+        tiempoRestante--;
+        cronometro.textContent = tiempoRestante;
+
+
+        const porcentaje = ((tiempoRestante / 10) * 100);
+        barra.style.width = porcentaje + "%";
+
+        if (tiempoRestante <= 3) {
+            barra.style.backgroundColor = "#E53935";
+        } else if (tiempoRestante <= 6) {
+            barra.style.backgroundColor = "#FFB300";
+        }
+
+        if (tiempoRestante <= -0.000000000000001) {
+
+            clearInterval(intervalo);
+            const botones = document.querySelectorAll('button[name="respuestaId"]');
+
+            if (botones.length > 0) {
+                const randomIndex = Math.floor(Math.random() * botones.length);
+                botones[randomIndex].click();
+            }
+        }
+    }, 1000);
+</script>
+</body>
 </html>

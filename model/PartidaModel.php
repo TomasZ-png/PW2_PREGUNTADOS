@@ -28,8 +28,7 @@ class PartidaModel
     }
 
     // Obtiene una pregunta aleatoria que NO haya sido jugada en esta partida.
-    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta)
-    {
+    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta, $categoria){
 
         if(isset($idPregunta)){
             return null;
@@ -40,9 +39,9 @@ class PartidaModel
 
         // 1. Obtener una Pregunta aleatoria que no esté en la lista $preguntasExcluir
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
-        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje 
+        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje, p.categoria
                         FROM pregunta p
-                        WHERE p.id_pregunta NOT IN ($preguntasExcluir)
+                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria'
                         ORDER BY RAND() LIMIT 1";
         
         $pregunta = $this->conexion->query($sqlPregunta);
@@ -64,8 +63,25 @@ class PartidaModel
     }
     
     // Verifica si la respuesta es correcta y actualiza la partida.
-    public function verificarRespuesta($idPartida, $idRespuesta)
-    {
+    public function verificarRespuesta($idPartida, $idRespuesta, $partidaFinalizada){
+        if($partidaFinalizada){
+            $sqlVerif2 = "SELECT p.id_pregunta, pa.puntaje_final AS puntaje_actual
+                      FROM pregunta p
+                      JOIN partida pa ON pa.id_partida = $idPartida
+                      WHERE pa.id_partida = $idPartida";
+
+            $resultado2 = $this->conexion->query($sqlVerif2);
+
+            $puntajeActual2 = (int) $resultado2[0]['puntaje_actual']; // <<< CORRECCIÓN: CAST A INT
+
+            $puntajeFinalObtenido2 = $puntajeActual2;
+
+            $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA_POR_TIEMPO', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido2
+                        WHERE id_partida = $idPartida";
+            $this->conexion->query($sqlAct);
+            return false;
+        }
+
         // 1. Obtener datos de la pregunta, puntaje y si es correcta.
         $sqlVerif = "SELECT r.es_correcta, p.id_pregunta, p.puntaje, pa.puntaje_final AS puntaje_actual, pa.id_jugador
                       FROM respuesta r 
@@ -83,6 +99,14 @@ class PartidaModel
         $puntajeActual = (int) $resultado[0]['puntaje_actual']; // <<< CORRECCIÓN: CAST A INT
         $idJugador = $resultado[0]['id_jugador'];
 
+        $puntajeFinalObtenido = $puntajeActual; // El puntaje actual es el final (no suma la fallida)
+
+//        if($partidaFinalizada){
+//            $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA_POR_TIEMPO', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido
+//                        WHERE id_partida = $idPartida";
+//            $this->conexion->query($sqlAct);
+//            return false;
+//        }
 
         // 2. Actualizar Partida
         if ($esCorrecta) {
@@ -111,9 +135,6 @@ class PartidaModel
             $this->conexion->query($actualizarCantidadErroneas);
             $this->preguntaModel->actualizarDificultadPregunta($idPregunta);
 
-
-            $puntajeFinalObtenido = $puntajeActual; // El puntaje actual es el final (no suma la fallida)
-
             $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido
                         WHERE id_partida = $idPartida";
             $this->conexion->query($sqlAct);
@@ -121,7 +142,6 @@ class PartidaModel
             // Llama al método del UsuarioModel para verificar el puntaje máximo
             $this->usuarioModel->actualizarPuntajeMaximo($idJugador, $puntajeFinalObtenido);
         }
-
         return $esCorrecta;
     }
 
