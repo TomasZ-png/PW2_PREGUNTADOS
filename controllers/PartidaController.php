@@ -1,4 +1,5 @@
 <?php
+
 // Asegúrate de que las rutas son correctas
 include_once(__DIR__."/../model/UsuarioModel.php");
 include_once(__DIR__."/../model/PartidaModel.php");
@@ -39,27 +40,52 @@ class PartidaController
         }
 
         $idJugador = $_SESSION['id_usuario'];
-        
+
         $partidaId = $this->model->iniciarPartida($idJugador);
 
         $_SESSION['partidaId'] = $partidaId;
         
-        $this->redirectToRoute('PartidaController', 'jugar');
+        $this->redirectToRoute('PartidaController', 'mostrarRuleta');
+    }
+
+    public function mostrarRuleta(){
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categoria'])){
+            error_log('mostrarRuleta: categoria recibida -> ' . $_POST['categoria']);
+            $_SESSION['categoria'] = $_POST['categoria'];
+            $_SESSION['numeroDePreguntasPorCategoria'] = 0;
+            $this->redirectToRoute('PartidaController', 'jugar');
+            return;
+        }
+
+        $this->renderer->renderWoHaF("ruleta");
     }
 
     // Muestra la pregunta actual o finaliza el juego
-    public function jugar()
-    {
+    public function jugar(){
         if (!isset($_SESSION['partidaId'])) {
             $this->redirectToRoute('PartidaController', 'iniciar');
             return;
         }
+
+        if($_SESSION['numeroDePreguntasPorCategoria'] == 5){
+            $this->redirectToRoute('PartidaController', 'mostrarRuleta');
+        }
+
+        $categoria = $_SESSION['categoria'] ?? null;
+
+        if($categoria === null){
+            $this->redirectToRoute('PartidaController', 'mostrarRuleta');
+            return;
+        }
+
+        $_SESSION['tiempoPartidaIniciada'] = time();
         
         $partidaId = $_SESSION['partidaId'];
         $estado = $this->model->getEstadoPartida($partidaId);
         
         // El juego termina si el estado es PERDIDA
-        if ($estado['estado_partida'] === 'PERDIDA') {
+        if ($estado['estado_partida'] === 'PERDIDA' || $estado['estado_partida'] === 'PERDIDA_POR_TIEMPO') {
             $this->finalizar($estado);
             return;
         }
@@ -69,9 +95,9 @@ class PartidaController
         
         // Obtener la siguiente pregunta que no haya sido jugada
 
-        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID']);
+        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID'], $categoria);
 
-        if($pregunta == null){
+        if($pregunta === null){
             $this->finalizar(['estado_partida' => 'TERMINADO_POR_RECARGA', 'puntaje_final' => $estado['puntaje_final']]);
             return;
         }
@@ -85,19 +111,19 @@ class PartidaController
         }
 
         $datos = [
-    'pregunta' => $pregunta['pregunta'],
-    'categoria' => $pregunta['categoria'],
-    'puntaje' => $estado['puntaje_final'],
-    'respuestas' => $pregunta['respuestas'],
-    'feedback' => $_SESSION['feedback'] ?? null,
-    'basePath' => $this->basePath
-];
-
+            'pregunta' => $pregunta['pregunta'],
+            'categoria' => $pregunta['categoria'],
+            'puntaje' => $estado['puntaje_final'],
+            'respuestas' => $pregunta['respuestas'],
+            'feedback' => $_SESSION['feedback'] ?? null,
+            'basePath' => $this->basePath
+        ];
 
         // Limpiar feedback después de mostrarlo
         unset($_SESSION['feedback']);
 
         $this->renderer->render("jugarPartida", $datos);
+        $_SESSION['numeroDePreguntasPorCategoria']++;
     }
     
     // Procesa la respuesta del jugador
@@ -107,26 +133,40 @@ class PartidaController
             $this->redirectToRoute('PartidaController', 'jugar');
             return;
         }
-        
+
+        $tiempoTardado = $_SESSION['tiempoPartidaIniciada'];
+        $tiempoAhora = time();
+
         $partidaId = $_SESSION['partidaId'];
         $idRespuesta = $_POST['respuestaId'];
+        $tiempoFinalizado = false;
 
-        $esCorrecta = $this->model->verificarRespuesta($partidaId, $idRespuesta);
+        if(($tiempoAhora - $tiempoTardado) > 10){
+            $tiempoFinalizado = true;
+        }
+
+        $esCorrecta = $this->model->verificarRespuesta($partidaId, $idRespuesta, $tiempoFinalizado);
 
         // Obtener el estado después de la verificación para el feedback
         $estado = $this->model->getEstadoPartida($partidaId);
 
-        if ($esCorrecta) {
+        if ($esCorrecta && !$tiempoFinalizado) {
             $_SESSION['feedback'] = "¡Respuesta Correcta! Sigue sumando puntos.";
             unset($_SESSION['preguntaID']);
+            unset($_SESSION['tiempoPartidaIniciada']);
             // Si es correcta, el modelo la marcó, se redirige a jugar para la siguiente
+        } elseif($tiempoFinalizado) {
+            $_SESSION['feedback'] = "¡Tiempo agotado! Fin de la partida. Puntaje obtenido: " . $estado['puntaje_final'] . " puntos.";
+            unset($_SESSION['preguntaID']);
+
+            $estado = $this->model->getEstadoPartida($partidaId);
+            $this->finalizar($estado);
+            return;
         } else {
             // Si es incorrecta, el modelo la marcó como 'PERDIDA' y guardó el puntaje.
             $_SESSION['feedback'] = "¡Respuesta Incorrecta! Fin de la partida. Puntaje obtenido: " . $estado['puntaje_final'] . " puntos.";
             unset($_SESSION['preguntaID']);
         }
-
-
 
         $this->redirectToRoute('PartidaController', 'jugar');
     }
@@ -149,24 +189,26 @@ class PartidaController
             $mensaje = "¡Juego Terminado! Fallaste una pregunta.";
         } elseif ($estado['estado_partida'] === 'TERMINADO_POR_RECARGA') {
             $mensaje = "Perdiste la partida por recargar la página o salir del juego.";
-        } else {
+        } elseif($estado['estado_partida'] === 'PERDIDA_POR_TIEMPO') {
+            $mensaje = 'Perdiste!, el tiempo se agotó.';
+        }else {
             $mensaje = "¡Increíble! Has respondido todas las preguntas de la base de datos.";
         }
-
 
         $puntajeMaximo = $this->usuarioModel->getPuntajeMaximo($id_usuario);
 
         $datos = [
-    'mensaje' => $mensaje,
-    'puntaje' => $puntajeFinal,
-    'puntajeMaximo' => $puntajeMaximo,
-    'basePath' => $this->basePath
-];
+            'mensaje' => $mensaje,
+            'puntaje' => $puntajeFinal,
+            'puntajeMaximo' => $puntajeMaximo,
+            'basePath' => $this->basePath
+        ];
 
         // Limpiar sesión y renderizar
         unset($_SESSION['partidaId']);
         unset($_SESSION['feedback']);
         unset($_SESSION['preguntaID']);
+        unset($_SESSION['tiempoPartidaIniciada']);
 
         $this->renderer->render("resultadoPartida", $datos);
     }

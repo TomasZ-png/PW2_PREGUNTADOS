@@ -28,7 +28,7 @@ VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCD
 CREATE TABLE partida(
     id_partida INT AUTO_INCREMENT PRIMARY KEY,
     id_jugador INT NOT NULL,
-    estado_partida VARCHAR(10), -- 'ACTIVA' o 'PERDIDA'
+    estado_partida VARCHAR(25), -- 'ACTIVA' o 'PERDIDA, POR TIEMPO'
     puntaje_final INT DEFAULT 0,
     -- COLUMNA MODIFICADA: Guarda IDs de preguntas jugadas (separados por comas)
     preguntas_jugadas VARCHAR(1000) DEFAULT '',

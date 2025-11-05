@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/ruletaStyles.css">
+    <title>Ruleta - Preguntados</title>
+</head>
+<body >
+
+<div class="container">
+    <h1>🎯 Ruleta de Categorías</h1>
+
+    <div class="ruleta-wrapper">
+        <div class="indicador"></div>
+        <div class="ruleta-container">
+            <canvas id="ruleta" width="400" height="400"></canvas>
+            <button id="btnGirar" class="btn-girar">GIRAR</button>
+        </div>
+    </div>
+
+    <div class="resultado">
+        <h2 id="resultado">Presiona el botón para girar</h2>
+    </div>
+
+    <!-- Formulario oculto para enviar al backend -->
+    <form id="formCategoria" action="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/mostrarRuleta" method="POST" style="display: none;">
+        <input type="hidden" name="categoria" id="categoriaInput">
+    </form>
+</div>
+
+<script>
+    const canvas = document.getElementById('ruleta');
+    const ctx = canvas.getContext('2d');
+    const btnGirar = document.getElementById('btnGirar');
+    const resultado = document.getElementById('resultado');
+    const formCategoria = document.getElementById('formCategoria');
+    const categoriaInput = document.getElementById('categoriaInput');
+
+    // Categorías con colores
+    const categorias = [
+        { nombre: 'CIENCIA', color: '#fc8448' },
+        { nombre: 'GEOGRAFIA', color: '#73bd58' },
+        { nombre: 'DEPORTES', color: '#ba87d1' },
+        { nombre: 'ARTE', color: '#fb4551' },
+        { nombre: 'HISTORIA', color: '#3d9bd0' }
+    ];
+
+    const numSecciones = categorias.length;
+    const anguloSeccion = (2 * Math.PI) / numSecciones;
+    let anguloActual = 0;
+    let girando = false;
+
+    // Dibujar la ruleta
+    function dibujarRuleta() {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radio = canvas.width / 2 - 10;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < numSecciones; i++) {
+            const anguloInicio = anguloActual + (i * anguloSeccion);
+            const anguloFin = anguloInicio + anguloSeccion;
+
+            // Dibujar sección
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radio, anguloInicio, anguloFin);
+            ctx.lineTo(centerX, centerY);
+            ctx.fillStyle = categorias[i].color;
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Dibujar texto
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(anguloInicio + anguloSeccion / 2);
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText(categorias[i].nombre, radio / 1.5, 8);
+            ctx.restore();
+        }
+
+        // Círculo central
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
+        ctx.fillStyle = '#333';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+    }
+
+    // Obtener categoría seleccionada
+    function obtenerCategoriaSeleccionada() {
+        // El indicador apunta hacia arriba (270 grados o 3π/2)
+        const anguloIndicador = (3 * Math.PI / 2) - anguloActual;
+        let anguloNormalizado = anguloIndicador % (2 * Math.PI);
+        if (anguloNormalizado < 0) anguloNormalizado += 2 * Math.PI;
+
+        const indice = Math.floor(anguloNormalizado / anguloSeccion);
+        return categorias[indice].nombre;
+    }
+
+    // Girar la ruleta
+    function girarRuleta() {
+        if (girando) return;
+
+        girando = true;
+        btnGirar.disabled = true;
+        resultado.innerHTML = '🎲 Girando...';
+
+        // Generar rotación aleatoria (mínimo 10 vueltas completas + aleatorio entre 0 y 5 vueltas)
+        const vueltasMin = 10;
+        const vueltasExtra = Math.random() * 5;
+        const vueltasTotal = vueltasMin + vueltasExtra;
+
+        // Agregar un offset aleatorio adicional para mayor variabilidad
+        const offsetAleatorio = Math.random() * 2 * Math.PI;
+        const rotacionTotal = (vueltasTotal * 2 * Math.PI) + offsetAleatorio;
+
+        const duracion = 5000; // 5 segundos para más suspenso
+        const inicio = Date.now();
+        const anguloInicial = anguloActual;
+
+        function animar() {
+            const ahora = Date.now();
+            const transcurrido = ahora - inicio;
+            const progreso = Math.min(transcurrido / duracion, 1);
+
+            // Easing (desaceleración suave)
+            const easing = 1 - Math.pow(1 - progreso, 3);
+
+            anguloActual = anguloInicial + (rotacionTotal * easing);
+            dibujarRuleta();
+
+            if (progreso < 1) {
+                requestAnimationFrame(animar);
+            } else {
+                // Normalizar ángulo
+                anguloActual = anguloActual % (2 * Math.PI);
+                girando = false;
+                btnGirar.disabled = false;
+
+                const categoriaSeleccionada = obtenerCategoriaSeleccionada();
+                mostrarResultado(categoriaSeleccionada);
+            }
+        }
+
+        animar();
+    }
+
+    // Mostrar resultado y enviar al backend
+    function mostrarResultado(categoria) {
+        resultado.innerHTML = `Categoría: <span class="categoria-resultado">${categoria}</span>`;
+
+        // Esperar 2 segundos y enviar al backend
+        setTimeout(() => {
+            categoriaInput.value = categoria;
+            formCategoria.submit();
+        }, 2000);
+    }
+
+    // Event listener
+    btnGirar.addEventListener('click', girarRuleta);
+
+    // Dibujar ruleta inicial
+    dibujarRuleta();
+</script>
+</body>
+</html>
