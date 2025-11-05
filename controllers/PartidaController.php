@@ -53,6 +53,7 @@ class PartidaController
         if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categoria'])){
             error_log('mostrarRuleta: categoria recibida -> ' . $_POST['categoria']);
             $_SESSION['categoria'] = $_POST['categoria'];
+            $_SESSION['numeroDePreguntasPorCategoria'] = 0;
             $this->redirectToRoute('PartidaController', 'jugar');
             return;
         }
@@ -65,6 +66,10 @@ class PartidaController
         if (!isset($_SESSION['partidaId'])) {
             $this->redirectToRoute('PartidaController', 'iniciar');
             return;
+        }
+
+        if($_SESSION['numeroDePreguntasPorCategoria'] == 5){
+            $this->redirectToRoute('PartidaController', 'mostrarRuleta');
         }
 
         $categoria = $_SESSION['categoria'] ?? null;
@@ -118,6 +123,7 @@ class PartidaController
         unset($_SESSION['feedback']);
 
         $this->renderer->render("jugarPartida", $datos);
+        $_SESSION['numeroDePreguntasPorCategoria']++;
     }
     
     // Procesa la respuesta del jugador
