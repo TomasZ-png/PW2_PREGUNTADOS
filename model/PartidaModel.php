@@ -28,7 +28,7 @@ class PartidaModel
     }
 
     // Obtiene una pregunta aleatoria que NO haya sido jugada en esta partida.
-    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta){
+    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta, $categoria){
 
         if(isset($idPregunta)){
             return null;
@@ -39,9 +39,9 @@ class PartidaModel
 
         // 1. Obtener una Pregunta aleatoria que no esté en la lista $preguntasExcluir
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
-        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje 
+        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje, p.categoria
                         FROM pregunta p
-                        WHERE p.id_pregunta NOT IN ($preguntasExcluir)
+                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria'
                         ORDER BY RAND() LIMIT 1";
         
         $pregunta = $this->conexion->query($sqlPregunta);

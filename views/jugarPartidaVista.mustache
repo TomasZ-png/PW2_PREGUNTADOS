@@ -30,7 +30,7 @@
     <p class="categoria">Categoría: <strong>{{categoria}}</strong></p>
     <h3 class="pregunta">{{pregunta}}</h3>
     
-    <form action="{{basePath}}PartidaController/responder" method="POST">
+    <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/responder" method="POST">
         <div class="respuestas-grid d-flex flex-column">
             {{#respuestas}}
             <button type="submit" name="respuestaId" value="{{id_respuesta}}" class="btn btn-secondary mt-2">
@@ -43,7 +43,6 @@
 <script>
     let tiempoRestante = 10;
 
-
     const cronometro = document.getElementById("cronometro");
     const barra = document.getElementById("barra");
 
@@ -51,7 +50,6 @@
 
         tiempoRestante--;
         cronometro.textContent = tiempoRestante;
-
 
 
         const porcentaje = ((tiempoRestante / 10) * 100);

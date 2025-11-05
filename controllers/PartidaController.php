@@ -1,4 +1,5 @@
 <?php
+
 // Asegúrate de que las rutas son correctas
 include_once(__DIR__."/../model/UsuarioModel.php");
 include_once(__DIR__."/../model/PartidaModel.php");
@@ -39,18 +40,37 @@ class PartidaController
         }
 
         $idJugador = $_SESSION['id_usuario'];
-        
+
         $partidaId = $this->model->iniciarPartida($idJugador);
 
         $_SESSION['partidaId'] = $partidaId;
         
-        $this->redirectToRoute('PartidaController', 'jugar');
+        $this->redirectToRoute('PartidaController', 'mostrarRuleta');
+    }
+
+    public function mostrarRuleta(){
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categoria'])){
+            error_log('mostrarRuleta: categoria recibida -> ' . $_POST['categoria']);
+            $_SESSION['categoria'] = $_POST['categoria'];
+            $this->redirectToRoute('PartidaController', 'jugar');
+            return;
+        }
+
+        $this->renderer->renderWoHaF("ruleta");
     }
 
     // Muestra la pregunta actual o finaliza el juego
     public function jugar(){
         if (!isset($_SESSION['partidaId'])) {
             $this->redirectToRoute('PartidaController', 'iniciar');
+            return;
+        }
+
+        $categoria = $_SESSION['categoria'] ?? null;
+
+        if($categoria === null){
+            $this->redirectToRoute('PartidaController', 'mostrarRuleta');
             return;
         }
 
@@ -70,9 +90,9 @@ class PartidaController
         
         // Obtener la siguiente pregunta que no haya sido jugada
 
-        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID']);
+        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID'], $categoria);
 
-        if($pregunta == null){
+        if($pregunta === null){
             $this->finalizar(['estado_partida' => 'TERMINADO_POR_RECARGA', 'puntaje_final' => $estado['puntaje_final']]);
             return;
         }
