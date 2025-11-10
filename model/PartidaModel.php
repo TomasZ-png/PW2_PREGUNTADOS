@@ -11,6 +11,7 @@ class PartidaModel
     {
         $this->conexion = $conexion;
         // Asumiendo que UsuarioModel ya está incluido o disponible
+        $this->conexion->query("SET NAMES 'utf8mb4'");
         $this->usuarioModel = new UsuarioModel($this->conexion);
         $this->preguntaModel = new PreguntaModel($this->conexion);
     }
@@ -39,27 +40,51 @@ class PartidaModel
 
         // 1. Obtener una Pregunta aleatoria que no esté en la lista $preguntasExcluir
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
-        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje, p.categoria
+        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
                         FROM pregunta p
                         WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria'
                         ORDER BY RAND() LIMIT 1";
-        
-        $pregunta = $this->conexion->query($sqlPregunta);
 
-        if (empty($pregunta)) {
-            return null; // No hay más preguntas disponibles en toda la base de datos
+
+        // Ejecutamos la consulta
+        $resultado = $this->conexion->query($sqlPregunta);
+
+        // Si la conexión devuelve un array de filas
+        if (is_array($resultado) && !empty($resultado)) {
+            $fila = $resultado[0]; // Tomamos la primera fila
+            $idPregunta = $fila['id_pregunta'];
+
+            // Buscamos las respuestas asociadas
+            $sqlRespuestas = "
+            SELECT id_respuesta, respuesta, es_correcta
+            FROM respuesta
+            WHERE id_pregunta = $idPregunta
+            ORDER BY RAND();
+        ";
+            $respuestas = $this->conexion->query($sqlRespuestas);
+
+            // Asociamos las respuestas
+            $fila['respuestas'] = $respuestas;
+            return $fila;
         }
+    return null;
 
-        $idPregunta = $pregunta[0]['id_pregunta'];
-
-        // 2. Obtener las 4 respuestas para esa pregunta
-        $sqlRespuestas = "SELECT id_respuesta, respuesta, es_correcta FROM respuesta 
-                          WHERE id_pregunta = $idPregunta ORDER BY RAND()";
-        $respuestas = $this->conexion->query($sqlRespuestas);
-
-        $pregunta[0]['respuestas'] = $respuestas;
-        
-        return $pregunta[0];
+//        $pregunta = $this->conexion->query($sqlPregunta);
+//
+//        if (empty($pregunta)) {
+//            return null; // No hay más preguntas disponibles en toda la base de datos
+//        }
+//
+//        $idPregunta = $pregunta[0]['id_pregunta'];
+//
+//        // 2. Obtener las 4 respuestas para esa pregunta
+//        $sqlRespuestas = "SELECT id_respuesta, respuesta, es_correcta FROM respuesta
+//                          WHERE id_pregunta = $idPregunta ORDER BY RAND()";
+//        $respuestas = $this->conexion->query($sqlRespuestas);
+//
+//        $pregunta[0]['respuestas'] = $respuestas;
+//
+//        return $pregunta[0];
     }
     
     // Verifica si la respuesta es correcta y actualiza la partida.
