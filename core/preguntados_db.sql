@@ -323,3 +323,4 @@ INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) 
 INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('África', 45, 1);
 INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Asia', 45), ('Europa', 45), ('Oceanía', 45);
 
+-- preguntas
