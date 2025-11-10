@@ -67,6 +67,25 @@ CREATE TABLE respuesta(
 -- CATEGORIAS
 INSERT INTO categoria_pregunta (categoria) VALUES ('HISTORIA'), ('GEOGRAFIA'), ('ARTE'), ('CIENCIA'), ('DEPORTES');
 
+CREATE TABLE pregunta_sugerida (
+    id_pregunta_sugerida INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    pregunta VARCHAR(255) NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    fecha_sugerencia DATETIME DEFAULT NOW(),
+    estado VARCHAR(50) DEFAULT 'PENDIENTE', -- PENDIENTE / ACEPTADA / RECHAZADA
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+);
+
+CREATE TABLE respuesta_sugerida (
+    id_respuesta_sugerida INT AUTO_INCREMENT PRIMARY KEY,
+    id_pregunta_sugerida INT NOT NULL,
+    respuesta VARCHAR(255) NOT NULL,
+    es_correcta BOOLEAN DEFAULT 0,
+    FOREIGN KEY (id_pregunta_sugerida) REFERENCES pregunta_sugerida(id_pregunta_sugerida)
+);
+
+
 -- INSERTS DE PREGUNTAS (Tus inserts de pregunta son correctos)
 INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
         ('¿Quién fue el primer presidente de Argentina?', '-', 'HISTORIA', 5, CURDATE()), -- ID 1

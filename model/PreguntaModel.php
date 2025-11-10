@@ -31,4 +31,22 @@ class PreguntaModel
         }
     }
 
+
+    //guarrdar la pregunta sugerida
+    public function guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta) {
+    $sql = "INSERT INTO pregunta_sugerida (id_usuario, pregunta, categoria) 
+            VALUES ('$idUsuario', '$pregunta', '$categoria')";
+    $this->conexion->query($sql);
+
+    $idPreguntaSugerida = $this->conexion->insert_id;
+
+    foreach ($respuestas as $index => $textoRespuesta) {
+        $esCorrecta = ($index == $correcta) ? 1 : 0;
+        $sqlResp = "INSERT INTO respuesta_sugerida (id_pregunta_sugerida, respuesta, es_correcta)
+                    VALUES ('$idPreguntaSugerida', '$textoRespuesta', '$esCorrecta')";
+        $this->conexion->query($sqlResp);
+    }
+}
+
+
 }
