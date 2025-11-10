@@ -1,6 +1,7 @@
 <?php
 
 include_once(__DIR__."/../model/LoginModel.php");
+include_once(__DIR__."/../config/config.php");
 
 class LoginController{
 
@@ -15,11 +16,13 @@ private $loginModel;
     }
 
     public function loginForm(){
-        $this->renderer->renderWoHaF('login');
+        $this->renderer->renderWoHaF('login', [
+            "BASE_URL" => BASE_URL]);
     }
 
     public function registrarseForm(){
-        $this->renderer->renderWoHaF('registrarse');
+        $this->renderer->renderWoHaF('registrarse', [
+            "BASE_URL" => BASE_URL]);
     }
 
     public function login(){
@@ -30,19 +33,18 @@ private $loginModel;
             $password = $_POST["password"];
 
             if(empty($correo) || empty($password)){
-                $this->renderer->renderWoHaF('login', ['passOrEmailEmpty' => '*Todos los campos son obligatorios']);
+                $this->renderer->renderWoHaF('login', ['passOrEmailEmpty' => '*Todos los campos son obligatorios', "BASE_URL" => BASE_URL]);
             } else {
                 $resultado = $this->loginModel->login($correo, $password);
 
                 if($resultado){
                     $_SESSION["nombre_usuario"] = $resultado['nombre_completo'];
                     $_SESSION["id_usuario"] = $resultado['id_usuario'];
-                    $_SESSION["rol_usuario"] = $resultado['nombre_completo'];
-                    echo "Logueado Correctamente";
-                    header("Location: ". BASE_URL . "HomeController/mostrarHome");
+                    $_SESSION["rol_usuario"] = $resultado['rol'];
+                    header("Location: ". BASE_URL);
                     exit();
                 } else {
-                    $this->renderer->renderWoHaF('login', ['passOrEmailWrong' => '*Correo o contraseña incorrectos']);
+                    $this->renderer->renderWoHaF('login', ['passOrEmailWrong' => '*Correo o contraseña incorrectos', "BASE_URL" => BASE_URL]);
                 }
             }
         } else {
@@ -70,7 +72,7 @@ private $loginModel;
                 $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
                 $this->redirectToHome();
             } else {
-                $this->renderer->renderWoHaF('registrarse', ['errores' => $resultado['errores']]);
+                $this->renderer->renderWoHaF('registrarse', ['errores' => $resultado['errores'], "BASE_URL" => BASE_URL]);
             }
         } else {
             $this->registrarseForm();

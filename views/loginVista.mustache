@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/loginStyles.css">
+    <link rel="stylesheet" href="{{BASE_URL}}public/css/loginStyles.css">
 </head>
 <body>
 
@@ -26,7 +26,7 @@
     <div id="left-container">
 
             <div id="logo-conteiner">
-                <img src="/public/img/preguntame-logo.png" width="400" >
+                <img src="{{BASE_URL}}public/img/preguntame-logo.png" width="400" >
             </div>
     </div>
 
@@ -34,7 +34,7 @@
                 <h1>Bienvenido de nuevo!</h1>
 
 
-            <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/login" method="post">
+            <form action="{{BASE_URL}}LoginController/login" method="post">
                 <div id="inputs-conteiner">
                     <label for="email">Correo</label>
                     <input type="text" name="email" id="email" placeholder="Email">
@@ -53,7 +53,7 @@
                     <button type="submit" class="btn">Iniciar Sesion</button>
                 </div>
                 <div id="registrar-conteiner">
-                    <p>No tenes una cuenta? <a href="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarse">Registrate</a></p>
+                    <p>No tenes una cuenta? <a href="{{BASE_URL}}LoginController/registrarse">Registrate</a></p>
                 </div>
             </form>
         </div>

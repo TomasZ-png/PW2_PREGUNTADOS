@@ -3,13 +3,14 @@
 // Asegúrate de que las rutas son correctas
 include_once(__DIR__."/../model/UsuarioModel.php");
 include_once(__DIR__."/../model/PartidaModel.php");
+include_once(__DIR__."/../config/config.php");
 
 class PartidaController
 {
     private $model;
     private $usuarioModel;
     private $renderer;
-    private $basePath = '/PROYECTO_PREGUNTADOS/';
+    private $basePath = BASE_URL;
     private $conexion;
 
     // CONSTRUCTOR: Asegúrate de que tu ConfigFactory te inyecte estos 3:
@@ -33,6 +34,8 @@ class PartidaController
     }
 
     public function iniciar(){
+       $this->redirectToHome();
+
         // Previene iniciar una partida si ya hay una activa
         if (isset($_SESSION['partidaId'])) {
             $this->redirectToRoute('PartidaController', 'jugar');
@@ -58,11 +61,14 @@ class PartidaController
             return;
         }
 
-        $this->renderer->renderWoHaF("ruleta");
+        $this->renderer->renderWoHaF("ruleta", [
+            "BASE_URL" => BASE_URL]);
     }
 
     // Muestra la pregunta actual o finaliza el juego
     public function jugar(){
+        $this->redirectToHome();
+
         if (!isset($_SESSION['partidaId'])) {
             $this->redirectToRoute('PartidaController', 'iniciar');
             return;
@@ -122,7 +128,8 @@ class PartidaController
         // Limpiar feedback después de mostrarlo
         unset($_SESSION['feedback']);
 
-        $this->renderer->render("jugarPartida", $datos);
+        $this->renderer->render("jugarPartida", $datos, [
+            "BASE_URL" => BASE_URL]);
         $_SESSION['numeroDePreguntasPorCategoria']++;
     }
     
@@ -210,7 +217,8 @@ class PartidaController
         unset($_SESSION['preguntaID']);
         unset($_SESSION['tiempoPartidaIniciada']);
 
-        $this->renderer->render("resultadoPartida", $datos);
+        $this->renderer->render("resultadoPartida", $datos, [
+            "BASE_URL" => BASE_URL]);
     }
     
     // --- Utilidades ---
@@ -218,6 +226,13 @@ class PartidaController
     private function redirectToLogin(){
         if(!isset($_SESSION['id_usuario'])){
             $this->redirectToRoute('LoginController', 'login');
+        }
+    }
+
+    private function redirectToHome(){
+        if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'EDITOR') {
+            $_SESSION['feedback'] = "No tienes permiso para jugar partidas (rol: Editor).";
+            $this->redirectToRoute('HomeController', 'mostrarHome');
         }
     }
 

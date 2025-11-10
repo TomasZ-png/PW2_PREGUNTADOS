@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/ruletaStyles.css">
+    <link rel="stylesheet" href="{{BASE_URL}}public/css/ruletaStyles.css">
     <title>Ruleta - Preguntados</title>
 </head>
 <body >
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Formulario oculto para enviar al backend -->
-    <form id="formCategoria" action="http://localhost:8012/PROYECTO_PREGUNTADOS/PartidaController/mostrarRuleta" method="POST" style="display: none;">
+    <form id="formCategoria" action="{{BASE_URL}}PartidaController/mostrarRuleta" method="POST" style="display: none;">
         <input type="hidden" name="categoria" id="categoriaInput">
     </form>
 </div>
