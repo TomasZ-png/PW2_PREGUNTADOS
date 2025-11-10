@@ -24,6 +24,10 @@ VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO
 INSERT INTO usuario (nombre_completo, correo, password, rol)
 VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'JUGADOR');
 
+-- INSERTO UN EDITOR POR DEFECTO (ID: 3)
+INSERT INTO usuario (nombre_completo, correo, password, rol)
+VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'EDITOR');
+
 -- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(
     id_partida INT AUTO_INCREMENT PRIMARY KEY,
@@ -197,6 +201,7 @@ INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('China', 24), ('Corea del
 INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Michael Phelps', 25, 1);
 INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Usain Bolt', 25), ('Simone Biles', 25), ('Carl Lewis', 25);
 
+-- agrego 20 preguntas
 
 -- P26
 INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
