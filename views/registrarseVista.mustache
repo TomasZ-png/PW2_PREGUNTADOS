@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro</title>
-    <link rel="stylesheet" href="http://localhost:8012/PROYECTO_PREGUNTADOS/public/css/loginStyles.css">
+    <link rel="stylesheet" href="{{BASE_URL}}public/css/loginStyles.css">
 </head>
 
 <body>
@@ -26,7 +26,7 @@
 <div id="form-container">
     <div id="left-container">
             <div id="logo-conteiner">
-                <img src="/public/img/preguntame-logo.png" width="400">
+                <img src="{{BASE_URL}}public/img/preguntame-logo.png" width="400">
             </div>
     </div>
 
@@ -34,7 +34,7 @@
             <div id="title-conteiner">
                 <h1>Bienvenido!</h1>
             </div>
-        <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/LoginController/registrarse" method="post" enctype="multipart/form-data">
+        <form action="{{BASE_URL}}LoginController/registrarse" method="post" enctype="multipart/form-data">
 
 
             <div id="inputs-conteiner">

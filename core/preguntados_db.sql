@@ -24,6 +24,10 @@ VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO
 INSERT INTO usuario (nombre_completo, correo, password, rol)
 VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'JUGADOR');
 
+-- INSERTO UN EDITOR POR DEFECTO (ID: 3)
+INSERT INTO usuario (nombre_completo, correo, password, rol)
+VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'EDITOR');
+
 -- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(
     id_partida INT AUTO_INCREMENT PRIMARY KEY,
