@@ -220,6 +220,7 @@ INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('China', 24), ('Corea del
 INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES ('Michael Phelps', 25, 1);
 INSERT INTO respuesta (respuesta, id_pregunta) VALUES ('Usain Bolt', 25), ('Simone Biles', 25), ('Carl Lewis', 25);
 
+-- agrego 20 preguntas
 
 -- P26
 INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
