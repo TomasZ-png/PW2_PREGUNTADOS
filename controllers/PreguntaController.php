@@ -35,18 +35,18 @@ class PreguntaController {
     $respuestas = $_POST['respuestas'];
     $correcta = intval($_POST['correcta']);
 
-    // Validaciones
+    
     if (empty($pregunta) || empty($categoria) || count($respuestas) != 4) {
-        // 👇 redirección correcta
+        
         header("Location: " . BASE_URL . "PreguntaController/mostrarFormularioSugerir?error=campos");
         exit();
     }
 
-    // Guardar sugerencia
+    // guarda la sugerencia
     $this->preguntaModel->guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta);
 
-    // 👇 Redirige correctamente al HomeController
-    header("Location: " . BASE_URL . "HomeController/mostrarHome?success=sugerencia");
+    // redige al homeController
+    header("Location: " . BASE_URL );
     exit();
 }
 

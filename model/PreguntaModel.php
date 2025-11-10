@@ -33,20 +33,58 @@ class PreguntaModel
 
 
     //guarrdar la pregunta sugerida
-    public function guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta) {
-    $sql = "INSERT INTO pregunta_sugerida (id_usuario, pregunta, categoria) 
-            VALUES ('$idUsuario', '$pregunta', '$categoria')";
-    $this->conexion->query($sql);
+     public function guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta) {
+        $idPreguntaSugerida = null;
+    
+        $sql = "INSERT INTO pregunta_sugerida (id_usuario, pregunta, categoria) 
+                VALUES (?, ?, ?)";
+        
+        $stmt_pregunta = $this->conexion->prepare($sql);
 
-    $idPreguntaSugerida = $this->conexion->insert_id;
+        if (!$stmt_pregunta) {
+            error_log("Error preparando sentencia de pregunta: " . $this->conexion->error);
+            return false;
+        }
 
-    foreach ($respuestas as $index => $textoRespuesta) {
-        $esCorrecta = ($index == $correcta) ? 1 : 0;
+        $stmt_pregunta->bind_param("iss", $idUsuario, $pregunta, $categoria);
+
+        if (!$stmt_pregunta->execute()) {
+            error_log("Error ejecutando inserción de pregunta: " . $stmt_pregunta->error);
+            $stmt_pregunta->close();
+            return false;
+        }
+
+        $idPreguntaSugerida = $stmt_pregunta->insert_id;
+        $stmt_pregunta->close();
+
+        if ($idPreguntaSugerida === 0 || $idPreguntaSugerida === null) {
+             error_log("Error: El ID de la pregunta no fue generado. Abortando inserción de respuestas.");
+             return false;
+        }
+
         $sqlResp = "INSERT INTO respuesta_sugerida (id_pregunta_sugerida, respuesta, es_correcta)
-                    VALUES ('$idPreguntaSugerida', '$textoRespuesta', '$esCorrecta')";
-        $this->conexion->query($sqlResp);
+                    VALUES (?, ?, ?)";
+        
+        $stmt_respuesta = $this->conexion->prepare($sqlResp);
+
+        if (!$stmt_respuesta) {
+            error_log("Error preparando sentencia de respuesta: " . $this->conexion->error);
+            return false;
+        }
+
+        foreach ($respuestas as $index => $textoRespuesta) {
+            $esCorrecta = ($index == $correcta) ? 1 : 0;
+            
+            $stmt_respuesta->bind_param("isi", $idPreguntaSugerida, $textoRespuesta, $esCorrecta);
+            
+            if (!$stmt_respuesta->execute()) {
+                error_log("Error ejecutando inserción de respuesta sugerida para ID " . $idPreguntaSugerida . ": " . $stmt_respuesta->error);
+            }
+        }
+
+        $stmt_respuesta->close();
+        return true;
     }
-}
 
 
 }
