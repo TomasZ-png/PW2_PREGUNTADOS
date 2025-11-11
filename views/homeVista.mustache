@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Preguntados</title>
+    <link rel="stylesheet" href="{{BASE_URL}}public/css/homeStyles.css">
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+            crossorigin="anonymous">
+</head>
+
+<body>
+
+<!-- Fondo animado -->
+<div class="animated-bg">
+    {{! Blobs }}
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+
+    {{! Partículas }}
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+
+<!-- Contenedor principal -->
+<div id="home-container" class="glass">
+
+    <header>
+        <div id="logo-container">
+            <img src="{{BASE_URL}}public/img/preguntame-logo-solo.png" alt="Logo Preguntame">
+            <h1>Preguntame</h1>
+        </div>
+        {{#usuario}}
+            <h2>¡Bienvenido, {{nombre_completo}}!</h2>
+        {{/usuario}}
+        <p class="subtitle">¡Es hora de poner a prueba tu conocimiento!</p>
+    </header>
+
+    <main>
+
+
+
+            {{#esAdmin}}
+                <div class="buttons-container">
+                    <a href="{{BASE_URL}}PartidaController/iniciar" class="btn-jugar">🎮 Jugar</a>
+                    <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class="btn-jugar">💡 Sugerir Pregunta</a>
+                </div>
+            {{/esAdmin}}
+            {{#esJugador}}
+                <div class="buttons-container">
+            <a href="{{BASE_URL}}PartidaController/iniciar" class="btn-jugar">🎮 Jugar</a>
+            <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class="btn-jugar">💡 Sugerir Pregunta</a>
+        </div>
+            {{/esJugador}}
+
+        <section class="ranking-container">
+            <h2>🏆 Ranking Global</h2>
+            <ul>
+                {{#usuarios}}
+                    <li>
+                        <img src="{{BASE_URL}}public/img/user-img/{{foto_perfil}}" alt="Foto de {{nombre_completo}}">
+                        <span class="user-name">{{nombre_completo}}</span>
+                        <span class="score">{{puntaje_maximo_obtenido}} pts</span>
+                    </li>
+                {{/usuarios}}
+                {{^usuarios}}
+                    <li class="no-users">Aún no hay jugadores en el ranking.</li>
+                {{/usuarios}}
+            </ul>
+        </section>
+    </main>
+{{#error}}
+<div class="alert alert-danger" role="alert">{{error}}</div>
+{{/error}}
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</div>
+</body>
+</html>
