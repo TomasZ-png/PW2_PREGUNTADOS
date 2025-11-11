@@ -75,7 +75,7 @@ class PartidaController
     // Muestra la pregunta actual o finaliza el juego
     public function jugar(){
         $this->redirectToHome();
-
+        
         // 🚫 Bloquear si el usuario es editor
         if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'EDITOR') {
             $_SESSION['feedback'] = "No tienes permiso para jugar partidas (rol: Editor).";

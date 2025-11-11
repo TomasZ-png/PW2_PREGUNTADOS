@@ -41,6 +41,7 @@ private $loginModel;
                     $_SESSION["nombre_usuario"] = $resultado['nombre_completo'];
                     $_SESSION["id_usuario"] = $resultado['id_usuario'];
                     $_SESSION["rol"] = $resultado['rol'];
+
                     header("Location: ". BASE_URL);
                     exit();
                 } else {

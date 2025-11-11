@@ -46,7 +46,7 @@ class PreguntaController {
     $this->preguntaModel->guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta);
 
     // redige al homeController
-    header("Location: " . BASE_URL);
+    header("Location: " . BASE_URL );
     exit();
 }
 

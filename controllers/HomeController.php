@@ -52,6 +52,7 @@ class HomeController {
             $data['esAdmin'] = ($rol === 'ADMIN');
         }
 
+
         if (isset($_SESSION['mensaje_home'])) {
             $data['mensaje_home'] = $_SESSION['mensaje_home'];
             unset($_SESSION['mensaje_home']); // limpia mensaje después de mostrarlo
