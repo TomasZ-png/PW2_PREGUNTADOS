@@ -6,11 +6,8 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-<<<<<<< HEAD
+
     RewriteBase /PROYECTO_PREGUNTADOS
-=======
-    RewriteBase /PROYECTO_PREGUNTADOS/
->>>>>>> 533b665fed3254fa9741cb53ff327e5d5a9478c2
 
     RewriteCond %{REQUEST_URI} ^/PROYECTO_PREGUNTADOS/public/ [NC]
     RewriteRule .* - [L]
