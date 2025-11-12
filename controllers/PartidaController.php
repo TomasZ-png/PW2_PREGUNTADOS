@@ -222,6 +222,7 @@ class PartidaController
             'mensaje' => $mensaje,
             'puntaje' => $puntajeFinal,
             'puntajeMaximo' => $puntajeMaximo,
+            'id_partida' => $estado['id_partida'] ?? ($_SESSION['partidaId'] ?? null),
             'basePath' => $this->basePath
         ];
 

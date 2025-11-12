@@ -12,6 +12,9 @@ include_once(__DIR__.'/../controllers/PreguntaController.php');
 include_once(__DIR__.'/../model/PartidaModel.php');
 include_once(__DIR__.'/../model/UsuarioModel.php');
 include_once(__DIR__.'/../model/PreguntaModel.php');
+include_once(__DIR__.'/../controllers/ReportarPreguntaController.php');
+include_once(__DIR__.'/../model/ReportarPreguntaModel.php');
+
 
 
 class ConfigFactory{
@@ -26,8 +29,10 @@ class ConfigFactory{
         $this->clases['LoginController'] = new LoginController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['HomeController'] = new HomeController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['PreguntaController'] = new PreguntaController($this->clases['MyDatabase'], $this->renderer);
+        $this->clases['ReportarPreguntaController'] = new ReportarPreguntaController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']);
         $this->clases['PreguntaModel'] = new PreguntaModel($this->clases['MyDatabase']);
+        $this->clases['ReportarPreguntaModel'] = new ReportarPreguntaModel($this->clases['MyDatabase']);
 
         //Pasamos los 3 argumentos que espera el PartidaController
         $this->clases['PartidaController'] = new PartidaController(

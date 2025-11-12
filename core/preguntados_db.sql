@@ -89,6 +89,29 @@ CREATE TABLE respuesta_sugerida (
     FOREIGN KEY (id_pregunta_sugerida) REFERENCES pregunta_sugerida(id_pregunta_sugerida)
 );
 
+CREATE TABLE pregunta_reportada (
+    id_reporte INT AUTO_INCREMENT PRIMARY KEY,
+    id_pregunta INT NOT NULL,
+    id_usuario INT NOT NULL,
+    id_partida INT NOT NULL,
+    motivo TEXT NOT NULL,
+    fecha_reporte DATETIME DEFAULT NOW(),
+    estado VARCHAR(50) DEFAULT 'PENDIENTE', -- PENDIENTE / REVISADA
+    habilitada BOOLEAN DEFAULT 1,            -- 1 = habilitada, 0 = inhabilitada
+    FOREIGN KEY (id_pregunta) REFERENCES pregunta(id_pregunta),
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    FOREIGN KEY (id_partida) REFERENCES partida(id_partida)
+);
+
+CREATE TABLE respuesta_reportada (
+    id_respuesta_reportada INT AUTO_INCREMENT PRIMARY KEY,
+    id_reporte INT NOT NULL,
+    id_respuesta INT NOT NULL,
+    FOREIGN KEY (id_reporte) REFERENCES pregunta_reportada(id_reporte),
+    FOREIGN KEY (id_respuesta) REFERENCES respuesta(id_respuesta)
+);
+
+
 
 -- INSERTS DE PREGUNTAS (Tus inserts de pregunta son correctos)
 INSERT INTO pregunta (pregunta, dificultad, categoria, puntaje, fecha_creacion) VALUES
