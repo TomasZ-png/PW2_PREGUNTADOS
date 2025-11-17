@@ -28,6 +28,21 @@ class AdminController {
 
     }
 
+    public function dashboardGraficos(){
+        $this->validarAdmin();
+
+        $datosSexo = $this->crearGraficoSexo();
+        $datosPreguntasDificiles = $this->crearGraficoPreguntasDificilesYFaciles();
+        $puntajeGlobal = $this->crearGraficoPuntajeGlobal();
+
+        $this->renderer->render('adminGraficos', [
+            'datosSexo' => json_encode($datosSexo, JSON_UNESCAPED_UNICODE),
+            'datosPreguntas' => json_encode($datosPreguntasDificiles, JSON_UNESCAPED_UNICODE),
+            'puntajeGlobal' => json_encode($puntajeGlobal, JSON_UNESCAPED_UNICODE),
+            'BASE_URL' => BASE_URL
+        ]);
+    }
+
     public function crearGraficoSexo(){
         $this->validarAdmin();
         $resultados = $this->usuarioModel->contarPorSexo();
@@ -47,16 +62,17 @@ class AdminController {
             else $data['No aclarado'] = $total;
         }
 
-        $json = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        if ($json === false) {
-            $json = '{}';
-        }
-
-        $this->renderer->render('adminGraficoSexo', [
-            "datosJSON" => $json,
-            "BASE_URL" => BASE_URL
-        ]);
+        return $data;
+//        $json = json_encode($data, JSON_UNESCAPED_UNICODE);
+//
+//        if ($json === false) {
+//            $json = '{}';
+//        }
+//
+//        $this->renderer->render('adminGraficoSexo', [
+//            "datosJSON" => $json,
+//            "BASE_URL" => BASE_URL
+//        ]);
     }
 
     public function crearGraficoPreguntasDificilesYFaciles(){
@@ -67,13 +83,32 @@ class AdminController {
 
         foreach ($resultado as $row) {
             $data[] = [
-                $row['pregunta'],
-                (int)$row['acertadas'],
-                (int)$row['erroneas']
+                'pregunta' => $row['pregunta'],
+                'acertadas' => (int)$row['acertadas'],
+                'erroneas'  => (int)$row['erroneas']
             ];
         }
         return $data;
     }
+
+    public function crearGraficoPuntajeGlobal(){
+        $this->validarAdmin();
+
+        $resultado = $this->usuarioModel->obtenerTopUsuariosGlobales();
+
+        $data = [];
+        $data[] = ['Usuario', 'Puntaje'];  // cabecera correcta
+
+        foreach ($resultado as $row) {
+            $data[] = [
+                $row['nombre'],
+                (int)$row['puntaje']
+            ];
+        }
+
+        return $data;
+    }
+
 
 }
 
