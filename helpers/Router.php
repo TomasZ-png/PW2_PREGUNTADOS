@@ -38,7 +38,15 @@ class Router{
     }
 
     private function getMethodName($controllerName, $methodName){
-        return method_exists($controllerName, $methodName) ? $methodName : $this->defaultMethod;
+        if (method_exists($controllerName, $methodName)) {
+            return $methodName;
+        }
+
+        if (method_exists($controllerName, $this->defaultMethod)) {
+            return $this->defaultMethod;
+        }
+
+        throw new Exception("Ni '$methodName' ni el método por defecto existen en " . get_class($controllerName));
     }
 
 

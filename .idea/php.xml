@@ -24,6 +24,11 @@
       <path value="$PROJECT_DIR$/vendor/mustache/bin" />
       <path value="$PROJECT_DIR$/vendor/mustache/vendor" />
       <path value="$PROJECT_DIR$/vendor/amenadiel/jpgraph" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/bin" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/composer" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/mustache" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/src" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/test" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0">

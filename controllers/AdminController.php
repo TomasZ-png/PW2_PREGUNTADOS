@@ -4,64 +4,50 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class AdminController {
     private $conexion;
     private $renderer;
+    private $usuarioModel;
+    private $preguntaModel;
 
     public function __construct($conexion, $renderer){
         $this->conexion = $conexion;
         $this->renderer = $renderer;
+        $this->usuarioModel = new UsuarioModel($this->conexion);
+        $this->preguntaModel = new PreguntaModel($this->conexion);
     }
 
     private function validarAdmin() {
         // Verifica sesión activa
         if (!isset($_SESSION['id_usuario'])) {
-            header("Location: " . BASE_URL . "/LoginController/login");
+            header("Location: " . BASE_URL . "LoginController/login");
             exit;
         }
 
-        $usuarioModel = new UsuarioModel($this->conexion);
-        $usuario = $usuarioModel->obtenerUsuario($_SESSION['id_usuario']);
-
-        if (!$usuario || !isset($usuario['rol']) || strtoupper(trim($usuario['rol'])) !== 'ADMIN') {
-            header("Location: " . BASE_URL);
+        if(!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'ADMIN' ) {
+            header("Location: " . BASE_URL . "LoginController/login");
             exit;
         }
 
-        // ✅ Si llegamos hasta aquí, es admin, podemos continuar
     }
 
-    public function crearGraficoSexo() {
+    public function dashboardGraficos(){
         $this->validarAdmin();
 
-        $usuarioModel = new UsuarioModel($this->conexion);
-        $sexoCount = $usuarioModel->contarPorSexo();
+        $datosSexo = $this->crearGraficoSexo();
+        $datosPreguntasDificiles = $this->crearGraficoPreguntasDificilesYFaciles();
+        $puntajeGlobal = $this->crearGraficoPuntajeGlobal();
 
-        // Transformar a formato asociativo
-        $data = [
-            'Masculino' => 0,
-            'Femenino' => 0,
-            'No aclarado' => 0
-        ];
-
-        foreach ($sexoCount as $row) {
-            $sexo = strtolower(trim($row['sexo']));
-            if ($sexo === 'masculino') $data['Masculino'] = (int)$row['cantidad'];
-            elseif ($sexo === 'femenino') $data['Femenino'] = (int)$row['cantidad'];
-            else $data['No aclarado'] = (int)$row['cantidad'];
-        }
-
-        // Pasar los datos a la vista Mustache
-        echo $this->renderer->render('adminGraficoSexoVista', [
-            'sexoCount' => $data
+        $this->renderer->render('adminGraficos', [
+            'datosSexo' => json_encode($datosSexo, JSON_UNESCAPED_UNICODE),
+            'datosPreguntas' => json_encode($datosPreguntasDificiles, JSON_UNESCAPED_UNICODE),
+            'puntajeGlobal' => json_encode($puntajeGlobal, JSON_UNESCAPED_UNICODE),
+            'BASE_URL' => BASE_URL
         ]);
     }
 
-
-    public function generarGraficoSexoImg() {
+    public function crearGraficoSexo(){
         $this->validarAdmin();
+        $resultados = $this->usuarioModel->contarPorSexo();
 
-        $usuarioModel = new UsuarioModel($this->conexion);
-        $resultados = $usuarioModel->contarPorSexo();
-
-        $sexoCount = [
+        $data = [
             'Masculino' => 0,
             'Femenino' => 0,
             'No aclarado' => 0
@@ -70,31 +56,59 @@ class AdminController {
         foreach ($resultados as $row) {
             $sexo = strtolower(trim($row['sexo']));
             $total = (int)$row['total'];
-            if ($sexo === 'masculino')$sexoCount['Masculino'] = $total;
-            elseif ($sexo === 'femenino')  $sexoCount['Femenino'] = $total;
+
+            if ($sexo === 'masculino') $data['Masculino'] = $total;
+            elseif ($sexo === 'femenino') $data['Femenino'] = $total;
             else $data['No aclarado'] = $total;
         }
 
-        $data = array_values($sexoCount);
-        $labels = array_keys($sexoCount);
-
-        $graph = new PieGraph(1000, 800);
-        $graph->SetShadow();
-
-        $p1 = new PiePlot3D($data);
-        $p1->SetLegends($labels);
-        $p1->SetTheme('sand');
-
-        $graph->Add($p1);
-
-        header('Content-Type: image/png');
-        $graph->Stroke();
-        exit;
+        return $data;
+//        $json = json_encode($data, JSON_UNESCAPED_UNICODE);
+//
+//        if ($json === false) {
+//            $json = '{}';
+//        }
+//
+//        $this->renderer->render('adminGraficoSexo', [
+//            "datosJSON" => $json,
+//            "BASE_URL" => BASE_URL
+//        ]);
     }
-    public function vistaGraficos() {
-        $this->redirectToLogin();
-        $this->renderer->render("adminGraficoSexoVista");
+
+    public function crearGraficoPreguntasDificilesYFaciles(){
+        $this->validarAdmin();
+        $resultado = $this->preguntaModel->obtenerPreguntasDeFacilesADificiles();
+
+        $data = ['Pregunta', 'Acertadas', 'Erroneas'];
+
+        foreach ($resultado as $row) {
+            $data[] = [
+                'pregunta' => $row['pregunta'],
+                'acertadas' => (int)$row['acertadas'],
+                'erroneas'  => (int)$row['erroneas']
+            ];
+        }
+        return $data;
     }
+
+    public function crearGraficoPuntajeGlobal(){
+        $this->validarAdmin();
+
+        $resultado = $this->usuarioModel->obtenerTopUsuariosGlobales();
+
+        $data = [];
+        $data[] = ['Usuario', 'Puntaje'];  // cabecera correcta
+
+        foreach ($resultado as $row) {
+            $data[] = [
+                $row['nombre'],
+                (int)$row['puntaje']
+            ];
+        }
+
+        return $data;
+    }
+
 
 }
 

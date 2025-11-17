@@ -58,4 +58,14 @@ class UsuarioModel
         $stmt->bind_param("ii", $puntaje_final, $id_usuario);
         $stmt->execute();
     }
+
+    public function obtenerTopUsuariosGlobales(){
+        $stmt = $this->conexion->prepare('SELECT u.nombre_completo as nombre, u.puntaje_global as puntaje FROM usuario u
+                                                                WHERE u.puntaje_global IS NOT NULL AND u.puntaje_global > 0 
+                                            ORDER BY u.puntaje_global DESC LIMIT 10');
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+    return $usuarios;
+    }
 }
