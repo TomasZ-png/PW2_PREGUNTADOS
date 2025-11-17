@@ -56,28 +56,63 @@ private $loginModel;
     public function registrarse(){
         $this->redirectToHome();
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $nombre = $_POST["name"];
-            $fecha_nac = $_POST["fecha_nac"];
-            $sexo = isset($_POST["sexo"]) ? $_POST["sexo"] : "";
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-            $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : null;
+        $this->renderer->renderWoHaF('registrarse', ['BASE_URL' => BASE_URL]);
+//        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+//            $nombre = $_POST["name"];
+//            $fecha_nac = $_POST["fecha_nac"];
+//            $sexo = isset($_POST["sexo"]) ? $_POST["sexo"] : "";
+//            $email = $_POST["email"];
+//            $password = $_POST["password"];
+//            $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : null;
+//
+//            $resultado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
+//
+//            if($resultado['exito']){
+//                $usuario = $resultado['usuario'];
+//                $_SESSION["nombre_usuario"] = $usuario['nombre_completo'];
+//                $_SESSION["id_usuario"] = $usuario['id_usuario'];
+//                $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
+//                $this->redirectToHome();
+//            } else {
+//                $this->renderer->renderWoHaF('registrarse', ['errores' => $resultado['errores'], "BASE_URL" => BASE_URL]);
+//            }
+//        } else {
+//            $this->registrarseForm();
+//        }
+    }
 
-            $resultado = $this->loginModel->registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil);
 
-            if($resultado['exito']){
-                $usuario = $resultado['usuario'];
-                $_SESSION["nombre_usuario"] = $usuario['nombre_completo'];
-                $_SESSION["id_usuario"] = $usuario['id_usuario'];
-                $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
-                $this->redirectToHome();
-            } else {
-                $this->renderer->renderWoHaF('registrarse', ['errores' => $resultado['errores'], "BASE_URL" => BASE_URL]);
-            }
-        } else {
-            $this->registrarseForm();
+    public function registrarseConAjax(){
+        header('Content-type: application/json');
+
+        $nombre = $_POST["name"];
+        $fecha_nac = $_POST["fecha_nac"];
+        $sexo = $_POST["sexo"] ?? "";
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $foto_perfil = isset($_FILES["user_photo"]) ? $_FILES["user_photo"]["name"] : null;
+
+        $resultado = $this->loginModel->registrarse(
+            $nombre,
+            $fecha_nac,
+            $sexo,
+            $email,
+            $password,
+            $foto_perfil
+        );
+
+        if($resultado['exito']){
+            $usuario = $resultado['usuario'];
+            $_SESSION["nombre_usuario"] = $usuario['nombre_completo'];
+            $_SESSION["id_usuario"] = $usuario['id_usuario'];
+            $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
+
+            echo json_encode([
+                "exito" => true
+            ]);
+            return;
         }
+        echo json_encode($resultado);
     }
 
     public function logout(){

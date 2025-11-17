@@ -67,6 +67,9 @@
                 <p class="errores">{{.}}</p>
             {{/errores}}
 
+            <div id="errores-contenedor"></div>
+
+
             <div id="buttons-conteiner">
                 <button type="submit" class="btn">Registrarse</button>
             </div>
@@ -79,5 +82,40 @@
 
 
 </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const form = document.querySelector('form');
+            const errores_container = document.querySelector('#errores-contenedor');
+
+            form.addEventListener('submit', async(e)=>{
+                e.preventDefault();
+
+                const dataFormulario = new FormData(form);
+
+                const response = await fetch("{{BASE_URL}}LoginController/registrarseConAjax", {
+                    method: 'POST',
+                    body: dataFormulario
+                });
+
+                const resultado = await response.json();
+
+                errores_container.innerHTML = '';
+
+                if(!resultado.exito){
+                    resultado.errores.forEach(err => {
+                        const p = document.createElement('p');
+                        p.classList.add('errores');
+                        p.innerText = err;
+                        errores_container.appendChild(p);
+                    })
+                } else {
+                    window.location.href = "{{BASE_URL}}";
+                }
+
+            })
+
+        })
+    </script>
 </body>
 </html>
