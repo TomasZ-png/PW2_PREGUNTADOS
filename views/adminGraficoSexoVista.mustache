@@ -3,18 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Gráfico de Sexo - Admin</title>
-
 </head>
-<body class="p-4">
+<body>
+<h2>Gráfico de Usuarios por Sexo</h2>
 
-<h1>Distribución de Usuarios por Sexo</h1>
-<img src="{{BASE_URL}}AdminController/generarGraficoSexoImg" alt="Gráfico Sexo">
-<!-- Mostrar gráfico generado por JPGraph -->
-<img src="{{BASE_URL}}AdminController/generarGraficoSexoImg" alt="Gráfico de Sexo">
+<div>
+<div id="grafico_sexo" style="width: 900px; height: 500px;"></div>
+    <button id="btn-generar-pdf">Descargar PDF</button>
+</div>
 
-    <a href="{{BASE_URL}}AdminController/vistagarficos" class="btn btn-primary">Ver Gráficos</a>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
 
-<a href="{{BASE_URL}}" class="btn btn-secondary mt-3">🏠 Volver al Home</a>
+    const datosPHP = {{{datosJSON}}};
 
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(dibujar);
+
+    let chartGlobal;
+    let dataGlobal;
+    let opcionesGlobal;
+
+    function dibujar() {
+
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Sexo');
+        data.addColumn('number', 'Cantidad');
+
+        for (let key in datosPHP) {
+            data.addRow([key, datosPHP[key]]);
+        }
+
+        const opciones = {
+            title: 'Usuarios Registrados por Sexo',
+            pieHole: 0.4
+        };
+
+        const chart = new google.visualization.PieChart(
+                document.getElementById('grafico_sexo')
+        );
+
+        chart.draw(data, opciones);
+
+        chartGlobal = chart;
+        dataGlobal = data;
+        opcionesGlobal = opciones;
+    }
+
+    document.getElementById("btn-generar-pdf").addEventListener("click", () => {
+
+        if (!chartGlobal) {
+            alert("El gráfico todavía no terminó de cargarse.");
+            return;
+        }
+
+        google.visualization.events.addListener(chartGlobal, 'ready', () => {
+
+            const imgURI = chartGlobal.getImageURI();
+            const { jsPDF } = window.jspdf;
+
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            pdf.addImage(imgURI, 'PNG', 10, 10, 270, 180);
+            pdf.save('grafico_sexo.pdf');
+        });
+
+        chartGlobal.draw(dataGlobal, opcionesGlobal);
+    });
+
+</script>
 </body>
 </html>

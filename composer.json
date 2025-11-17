@@ -2,6 +2,7 @@
     "require": {
         "mustache/mustache": "^3.0",
       "ext-mysqli": "*",
-        "amenadiel/jpgraph": "*"
+        "amenadiel/jpgraph": "*",
+      "ext-json": "*"
     }
 }

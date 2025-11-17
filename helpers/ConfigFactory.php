@@ -9,10 +9,11 @@ include_once(__DIR__.'/../helpers/MustacheRenderer.php');
 include_once(__DIR__.'/../vendor/mustache/src/Mustache/Autoloader.php');
 include_once(__DIR__.'/../controllers/PartidaController.php'); 
 include_once(__DIR__.'/../controllers/PreguntaController.php'); 
+include_once(__DIR__.'/../controllers/AdminController.php');
 include_once(__DIR__.'/../model/PartidaModel.php');
 include_once(__DIR__.'/../model/UsuarioModel.php');
 include_once(__DIR__.'/../model/PreguntaModel.php');
-include_once(__DIR__.'/../vendor/amenadiel/jpgraph/src/config.inc.php');
+include_once(__DIR__.'/../public/vendor/amenadiel/jpgraph/src/graph.inc.php');
 
 
 class ConfigFactory{
@@ -29,7 +30,7 @@ class ConfigFactory{
         $this->clases['PreguntaController'] = new PreguntaController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']);
         $this->clases['PreguntaModel'] = new PreguntaModel($this->clases['MyDatabase']);
-
+        $this->clases['AdminController'] = new AdminController($this->clases['MyDatabase'], $this->renderer);
 
         //Pasamos los 3 argumentos que espera el PartidaController
         $this->clases['PartidaController'] = new PartidaController(
