@@ -41,6 +41,15 @@ class UsuarioModel
         $stmt->execute();
     }
 
+    public function contarPorSexo() {
+        $stmt = $this->conexion->prepare("SELECT sexo, COUNT(*) as total FROM usuario GROUP BY sexo");
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+        return $usuarios;
+    }
+
     // ... (Mantener listarUsuarios y sumarPuntosUsuario si los usas para puntaje_global)
     public function sumarPuntosUsuario($id_usuario, $puntaje_final){
         $stmt = $this->conexion->prepare("UPDATE usuario 
@@ -48,5 +57,15 @@ class UsuarioModel
                                            WHERE id_usuario = ?");
         $stmt->bind_param("ii", $puntaje_final, $id_usuario);
         $stmt->execute();
+    }
+
+    public function obtenerTopUsuariosGlobales(){
+        $stmt = $this->conexion->prepare('SELECT u.nombre_completo as nombre, u.puntaje_global as puntaje FROM usuario u
+                                                                WHERE u.puntaje_global IS NOT NULL AND u.puntaje_global > 0 
+                                            ORDER BY u.puntaje_global DESC LIMIT 10');
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+    return $usuarios;
     }
 }

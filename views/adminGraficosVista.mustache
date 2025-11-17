@@ -1,0 +1,153 @@
+<h2>Gráficos del Administrador</h2>
+
+<div style="margin-bottom:40px;">
+    <h3>Usuarios por Sexo</h3>
+    <div id="grafico_sexo" style="width:600px;height:400px"></div>
+    <button id="btn_pdf_sexo">Descargar PDF</button>
+</div>
+
+<div style="margin-top:40px;">
+    <h3>Puntaje Global de Usuarios</h3>
+    <div id="grafico_puntaje" style="width:800px;height:500px"></div>
+    <button id="btn_pdf_puntaje">Descargar PDF</button>
+</div>
+
+
+<div style="margin-top:40px;">
+    <h3>Preguntas más Difíciles</h3>
+    <div id="grafico_preguntas" style="width:800px;height:500px"></div>
+    <button id="btn_pdf_preguntas">Descargar PDF</button>
+</div>
+
+<!-- Google Charts -->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<!-- jsPDF para crear PDFs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+
+    // Recibir datos desde PHP ya codificados como JSON
+    const datosSexo = {{{datosSexo}}};
+    const datosPreguntas = {{{datosPreguntas}}};
+    const datosPuntaje = {{{puntajeGlobal}}};
+
+
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(dibujarGraficos);
+
+    let chartSexo, chartPreg, chartPuntaje;
+
+    function dibujarGraficos() {
+
+        // ------------------------------
+        // GRAFICO DE SEXO
+        // ------------------------------
+        let dataSexo = new google.visualization.DataTable();
+        dataSexo.addColumn('string', 'Sexo');
+        dataSexo.addColumn('number', 'Cantidad');
+
+        for (let key in datosSexo) {
+            dataSexo.addRow([key, datosSexo[key]]);
+        }
+
+        chartSexo = new google.visualization.PieChart(
+                document.getElementById('grafico_sexo')
+        );
+
+        chartSexo.draw(dataSexo, {
+            title: 'Usuarios Registrados por Sexo',
+            pieHole: 0.3
+        });
+
+
+        // ------------------------------
+        // GRAFICO DE PREGUNTAS
+        // ------------------------------
+        let dataPreg = new google.visualization.DataTable();
+        dataPreg.addColumn('string', 'Pregunta');
+        dataPreg.addColumn('number', 'Errores');
+        dataPreg.addColumn('number', 'Acertadas');
+
+        datosPreguntas.forEach(p => {
+            dataPreg.addRow([p.pregunta, p.erroneas, p.acertadas]);
+        });
+
+
+
+        console.log("datosPreguntas:", datosPreguntas);
+        chartPreg = new google.visualization.ColumnChart(
+                document.getElementById('grafico_preguntas')
+        );
+
+        chartPreg.draw(dataPreg, {
+            title: 'Top Preguntas Más Difíciles',
+            legend: { position: 'none' },
+            bar: { groupWidth: "70%" },
+            colors: ['#e74c3c', '#2ecc71']
+        });
+
+
+        // ------------------------------
+        // GRAFICO DE PUNTAJE GLOBAL
+        // ------------------------------
+        let dataPuntaje = new google.visualization.DataTable();
+        dataPuntaje.addColumn('string', 'Usuario');
+        dataPuntaje.addColumn('number', 'Puntaje');
+
+        for (let i = 1; i < datosPuntaje.length; i++) {
+            let fila = datosPuntaje[i];
+            dataPuntaje.addRow([fila[0], fila[1]]);
+        }
+
+
+        chartPuntaje = new google.visualization.ColumnChart(
+                document.getElementById('grafico_puntaje')
+        );
+
+        chartPuntaje.draw(dataPuntaje, {
+            title: 'Puntaje Global por Usuario',
+            legend: { position: 'none' },
+            colors: ['#2980b9'],
+            bar: { groupWidth: "70%" }
+        });
+
+    }
+
+
+
+    // ------------------------------
+    // DESCARGA DE PDF (SEXOS)
+    // ------------------------------
+    document.getElementById("btn_pdf_sexo").addEventListener("click", function () {
+        const imgURI = chartSexo.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.addImage(imgURI, 'PNG', 10, 10, 180, 120);
+        pdf.save("grafico_sexo.pdf");
+    });
+
+
+    // ------------------------------
+    // DESCARGA DE PDF (PREGUNTAS DIFÍCILES)
+    // ------------------------------
+    document.getElementById("btn_pdf_preguntas").addEventListener("click", function () {
+        const imgURI = chartPreg.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("l", "mm", "a4"); // horizontal para gráficos grandes
+
+        pdf.addImage(imgURI, 'PNG', 10, 10, 270, 150);
+        pdf.save("grafico_preguntas.pdf");
+    });
+
+    document.getElementById("btn_pdf_puntaje").addEventListener("click", function () {
+        const imgURI = chartPuntaje.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("l", "mm", "a4");
+
+        pdf.addImage(imgURI, 'PNG', 10, 10, 270, 150);
+        pdf.save("grafico_puntaje_global.pdf");
+    });
+
+</script>
