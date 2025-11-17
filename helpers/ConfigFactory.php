@@ -12,6 +12,7 @@ include_once(__DIR__.'/../controllers/PreguntaController.php');
 include_once(__DIR__.'/../model/PartidaModel.php');
 include_once(__DIR__.'/../model/UsuarioModel.php');
 include_once(__DIR__.'/../model/PreguntaModel.php');
+include_once(__DIR__.'/../vendor/amenadiel/jpgraph/src/config.inc.php');
 
 
 class ConfigFactory{
@@ -28,6 +29,7 @@ class ConfigFactory{
         $this->clases['PreguntaController'] = new PreguntaController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']);
         $this->clases['PreguntaModel'] = new PreguntaModel($this->clases['MyDatabase']);
+
 
         //Pasamos los 3 argumentos que espera el PartidaController
         $this->clases['PartidaController'] = new PartidaController(

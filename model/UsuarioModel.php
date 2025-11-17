@@ -41,6 +41,15 @@ class UsuarioModel
         $stmt->execute();
     }
 
+    public function contarPorSexo() {
+        $stmt = $this->conexion->prepare("SELECT sexo, COUNT(*) as total FROM usuario GROUP BY sexo");
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+        return $usuarios;
+    }
+
     // ... (Mantener listarUsuarios y sumarPuntosUsuario si los usas para puntaje_global)
     public function sumarPuntosUsuario($id_usuario, $puntaje_final){
         $stmt = $this->conexion->prepare("UPDATE usuario 
