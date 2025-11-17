@@ -14,6 +14,8 @@ include_once(__DIR__.'/../model/UsuarioModel.php');
 include_once(__DIR__.'/../model/PreguntaModel.php');
 include_once(__DIR__.'/../controllers/ReportarPreguntaController.php');
 include_once(__DIR__.'/../model/ReportarPreguntaModel.php');
+include_once(__DIR__.'/../controllers/EditorController.php');
+include_once(__DIR__.'/../model/EditorModel.php');
 
 
 
@@ -33,7 +35,11 @@ class ConfigFactory{
         $this->clases['PartidaModel'] = new PartidaModel($this->clases['MyDatabase']);
         $this->clases['PreguntaModel'] = new PreguntaModel($this->clases['MyDatabase']);
         $this->clases['ReportarPreguntaModel'] = new ReportarPreguntaModel($this->clases['MyDatabase']);
+        $this->clases['EditorController'] = new EditorController($this->clases['MyDatabase'], $this->renderer);
+        $this->clases['EditorModel'] = new EditorModel($this->clases['MyDatabase']);
 
+
+        
         //Pasamos los 3 argumentos que espera el PartidaController
         $this->clases['PartidaController'] = new PartidaController(
             $this->clases['PartidaModel'],

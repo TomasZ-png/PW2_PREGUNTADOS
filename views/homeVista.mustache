@@ -49,16 +49,24 @@
     </header>
 
     <main>
+            {{#esEditor}}
+            <div class="buttons-container">
+                <a href="{{BASE_URL}}EditorController/home" class="btn-jugar" style="background:#6f42c1;">
+                    🛠 Panel de Editor
+                </a>
+            </div>
+        {{/esEditor}}
+
             {{#esAdmin}}
                 <div class="buttons-container">
                     <a href="{{BASE_URL}}PartidaController/iniciar" class="btn-jugar">🎮 Jugar</a>
-                    <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class="btn-jugar">💡 Sugerir Pregunta</a>
+                    <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class=" btn btn-warning">💡 Sugerir Pregunta</a>
                 </div>
             {{/esAdmin}}
             {{#esJugador}}
                 <div class="buttons-container">
             <a href="{{BASE_URL}}PartidaController/iniciar" class="btn-jugar">🎮 Jugar</a>
-            <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class="btn-jugar">💡 Sugerir Pregunta</a>
+            <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class=" btn btn-warning">💡 Sugerir Pregunta</a>
         </div>
             {{/esJugador}}
 

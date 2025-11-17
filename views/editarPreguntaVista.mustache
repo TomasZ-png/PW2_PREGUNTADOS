@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Pregunta</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+{{> header}}
+
+<div class="container mt-4">
+
+    <h1 class="text-center">Editar Pregunta</h1>
+    <hr>
+
+    {{#pregunta}}
+    <form method="POST" action="{{BASE_URL}}EditorController/guardarEdicion">
+
+        <!-- ID oculto -->
+        <input type="hidden" name="id_pregunta" value="{{id_pregunta}}">
+
+        <!-- ============================== -->
+        <!--        TEXTO PREGUNTA          -->
+        <!-- ============================== -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Texto de la Pregunta</label>
+            <textarea class="form-control" name="pregunta" rows="3" required>{{pregunta}}</textarea>
+        </div>
+
+        <!-- ============================== -->
+        <!--          CATEGORÍA             -->
+        <!-- ============================== -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Categoría</label>
+            <select class="form-select" name="categoria" required>
+                <option {{#isCategoriaHISTORIA}}selected{{/isCategoriaHISTORIA}}>HISTORIA</option>
+                <option {{#isCategoriaDEPORTE}}selected{{/isCategoriaDEPORTE}}>DEPORTE</option>
+                <option {{#isCategoriaCIENCIA}}selected{{/isCategoriaCIENCIA}}>CIENCIA</option>
+                <option {{#isCategoriaGEOGRAFIA}}selected{{/isCategoriaGEOGRAFIA}}>GEOGRAFIA</option>
+                <option {{#isCategoriaARTE}}selected{{/isCategoriaARTE}}>ARTE</option>
+            </select>
+        </div>
+
+        <!-- ============================== -->
+        <!--            PUNTAJE             -->
+        <!-- ============================== -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Puntaje</label>
+            <input type="number" name="puntaje" class="form-control" value="{{puntaje}}" min="1" max="50" required>
+        </div>
+
+        <hr>
+
+        <h3>Respuestas</h3>
+
+        <!-- ============================== -->
+        <!--         LISTA RESPUESTAS       -->
+        <!-- ============================== -->
+        {{#respuestas}}
+        <div class="card p-3 mt-3">
+            <!-- ID respuesta -->
+            <input type="hidden" name="ids_respuesta[]" value="{{id_respuesta}}">
+
+            <div class="row align-items-center">
+
+                <!-- Texto respuesta -->
+                <div class="col-md-10">
+                    <label class="form-label fw-bold">Respuesta {{id_respuesta}}</label>
+                    <input type="text" 
+                           name="respuestas[{{id_respuesta}}]" 
+                           class="form-control" 
+                           value="{{respuesta}}" required>
+                </div>
+
+                <!-- Correcta -->
+                <div class="col-md-2 text-center">
+                    <label class="form-label fw-bold">Correcta</label>
+                    <input type="radio" 
+                           name="correcta" 
+                           value="{{id_respuesta}}" 
+                           {{#es_correcta}}checked{{/es_correcta}}>
+                </div>
+
+            </div>
+        </div>
+        {{/respuestas}}
+
+        <hr>
+
+        <!-- BOTONES -->
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-success btn-lg">💾 Guardar Cambios</button>
+
+            <a href="{{BASE_URL}}EditorController/home" class="btn btn-secondary btn-lg ms-3">
+                ⬅ Volver
+            </a>
+        </div>
+
+    </form>
+    {{/pregunta}}
+
+</div>
+
+{{> footer}}
+
+</body>
+</html>

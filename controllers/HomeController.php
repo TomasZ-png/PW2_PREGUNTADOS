@@ -39,7 +39,8 @@ class HomeController {
             'usuarios' => $usuarios,
             'usuario' => $usuario,
             'esJugador' => false,
-            'esAdmin' => false
+            'esAdmin' => false,
+            'esEditor' => false
         ];
 
         if ($usuario && isset($usuario['rol'])) {
@@ -51,6 +52,10 @@ class HomeController {
             $rol = strtoupper(trim($usuario['rol']));
             $data['esAdmin'] = ($rol === 'ADMIN');
         }
+        if ($usuario && isset($usuario['rol'])) {
+            $rol = strtoupper(trim($usuario['rol']));
+            $data['esEditor'] = ($rol === 'EDITOR');
+        }   
 
 
         if (isset($_SESSION['mensaje_home'])) {

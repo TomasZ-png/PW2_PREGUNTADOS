@@ -150,23 +150,32 @@ class PartidaModel
 
             //actualizamos la dificultad de la pregunta
             $this->preguntaModel->actualizarDificultadPregunta($idPregunta);
-        } else {
-            // Incorrecta: FIN DE PARTIDA.
+       } else {
+    // Incorrecta: FIN DE PARTIDA.
 
-            // actualizamos la cantidad de veces acertadas
-            $actualizarCantidadErroneas = "UPDATE pregunta
-                                              SET cant_erroneas = COALESCE(cant_acertadas, 0) + 1
-                                              WHERE id_pregunta = $idPregunta";
-            $this->conexion->query($actualizarCantidadErroneas);
-            $this->preguntaModel->actualizarDificultadPregunta($idPregunta);
+    // Registrar la pregunta jugada aunque haya sido INCORRECTA
+    $sqlAdd = "UPDATE partida 
+               SET preguntas_jugadas = CONCAT(preguntas_jugadas, '$idPregunta,') 
+               WHERE id_partida = $idPartida";
+    $this->conexion->query($sqlAdd);
 
-            $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido
-                        WHERE id_partida = $idPartida";
-            $this->conexion->query($sqlAct);
+    // actualizar cantidad de erróneas (OJO, acá tenías un bug también)
+    $actualizarCantidadErroneas = "UPDATE pregunta
+                                       SET cant_erroneas = COALESCE(cant_erroneas, 0) + 1
+                                       WHERE id_pregunta = $idPregunta";
+    $this->conexion->query($actualizarCantidadErroneas);
 
-            // Llama al método del UsuarioModel para verificar el puntaje máximo
-            $this->usuarioModel->actualizarPuntajeMaximo($idJugador, $puntajeFinalObtenido);
-        }
+    $this->preguntaModel->actualizarDificultadPregunta($idPregunta);
+
+    // cerrar partida
+    $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido
+               WHERE id_partida = $idPartida";
+    $this->conexion->query($sqlAct);
+
+    // actualizar puntaje máximo
+    $this->usuarioModel->actualizarPuntajeMaximo($idJugador, $puntajeFinalObtenido);
+}
+
         return $esCorrecta;
     }
 
