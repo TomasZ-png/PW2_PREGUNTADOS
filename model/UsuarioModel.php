@@ -49,4 +49,22 @@ class UsuarioModel
         $stmt->bind_param("ii", $puntaje_final, $id_usuario);
         $stmt->execute();
     }
+    public function guardarTokenVerificacion($email, $token)
+    {
+        $stmt = $this->conexion->prepare("UPDATE usuario u 
+                                          SET u.token_verificado = ? 
+                                          WHERE u.correo = ?");
+        $stmt->bind_param("ss", $token, $email);
+        $stmt->execute();
+    }
+
+    public function verificarCuenta($token){
+        $stmt = $this->conexion->prepare("UPDATE usuario u
+                                          SET u.verificado = true
+                                          WHERE u.token_verificado = ?");
+
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+    }
+
 }

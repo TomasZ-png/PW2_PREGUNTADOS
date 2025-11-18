@@ -8,11 +8,13 @@ class LoginController{
 private $conexion;
 private $renderer;
 private $loginModel;
+private $usuarioModel;
 
     public function __construct($conexion, $renderer){
         $this->conexion = $conexion;
         $this->renderer = $renderer;
         $this->loginModel = new LoginModel($this->conexion);
+        $this->usuarioModel = new UsuarioModel($this->conexion);
     }
 
     public function loginForm(){
@@ -107,12 +109,24 @@ private $loginModel;
             $_SESSION["id_usuario"] = $usuario['id_usuario'];
             $_SESSION["rol_usuario"] = $usuario['nombre_completo'];
 
+            $token = bin2hex(random_bytes(16));
+
+            $this->usuarioModel->guardarTokenVerificacion($email, $token);
+
+            $emailService = new \services\EmailService();
+            $emailService->enviarCorreoDeVerificacion($email, $token);
+
             echo json_encode([
                 "exito" => true
             ]);
             return;
         }
         echo json_encode($resultado);
+    }
+
+    public function verificarCuenta(){
+        $token = $_GET['token'];
+        $this->usuarioModel->verificarCuenta($token);
     }
 
     public function logout(){
