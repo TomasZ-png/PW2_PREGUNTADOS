@@ -63,16 +63,33 @@ class EditorModel {
         return $this->fetchAllSafe($result);
     }
 
-    /* ============================
-       SUGERIDAS
-       ============================ */
 
-   public function getPreguntasSugeridas() {
-    $sql = "SELECT * FROM pregunta_sugerida WHERE estado = 'PENDIENTE'";
-    $result = $this->conexion->query($sql);
-    return $this->fetchAllSafe($result);
+
+public function getPreguntasSugeridas() {
+$sql = "SELECT id_pregunta_sugerida, pregunta, categoria FROM pregunta_sugerida WHERE estado = 'PENDIENTE'";
+$result = $this->conexion->query($sql);
+$preguntas = $this->fetchAllSafe($result); 
+foreach ($preguntas as &$pregunta) {
+$id = $pregunta['id_pregunta_sugerida'];
+$sqlRespuestas = "SELECT respuesta, es_correcta FROM respuesta_sugerida WHERE id_pregunta_sugerida = ?";
+
+$stmt = $this->conexion->prepare($sqlRespuestas);
+
+$stmt->bind_param("i", $id); 
+ $stmt->execute();
+
+            $resultRespuestas = $stmt->get_result(); 
+
+$pregunta['respuestas'] = $this->fetchAllSafe($resultRespuestas); 
+
+            foreach ($pregunta['respuestas'] as &$respuesta) {
+                $respuesta['es_correcta'] = (bool)$respuesta['es_correcta'];
+            }
 }
 
+ return $preguntas;
+}
+    
 
 
     public function aceptarSugerencia($id) {
@@ -140,7 +157,7 @@ class EditorModel {
 
     public function getPreguntasReportadas() {
     $sql = "
-        SELECT r.id_reporte, p.pregunta, p.id_pregunta, COUNT(r.id_reporte) AS cantidad_reportes
+        SELECT r.id_reporte,r.motivo, p.pregunta, p.id_pregunta, COUNT(r.id_reporte) AS cantidad_reportes
         FROM pregunta_reportada r
         INNER JOIN pregunta p ON p.id_pregunta = r.id_pregunta
         WHERE r.estado = 'PENDIENTE'
@@ -154,20 +171,20 @@ class EditorModel {
 
 
 
-    public function aceptarReporte($idReporte) {
-        $idReporte = intval($idReporte);
-        // marcar reporte revisado 
-        $this->conexion->query("UPDATE pregunta_reportada SET estado='REVISADA' WHERE id_reporte=$idReporte");
+   public function marcarReporteRevisado($idReporte)
+{
+    $idReporte = intval($idReporte);
+    $this->conexion->query("UPDATE pregunta_reportada SET estado='REVISADA' WHERE id_reporte=$idReporte");
+}
+public function obtenerPreguntaDesdeReporte($idReporte)
+{
+    $idReporte = intval($idReporte);
+    $res = $this->conexion->query("SELECT id_pregunta FROM pregunta_reportada WHERE id_reporte=$idReporte");
+    $fila = $this->fetchAssocSafe($res);
 
-        // obtener id_pregunta a partir del id_reporte 
-        $fila = $this->fetchAssocSafe($this->conexion->query("SELECT id_pregunta FROM pregunta_reportada WHERE id_reporte=$idReporte"));
-        if (!empty($fila) && isset($fila['id_pregunta'])) {
-            $idPregunta = intval($fila['id_pregunta']);
-            // inhabilitar pregunta
-            $this->conexion->query("UPDATE pregunta SET categoria='INHABILITADA' WHERE id_pregunta=$idPregunta");
-        }
-        return true;
-    }
+    return $fila["id_pregunta"] ?? null;
+}
+
 
     public function rechazarReporte($idReporte) {
         $idReporte = intval($idReporte);
@@ -223,4 +240,73 @@ class EditorModel {
 
         return true;
     }
+
+
+   public function eliminarPregunta($id)
+{
+    // Borrar respuestas primero
+    $stmt1 = $this->conexion->prepare("DELETE FROM respuesta WHERE id_pregunta = ?");
+    $stmt1->bind_param("i", $id);
+    $stmt1->execute();
+
+    // Ahora borrar la pregunta
+    $stmt2 = $this->conexion->prepare("DELETE FROM pregunta WHERE id_pregunta = ?");
+    $stmt2->bind_param("i", $id);
+    return $stmt2->execute();
+}
+
+
+public function categoriaExiste($nombre)
+{
+    $query = $this->conexion->prepare("SELECT COUNT(*) AS total FROM categoria_pregunta WHERE categoria = ?");
+    $query->execute([$nombre]);
+    $row = $query->fetch();
+    return $row['total'] > 0;
+}
+
+public function crearCategoria($nombre)
+{
+    $query = $this->conexion->prepare("INSERT INTO categoria_pregunta (categoria) VALUES (?)");
+    return $query->execute([$nombre]);
+}
+
+
+public function crearPregunta($pregunta, $categoria, $puntaje, $respuestas, $correcta)
+{
+    // Insertar pregunta
+    $stmt = $this->conexion->prepare("
+        INSERT INTO pregunta (pregunta, categoria, dificultad, puntaje, cant_acertadas, cant_erroneas, fecha_creacion)
+        VALUES (?, ?, 'MEDIA', ?, 0, 0, CURDATE())
+    ");
+    $stmt->bind_param("ssi", $pregunta, $categoria, $puntaje);
+    $stmt->execute();
+    $idPregunta = $stmt->insert_id;
+    $stmt->close();
+
+    // Insertar respuestas
+    foreach ($respuestas as $index => $texto) {
+        $esCorrecta = ($index == $correcta) ? 1 : 0;
+
+        $stmt2 = $this->conexion->prepare("
+            INSERT INTO respuesta (respuesta, id_pregunta, es_correcta)
+            VALUES (?, ?, ?)
+        ");
+        $stmt2->bind_param("sii", $texto, $idPregunta, $esCorrecta);
+        $stmt2->execute();
+        $stmt2->close();
+    }
+
+    return true;
+}
+
+public function getCategorias()
+{
+    $sql = "SELECT categoria FROM categoria_pregunta ORDER BY categoria";
+    $result = $this->conexion->query($sql);
+    return $this->fetchAllSafe($result);
+}
+
+
+
+
 }

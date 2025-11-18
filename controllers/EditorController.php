@@ -137,20 +137,24 @@ class EditorController {
         exit();
     }
 
-    $categoria = $pregunta["categoria"];
+    // Traer categorías dinámicas desde la BD
+    $categorias = $this->editorModel->getCategorias();
 
-    $pregunta["isCategoriaHISTORIA"]  = ($categoria === "HISTORIA");
-    $pregunta["isCategoriaDEPORTE"]  = ($categoria === "DEPORTE");
-    $pregunta["isCategoriaCIENCIA"]  = ($categoria === "CIENCIA");
-    $pregunta["isCategoriaGEOGRAFIA"] = ($categoria === "GEOGRAFIA");
-    $pregunta["isCategoriaARTE"]     = ($categoria === "ARTE");
+    // Marcar cual está seleccionada
+    foreach ($categorias as &$cat) {
+        $cat["seleccionada"] = ($cat["categoria"] === $pregunta["categoria"]);
+    }
 
-    $this->renderer->render("editarPregunta", [
-        'pregunta'   => $pregunta,
-        'respuestas' => $pregunta['respuestas'],
-        'BASE_URL'   => BASE_URL
-    ]);
+    $data = [
+        "pregunta"   => $pregunta,
+        "respuestas" => $pregunta['respuestas'],
+        "categorias" => $categorias,
+        "BASE_URL"   => BASE_URL
+    ];
+
+    $this->renderer->render("editarPregunta", $data);
 }
+
 
 
     public function guardarEdicion() {
@@ -168,4 +172,130 @@ class EditorController {
         header("Location: " . BASE_URL . "EditorController/home?ok=editado");
         exit();
     }
+
+
+    public function eliminarPregunta()
+{
+    $this->verificarEditor();
+
+    $id = $_GET['id'] ?? null;
+
+    if (!$id) {
+        die("ID inválido");
+    }
+
+    $resultado = $this->editorModel->eliminarPregunta($id);
+
+    if ($resultado) {
+        header("Location: " . BASE_URL . "EditorController/home?ok=eliminada");
+        exit();
+    } else {
+        die("Error al eliminar la pregunta");
+    }
+}
+
+
+public function crearCategoria()
+{
+    $this->verificarEditor();
+
+    if ($_SESSION['rol'] !== 'EDITOR') {
+        die("No autorizado");
+    }
+
+    $categoria = trim($_POST['categoria'] ?? '');
+
+    if ($categoria === '') {
+        header("Location: ".BASE_URL."EditorController/home?error_categoria=1");
+        exit();
+    }
+
+    if ($this->editorModel->categoriaExiste($categoria)) {
+        header("Location: ".BASE_URL."EditorController/home?error_categoria=1");
+        exit();
+    }
+
+    $this->editorModel->crearCategoria($categoria);
+
+    header("Location: ".BASE_URL."EditorController/home?success_categoria=1");
+    exit();
+}
+
+
+public function crearPregunta()
+{
+    $this->verificarEditor();
+
+    // traer categorias desde el model
+    $categorias = $this->editorModel->getCategorias();
+
+    // generar 4 campos para respuestas
+    $respuestas = [
+        ["n" => 1, "index" => 0],
+        ["n" => 2, "index" => 1],
+        ["n" => 3, "index" => 2],
+        ["n" => 4, "index" => 3],
+    ];
+
+    $data = [
+        "categorias" => $categorias,
+        "respuestas" => $respuestas,
+        "BASE_URL" => BASE_URL
+    ];
+
+    $this->renderer->render("crearPregunta", $data);
+}
+
+
+
+public function guardarPregunta()
+{
+    $this->verificarEditor();
+
+    $pregunta = trim($_POST["pregunta"]);
+    $categoria = $_POST["categoria"];
+    $puntaje = intval($_POST["puntaje"]);
+    $respuestas = $_POST["respuestas"] ?? [];
+    $correcta = intval($_POST["correcta"]);
+
+    if ($pregunta === "" || count($respuestas) !== 4) {
+        header("Location: ".BASE_URL."EditorController/home?error_crearPregunta=1");
+        exit();
+    }
+
+    $this->editorModel->crearPregunta($pregunta, $categoria, $puntaje, $respuestas, $correcta);
+
+    header("Location: ".BASE_URL."EditorController/home?ok=preguntaCreada");
+    exit();
+}
+
+
+
+public function verPreguntaReportada()
+{
+    $this->verificarEditor();
+
+    $idReporte = $_GET["id"] ?? null;
+
+    if (!$idReporte) {
+        die("ID de reporte inválido");
+    }
+
+    // 1. Marcar reporte como revisado
+    $this->editorModel->marcarReporteRevisado($idReporte);
+
+    // 2. Obtener id de la pregunta
+    $idPregunta = $this->editorModel->obtenerPreguntaDesdeReporte($idReporte);
+
+    if (!$idPregunta) {
+        die("No se encontró la pregunta asociada al reporte");
+    }
+
+    // 3. Redirigir a editarPregunta
+    header("Location: ".BASE_URL."EditorController/editarPregunta?id=".$idPregunta);
+    exit();
+}
+
+
+
 }

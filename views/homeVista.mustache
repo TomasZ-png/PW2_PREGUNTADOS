@@ -95,5 +95,28 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 </div>
+
+{{#success}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let msg = "";
+
+        if ("{{success}}" === "reporte_enviado") {
+            msg = "✔ ¡Reporte enviado con éxito! Gracias por ayudarnos a mejorar el juego.";
+        }
+
+        if ("{{success}}" === "sugerencia_enviada") {
+            msg = "🎉 ¡Sugerencia enviada correctamente! El equipo de editores la revisará.";
+        }
+
+        if (msg !== "") {
+            setTimeout(() => {
+                alert(msg);
+            }, 200);
+        }
+    });
+</script>
+{{/success}}
+
 </body>
 </html>

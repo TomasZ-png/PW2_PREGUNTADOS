@@ -68,6 +68,10 @@ class HomeController {
             unset($_SESSION['error_home']);
         }
 
+        if (isset($_GET['success'])) {
+        $data['success'] = $_GET['success']; // 'reporte_enviado' o 'sugerencia_enviada'
+    }
+
         return $this->renderer->render("home", $data);
     }
 

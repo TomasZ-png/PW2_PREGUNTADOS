@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel del Editor</title>
-
-    <!-- BOOTSTRAP (si lo usás desde el header, podés quitar esto) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
 </head>
@@ -19,6 +17,11 @@
     <h4 class="text-center">Bienvenido {{usuario}}</h4>
 
     <hr>
+
+
+<a href="{{BASE_URL}}EditorController/crearPregunta" class="btn btn-primary mb-3">
+    ➕ Crear Pregunta Nueva
+</a>
 
     <h2>Preguntas</h2>
 
@@ -45,6 +48,12 @@
                        class="btn btn-warning btn-sm">
                        Editar
                     </a>
+
+                    <a href="{{BASE_URL}}EditorController/eliminarPregunta?id={{id_pregunta}}" 
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('¿Seguro que querés eliminar esta pregunta?');">
+                Eliminar
+            </a>
                 </td>
             </tr>
             {{/preguntas}}
@@ -53,9 +62,29 @@
 
     <hr>
 
-    <!-- ====================================== -->
-    <!--         PREGUNTAS SUGERIDAS             -->
-    <!-- ====================================== -->
+    <h2>Crear Nueva Categoría</h2>
+
+<form action="{{BASE_URL}}EditorController/crearCategoria" method="POST" class="card p-4 shadow-sm mt-3">
+    <div class="mb-3">
+        <label class="form-label">Nombre de la categoría</label>
+        <input type="text" name="categoria" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Agregar Categoría</button>
+</form>
+
+{{#success_categoria}}
+<script>
+    alert("✔ Categoría creada correctamente");
+</script>
+{{/success_categoria}}
+
+{{#error_categoria}}
+<script>
+    alert("❌ Error: Ya existe una categoría con ese nombre.");
+</script>
+{{/error_categoria}}
+
     <h2>Preguntas Sugeridas (Pendientes)</h2>
 
     <table class="table table-hover">
@@ -64,6 +93,7 @@
                 <th>ID</th>
                 <th>Pregunta</th>
                 <th>Categoría</th>
+                <th>Respuestas</th>
                 <th>Acción</th>
             </tr>
         </thead>
@@ -73,6 +103,16 @@
                 <td>{{id_pregunta_sugerida}}</td>
                 <td>{{pregunta}}</td>
                 <td>{{categoria}}</td>
+                  <td>
+                <ul class="mb-0">
+                    {{#respuestas}}
+                    <li>
+                        {{respuesta}}
+                        {{#es_correcta}}<strong class="text-success">(Correcta)</strong>{{/es_correcta}}
+                    </li>
+                    {{/respuestas}}
+                </ul>
+            </td>
 
                 <td>
                     <a class="btn btn-success btn-sm"
@@ -92,9 +132,6 @@
 
     <hr>
 
-    <!-- ====================================== -->
-    <!--        PREGUNTAS REPORTADAS            -->
-    <!-- ====================================== -->
     <h2>Preguntas Reportadas</h2>
 
     <table class="table table-dark table-bordered">
@@ -103,6 +140,7 @@
                 <th>ID Pregunta</th>
                 <th>Pregunta</th>
                 <th>Reportes</th>
+                <th>Comentario del Usuario</th>
                 <th>Acción</th>
             </tr>
         </thead>
@@ -113,12 +151,13 @@
                 <td>{{id_pregunta}}</td>
                 <td>{{pregunta}}</td>
                 <td>{{cantidad_reportes}}</td>
-
+                <td>{{motivo}}</td>
                 <td>
                     <a class="btn btn-success btn-sm"
-   href="{{BASE_URL}}EditorController/aceptarReporte?id={{id_reporte}}">
-   Aceptar
+   href="{{BASE_URL}}EditorController/verPreguntaReportada?id={{id_reporte}}">
+   Ver Pregunta Reportada
 </a>
+
 
 <a class="btn btn-danger btn-sm"
    href="{{BASE_URL}}EditorController/rechazarReporte?id={{id_reporte}}">
