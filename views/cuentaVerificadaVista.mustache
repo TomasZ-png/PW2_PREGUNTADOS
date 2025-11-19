@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cuenta Verificada - Preguntame</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-container {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease-out 0.3s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .icon-container svg {
+            width: 60px;
+            height: 60px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .checkmark {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawCheck 0.5s ease-out 0.6s forwards;
+        }
+
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-out 0.8s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        p {
+            color: #4a5568;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-out 1s both;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 2px solid #48bb78;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 25px 0;
+            animation: fadeIn 0.5s ease-out 1.2s both;
+        }
+
+        .success-message p {
+            margin: 0;
+            color: #22543d;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-login {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-out 1.4s both;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            top: -20px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 25px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            .icon-container {
+                width: 80px;
+                height: 80px;
+            }
+
+            .icon-container svg {
+                width: 45px;
+                height: 45px;
+            }
+
+            .btn-login {
+                padding: 12px 30px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="icon-container">
+        <svg viewBox="0 0 52 52">
+            <path class="checkmark" d="M14 27l7 7 16-16"/>
+        </svg>
+    </div>
+
+    <h2>¡Cuenta verificada exitosamente!</h2>
+
+    <div class="success-message">
+        <p>✓ Tu email ha sido confirmado correctamente</p>
+    </div>
+
+    <p>Ya podés iniciar sesión con tus datos y comenzar a usar Preguntame.</p>
+
+    <a href="{{BASE_URL}}LoginController/login" class="btn-login">Iniciar Sesión</a>
+</div>
+
+<script>
+    // Efecto confetti opcional
+    function createConfetti() {
+        const colors = ['#667eea', '#764ba2', '#48bb78', '#f6ad55', '#fc8181'];
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 3000);
+            }, i * 30);
+        }
+    }
+
+    // Lanzar confetti después de las animaciones principales
+    setTimeout(createConfetti, 800);
+</script>
+
+</body>
+</html>
