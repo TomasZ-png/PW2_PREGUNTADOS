@@ -88,5 +88,19 @@ class PreguntaModel
 
     
 
+    public function obtenerPreguntasDeFacilesADificiles(){
+        $stmt = $this->conexion->prepare("SELECT p.pregunta, SUM(p.cant_erroneas) AS erroneas, SUM(p.cant_acertadas) AS acertadas
+                                          FROM pregunta p
+                                          WHERE p.cant_acertadas IS NOT NULL OR p.cant_erroneas IS NOT NULL
+                                          GROUP BY p.pregunta
+                                          HAVING erroneas > acertadas
+                                          ORDER BY (erroneas) DESC
+                                          LIMIT 10;");
+
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
 
 }

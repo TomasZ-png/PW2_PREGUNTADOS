@@ -1,29 +1,31 @@
-<?php
+    <?php
 
-include_once(__DIR__ . "/../model/HomeModel.php");
-include_once(__DIR__ . "/../model/UsuarioModel.php");
+    include_once(__DIR__ . "/../model/HomeModel.php");
+    include_once(__DIR__ . "/../model/UsuarioModel.php");
 
-class HomeController {
+    class HomeController {
 
-    private $conexion;
-    private $renderer;
-    private $homeModel;
-    private $usuarioModel;
+        private $conexion;
+        private $renderer;
+        private $homeModel;
+        private $usuarioModel;
 
-    public function __construct($conexion, $renderer) {
-        $this->conexion = $conexion;
-        $this->renderer = $renderer;
-        $this->homeModel = new HomeModel($this->conexion);
-        $this->usuarioModel = new UsuarioModel($this->conexion);
-    }
-
-    // 🔹 Redirige a login si no hay sesión activa
-    private function redirectToLogin() {
-        if (!isset($_SESSION['id_usuario'])) {
-            header("Location: " . BASE_URL . "/LoginController/login");
-            exit();
+        public function __construct($conexion, $renderer) {
+            $this->conexion = $conexion;
+            $this->renderer = $renderer;
+            $this->homeModel = new HomeModel($this->conexion);
+            $this->usuarioModel = new UsuarioModel($this->conexion);
         }
-    }
+
+        // 🔹 Redirige a login si no hay sesión activa
+        private function redirectToLogin() {
+            if (!isset($_SESSION['id_usuario'])) {
+                header("Location: " . BASE_URL . "/LoginController/login");
+                exit();
+            }
+        }
+
+
 
     // 🔹 Muestra el Home
     public function mostrarHome() {
@@ -76,3 +78,4 @@ class HomeController {
     }
 
 }
+

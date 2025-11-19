@@ -7,7 +7,7 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    RewriteBase /PROYECTO_PREGUNTADOS
+    RewriteBase /PROYECTO_PREGUNTADOS/
 
     RewriteCond %{REQUEST_URI} ^/PROYECTO_PREGUNTADOS/public/ [NC]
     RewriteRule .* - [L]

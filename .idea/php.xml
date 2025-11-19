@@ -10,6 +10,11 @@
     <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
   </component>
+  <component name="PhpCodeSniffer">
+    <phpcs_settings>
+      <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="74905dff-e27e-4862-8ce4-e92f32675612" timeout="30000" />
+    </phpcs_settings>
+  </component>
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/mustache/test" />
@@ -18,13 +23,34 @@
       <path value="$PROJECT_DIR$/vendor/mustache/mustache" />
       <path value="$PROJECT_DIR$/vendor/mustache/bin" />
       <path value="$PROJECT_DIR$/vendor/mustache/vendor" />
+      <path value="$PROJECT_DIR$/vendor/amenadiel/jpgraph" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/bin" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/composer" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/mustache" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/src" />
+      <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/test" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="74905dff-e27e-4862-8ce4-e92f32675612" timeout="60000" />
+    </PhpStan_settings>
+  </component>
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
+    </phpunit_settings>
+  </component>
+  <component name="Psalm">
+    <Psalm_settings>
+      <psalm_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="74905dff-e27e-4862-8ce4-e92f32675612" timeout="60000" />
+    </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />
