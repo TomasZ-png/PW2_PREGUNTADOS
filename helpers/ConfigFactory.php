@@ -17,6 +17,8 @@ include_once(__DIR__.'/../controllers/ReportarPreguntaController.php');
 include_once(__DIR__.'/../model/ReportarPreguntaModel.php');
 include_once(__DIR__.'/../controllers/EditorController.php');
 include_once(__DIR__.'/../model/EditorModel.php');
+include_once(__DIR__.'/../controllers/PerfilController.php');
+include_once(__DIR__.'/../model/PerfilModel.php');
 
 include_once(__DIR__.'/../public/vendor/amenadiel/jpgraph/src/graph.inc.php');
 
@@ -40,7 +42,8 @@ class ConfigFactory{
         $this->clases['EditorController'] = new EditorController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['EditorModel'] = new EditorModel($this->clases['MyDatabase']);
         $this->clases['AdminController'] = new AdminController($this->clases['MyDatabase'], $this->renderer);
-
+        $this->clases['PerfilModel'] = new PerfilModel($this->clases['MyDatabase']);
+        $this->clases['PerfilController'] = new PerfilController($this->clases['MyDatabase'], $this->renderer);
 
         
         //Pasamos los 3 argumentos que espera el PartidaController

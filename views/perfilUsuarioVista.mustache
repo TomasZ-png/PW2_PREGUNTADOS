@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil 🌟</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+{{> header}}
+
+<div class="container mt-5">
+
+    <h1 class="text-center mb-4" style="margin-top: 100px;">👤 Perfil de Usuario</h1>
+
+    <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+        <div class="text-center">
+            <img src="{{BASE_URL}}public/img/user-img/{{perfil.foto_perfil}}"
+                 alt="Foto de perfil"
+                 class="rounded-circle mb-3"
+                 width="150" height="150">
+        </div>
+
+        <h3 class="text-center mb-3"> <strong>Usuario:</strong> {{perfil.nombre_completo}} </h3>
+
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>📧 Correo:</strong> {{perfil.correo}}
+            </li>
+
+            <li class="list-group-item">
+                <strong>🎂 Año de nacimiento:</strong> {{perfil.anio_nacimiento}}
+            </li>
+
+            <li class="list-group-item">
+                <strong>🧬 Sexo:</strong> {{perfil.sexo}}
+            </li>
+
+            <li class="list-group-item">
+                <strong>🏆 Puntaje Máximo:</strong>
+                <span class="text-success fw-bold">{{perfil.puntaje_maximo_obtenido}}</span>
+            </li>
+        </ul>
+
+        <div class="text-center mt-4">
+            <a href="{{BASE_URL}}" class="btn btn-primary">⬅ Volver al Home 🏠</a>
+        </div>
+    </div>
+
+</div>
+
+{{> footer}}
+
+</body>
+</html>
