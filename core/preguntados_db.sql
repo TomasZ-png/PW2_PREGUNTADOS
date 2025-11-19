@@ -19,15 +19,15 @@ CREATE TABLE usuario(
 );
 
 -- INSERTO DE USUARIO ADMIN (ID: 1)
-INSERT INTO usuario (nombre_completo, correo, password, rol)
-VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'ADMIN');
+INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
+VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'ADMIN', 1);
 -- INSERTO UN JUGADOR POR DEFECTO (ID: 2)
-INSERT INTO usuario (nombre_completo, correo, password, rol)
-VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'JUGADOR');
+INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
+VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'JUGADOR', 1);
 
 -- INSERTO UN EDITOR POR DEFECTO (ID: 3)
-INSERT INTO usuario (nombre_completo, correo, password, rol)
-VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'EDITOR');
+INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
+VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'EDITOR', 1);
 
 -- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(
