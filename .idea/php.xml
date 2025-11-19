@@ -29,6 +29,7 @@
       <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/mustache" />
       <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/src" />
       <path value="$PROJECT_DIR$/PW2_PREGUNTADOS/vendor/mustache/test" />
+      <path value="$PROJECT_DIR$/vendor/phpmailer/phpmailer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0">

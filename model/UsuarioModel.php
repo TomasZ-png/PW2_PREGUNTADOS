@@ -63,9 +63,28 @@ class UsuarioModel
         $stmt = $this->conexion->prepare('SELECT u.nombre_completo as nombre, u.puntaje_global as puntaje FROM usuario u
                                                                 WHERE u.puntaje_global IS NOT NULL AND u.puntaje_global > 0 
                                             ORDER BY u.puntaje_global DESC LIMIT 10');
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $usuarios = $result->fetch_all(MYSQLI_ASSOC);
-    return $usuarios;
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
+        return $usuarios;
     }
+
+    public function guardarTokenVerificacion($email, $token)
+    {
+        $stmt = $this->conexion->prepare("UPDATE usuario u 
+                                          SET u.token_verificado = ? 
+                                          WHERE u.correo = ?");
+        $stmt->bind_param("ss", $token, $email);
+        $stmt->execute();
+    }
+
+    public function verificarCuenta($token){
+        $stmt = $this->conexion->prepare("UPDATE usuario u
+                                          SET u.verificado = true
+                                          WHERE u.token_verificado = ?");
+
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+    }
+
 }
