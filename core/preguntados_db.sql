@@ -13,8 +13,9 @@ CREATE TABLE usuario(
     foto_perfil VARCHAR(255),
     rol VARCHAR(50) NOT NULL,
     puntaje_global INT,
-    -- NUEVO CAMPO PARA EL RANKING
-    puntaje_maximo_obtenido INT DEFAULT 0
+    puntaje_maximo_obtenido INT DEFAULT 0,
+    token_verificado VARCHAR(255),
+    verificado BOOLEAN DEFAULT FALSE
 );
 
 -- INSERTO DE USUARIO ADMIN (ID: 1)
