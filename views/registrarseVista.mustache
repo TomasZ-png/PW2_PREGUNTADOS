@@ -25,17 +25,16 @@
 
 <div id="form-container">
     <div id="left-container">
-            <div id="logo-conteiner">
-                <img src="{{BASE_URL}}public/img/preguntame-logo.png" width="400">
-            </div>
+        <div id="logo-conteiner">
+            <img src="{{BASE_URL}}public/img/preguntame-logo.png" width="400">
+        </div>
     </div>
 
     <div class="right-container glass">
-            <div id="title-conteiner">
-                <h1>Bienvenido!</h1>
-            </div>
+        <div id="title-conteiner">
+            <h1>Bienvenido!</h1>
+        </div>
         <form action="{{BASE_URL}}LoginController/registrarse" method="post" enctype="multipart/form-data">
-
 
             <div id="inputs-conteiner">
                 <label for="name">Nombre completo</label>
@@ -67,6 +66,9 @@
                 <p class="errores">{{.}}</p>
             {{/errores}}
 
+            <div id="errores-contenedor"></div>
+
+
             <div id="buttons-conteiner">
                 <button type="submit" class="btn">Registrarse</button>
             </div>
@@ -79,5 +81,58 @@
 
 
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=places"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const BASE_URL = "{{{BASE_URL}}}";
+        const form = document.querySelector('form');
+        const errores_container = document.querySelector('#errores-contenedor');
+
+        console.log(BASE_URL);
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Limpio errores anteriores SIEMPRE
+            errores_container.innerHTML = '';
+
+            const dataFormulario = new FormData(form);
+
+
+
+            try {
+                const res = await fetch(BASE_URL+"LoginController/registrarseConAjax", {
+                    method: 'POST',
+                    body: dataFormulario
+                });
+
+                const data = await res.json();
+
+                // Si hubo errores → los muestro
+                if (!data.exito) {
+                    if (data.errores && Array.isArray(data.errores)) {
+                        data.errores.forEach(err => {
+                            const p = document.createElement('p');
+                            p.classList.add('errores');
+                            p.innerText = err;
+                            errores_container.appendChild(p);
+                        });
+                    }
+                    return; // corto acá
+                }
+
+                // Si salió
+                window.location.href = BASE_URL+"LoginController/registroExitoso";
+
+            } catch (error) {
+                console.error("Error en fetch:", error);
+            }
+        });
+
+    });
+</script>
 </body>
 </html>
