@@ -85,20 +85,26 @@
             {{/esJugador}}
 
         <section class="ranking-container">
-            <h2>🏆 Ranking Global</h2>
-            <ul>
-                {{#usuarios}}
-                    <li>
-                        <img src="{{BASE_URL}}public/img/user-img/{{foto_perfil}}" alt="Foto de {{nombre_completo}}">
-                        <span class="user-name">{{nombre_completo}}</span>
-                        <span class="score">{{puntaje_maximo_obtenido}} pts</span>
-                    </li>
-                {{/usuarios}}
-                {{^usuarios}}
-                    <li class="no-users">Aún no hay jugadores en el ranking.</li>
-                {{/usuarios}}
-            </ul>
-        </section>
+    <h2>🏆 Ranking Global</h2>
+    <ul>
+        {{#usuarios}}
+            <li>
+                <img src="{{BASE_URL}}public/img/user-img/{{foto_perfil}}" alt="Foto de {{nombre_completo}}">
+
+                <a class="user-name btn btn-success"
+                   href="{{BASE_URL}}PerfilController/verPerfilPublico?id={{id_usuario}}">
+                    {{nombre_completo}}
+                </a>
+
+                <span class="score">{{puntaje_maximo_obtenido}} pts</span>
+            </li>
+        {{/usuarios}}
+
+        {{^usuarios}}
+            <li class="no-users">Aún no hay jugadores en el ranking.</li>
+        {{/usuarios}}
+    </ul>
+</section>
     </main>
 {{#error}}
 <div class="alert alert-danger" role="alert">{{error}}</div>
