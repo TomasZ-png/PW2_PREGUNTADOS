@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Registro</title>
     <link rel="stylesheet" href="{{BASE_URL}}public/css/loginStyles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -60,6 +62,17 @@
                 <input type="password" name="password" id="password" placeholder="Contraseña">
                 <label for="foto-perfil">Foto de perfil</label>
                 <input type="file" name="user_photo" id="foto-perfil">
+
+                <label>Direccion:</label>
+                <div id="map" style="height: 400px; border-radius: 10px; margin-top: 20px;"></div>
+
+                <input type="hidden" id="latitud" name="latitud">
+                <input type="hidden" id="longitud" name="longitud">
+                <input type="hidden" id="inputCiudad" name="ciudad">
+                <input type="hidden" id="inputPais" name="pais">
+                <span style="font-size: 20px">Ciudad: <span id="ciudad">—</span></span>
+                <span style="font-size: 20px">País: <span id="pais">—</span></span>
+
             </div>
 
             {{#errores}}
@@ -81,8 +94,6 @@
 
 
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=places"></script>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -132,6 +143,47 @@
             }
         });
 
+    });
+</script>
+<script>
+    let map = L.map('map').setView([-34.6037, -58.3816], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', function(e) {
+        let lat = e.latlng.lat;
+        let lng = e.latlng.lng;
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map);
+
+        document.getElementById("latitud").value = lat;
+        document.getElementById("longitud").value = lng;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    // Extraer ciudad y país
+                    const ciudad = data.address.city || data.address.town || data.address.village || "Desconocida";
+                    const pais = data.address.country || "Desconocido";
+
+                    // Mostrar en pantalla
+                    document.getElementById("ciudad").innerText = ciudad;
+                    document.getElementById("pais").innerText = pais;
+
+                    // Opcional: guardar oculto para enviarlo al backend
+                    document.getElementById("inputCiudad").value = ciudad;
+                    document.getElementById("inputPais").value = pais;
+                });
     });
 </script>
 </body>

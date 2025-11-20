@@ -24,12 +24,18 @@ class LoginModel
     }
 
 
-    public function registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil){
+    public function registrarse($nombre, $fecha_nac, $sexo, $email, $password, $foto_perfil, $latitud, $longitud, $pais, $ciudad){
         $errores = [];
 
         // == VALIDACIONES DE INPUT DELÑ FORM ==
 
-        if (empty($nombre) || empty($fecha_nac) || empty($sexo) || empty($email) || empty($password) || !isset($_FILES["user_photo"])) {
+        if (empty($nombre) ||
+            empty($fecha_nac) ||
+            empty($sexo) ||
+            empty($email) ||
+            empty($password) ||
+            !isset($_FILES["user_photo"])
+        ) {
             $errores[] = "*Todos los campos son obligatorios.";
         } else {
 
@@ -45,6 +51,10 @@ class LoginModel
             $regex_contrasenia = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w\-.]{8,}$/";
             if (!preg_match($regex_contrasenia, $password)) {
                 $errores[] = "*Contraseña no valida (Al menos 8 caracteres, una mayuscula y un numero)";
+            }
+
+            if(empty($latitud) || empty($longitud) || empty($pais) || empty($ciudad) || $ciudad === 'Desconocida' || $pais === 'Desconocido'){
+                $errores[] = "*Debes marcar un punto en el mapa para tu direccion. Acercalo lo suficiente para captar tu direccion.";
             }
 
             // obtenemos la fecha actual, ingresamos la fecha del form.
@@ -129,6 +139,16 @@ class LoginModel
                 $stmt3->bind_param("s", $email);
                 $stmt3->execute();
                 $usuario = $stmt3->get_result()->fetch_assoc();
+
+                // registramos la direccion del usuario
+
+                $id_usuario = $usuario['id_usuario'];
+
+                $stmtDir = $this->conexion->prepare("INSERT INTO direccion_usuario (id_usuario, latitud, longitud, pais, ciudad) 
+                                                 VALUES (?, ?, ?, ?, ?)");
+
+                $stmtDir->bind_param("iddss", $id_usuario, $latitud, $longitud, $pais, $ciudad);
+                $stmtDir->execute();
 
                 return ['exito' => true, 'usuario' => $usuario];
             } else {
