@@ -29,13 +29,9 @@ class PartidaModel
     }
 
     // Obtiene una pregunta aleatoria que NO haya sido jugada en esta partida.
-    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta, $categoria){
+    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta, $categoria, $nivelUsuario){
 
         if(isset($idPregunta)){
-//            $stmt = $this->conexion->prepare("UPDATE partida
-//                                              SET estado_partida = 'PERDIDA_POR_RECARGA'
-//                                              WHERE id_partida = ?");
-//            $stmt->bind_param("i", $idPregunta);
             return null;
         }
 
@@ -44,9 +40,14 @@ class PartidaModel
 
         // 1. Obtener una Pregunta aleatoria que no esté en la lista $preguntasExcluir
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
+
+        $dificultad_pregunta = $this->obtenerDificultad($nivelUsuario);
+
+
+
         $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
                         FROM pregunta p
-                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria'
+                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria' AND p.dificultad = '$dificultad_pregunta'
                         ORDER BY RAND() LIMIT 1";
 
 
@@ -74,6 +75,30 @@ class PartidaModel
     return null;
 
     }
+
+    public function obtenerDificultad($nivelUsuario){
+
+        switch($nivelUsuario){
+            case 'NOVATO':
+                $dificultad_pregunta = 'FACIL';
+                break;
+            case 'INTERMEDIO':
+                $dificultad_pregunta = 'MEDIO';
+                break;
+            case 'PROFESIONAL':
+                $dificultad_pregunta = 'DIFICIL';
+                break;
+            case 'ENTIDAD':
+                $dificultad_pregunta = 'IMPOSIBLE';
+                break;
+            default:
+                $dificultad_pregunta = 'NUEVA';
+                break;
+        }
+
+        return $dificultad_pregunta;
+    }
+
     
     // Verifica si la respuesta es correcta y actualiza la partida.
     public function verificarRespuesta($idPartida, $idRespuesta, $partidaFinalizada, $recarga = false){
@@ -167,10 +192,6 @@ class PartidaModel
     }
 
 
-    public function terminarPartidaPorRecarga(){
-
-    }
-
     // Obtiene el estado actual de la partida (MODIFICADO para lógica infinita)
     public function getEstadoPartida($idPartida)
     {
@@ -179,4 +200,7 @@ class PartidaModel
         $resultado = $this->conexion->query($sql);
         return $resultado[0] ?? null;
     }
+
+
+
 }

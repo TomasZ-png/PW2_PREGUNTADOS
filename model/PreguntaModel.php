@@ -21,16 +21,88 @@ class PreguntaModel
 
         $preguntaInteraccion = $pregunta['cant_acertadas'] + $pregunta['cant_erroneas'];
 
-        if($preguntaInteraccion >= 5){
-            if($pregunta["cant_acertadas"] > $pregunta["cant_erroneas"]){
-                $query = "UPDATE pregunta SET dificultad = 'FACIL' WHERE id_pregunta = $idPregunta";
-            } else {
-                $query = "UPDATE pregunta SET dificultad = 'DIFICIL' WHERE id_pregunta = $idPregunta";
-            }
-            $this->conexion->query($query);
-        }
+        $dificultad = $this->calcularDificultad($pregunta['cant_acertadas'], $pregunta['cant_erroneas'], $preguntaInteraccion);
+
+//        if($preguntaInteraccion <= 5){
+//            if($pregunta["cant_acertadas"] > $pregunta["cant_erroneas"]){
+//                $query = "UPDATE pregunta SET dificultad = 'FACIL' WHERE id_pregunta = $idPregunta";
+//            } else {
+//                $query = "UPDATE pregunta SET dificultad = 'MEDIO' WHERE id_pregunta = $idPregunta";
+//            }
+//        } elseif ($preguntaInteraccion >= 6 && $preguntaInteraccion <= 9) {
+//            if($pregunta["cant_acertadas"] > $pregunta["cant_erroneas"]){
+//                if(($pregunta["cant_acertadas"] - $pregunta["cant_erroneas"]) >= 5 ){
+//                    $query = "UPDATE pregunta SET dificultad = 'FACIL' WHERE id_pregunta = $idPregunta";
+//                } else {
+//                    $query = "UPDATE pregunta SET dificultad = 'MEDIO' WHERE id_pregunta = $idPregunta";
+//                }
+//            } else {
+//                if(($pregunta["cant_erroneas"] - $pregunta["cant_acertadas"]) >= 10 ){
+//                    $query = "UPDATE pregunta SET dificultad = 'DIFICIL' WHERE id_pregunta = $idPregunta";
+//                } else {
+//                    $query = "UPDATE pregunta SET dificultad = 'MEDIO' WHERE id_pregunta = $idPregunta";
+//                }
+//            }
+//        } elseif ($preguntaInteraccion >= 10 && $preguntaInteraccion <= 20) {
+//            if($pregunta["cant_acertadas"] > $pregunta["cant_erroneas"]){
+//                if(($pregunta["cant_acertadas"] - $pregunta["cant_erroneas"]) >= 5 ){
+//                    $query = "UPDATE pregunta SET dificultad = 'MEDIO' WHERE id_pregunta = $idPregunta";
+//                } else {
+//                    $query = "UPDATE pregunta SET dificultad = 'DIFICIL' WHERE id_pregunta = $idPregunta";
+//                }
+//            } else {
+//                if(($pregunta["cant_erroneas"] - $pregunta["cant_acertadas"]) >= 10 ){
+//                    $query = "UPDATE pregunta SET dificultad = 'DIFICIL' WHERE id_pregunta = $idPregunta";
+//                } else {
+//                    $query = "UPDATE pregunta SET dificultad = 'MEDIO' WHERE id_pregunta = $idPregunta";
+//                }
+//            }
+//        } else {
+//            if($pregunta["cant_acertadas"] > $pregunta["cant_erroneas"]){
+//                if(($pregunta["cant_acertadas"] - $pregunta["cant_erroneas"]) >= 5 ){
+//                    $query = "UPDATE pregunta SET dificultad = 'MEDIO' WHERE id_pregunta = $idPregunta";
+//                } else {
+//                    $query = "UPDATE pregunta SET dificultad = 'DIFICIL' WHERE id_pregunta = $idPregunta";
+//                }
+//            } else {
+//                if(($pregunta["cant_erroneas"] - $pregunta["cant_acertadas"]) >= 20 ){
+//                    $query = "UPDATE pregunta SET dificultad = 'IMPOSIBLE' WHERE id_pregunta = $idPregunta";
+//                } else {
+//                    $query = "UPDATE pregunta SET dificultad = 'DIFICIL' WHERE id_pregunta = $idPregunta";
+//                }
+//            }
+//        }
+        $query = "UPDATE pregunta SET dificultad = '$dificultad' WHERE id_pregunta = $idPregunta";
+
+        $this->conexion->query($query);
     }
 
+
+
+    public function calcularDificultad($aciertos, $errores, $interacciones){
+        $diferencia = abs($aciertos - $errores);
+        $masAciertos = $aciertos > $errores;
+
+        If($interacciones >= 5 && $interacciones <= 9){
+            if($masAciertos){
+                return $diferencia >= 5 ? 'FACIL' : 'MEDIO';
+            } else {
+                return $diferencia >= 5 ? 'DIFICIL' : 'MEDIO';
+            }
+        } elseif($interacciones >= 10 && $interacciones <= 20){
+            if($masAciertos){
+                return $diferencia >= 5 ? 'MEDIO' : 'DIFICIL';
+            } else {
+                return $diferencia >= 10 ? 'DIFICIL' : 'MEDIO';
+            }
+        } else {
+            if($masAciertos){
+                return $diferencia >= 5 ? 'MEDIO' : 'DIFICIL';
+            } else {
+                return $diferencia >= 20 ? 'IMPOSIBLE' : 'DIFICIL';
+            }
+        }
+    }
 
     //guarrdar la pregunta sugerida
      public function guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta) {

@@ -34,7 +34,7 @@ class PartidaController
     }
 
     public function iniciar(){
-       $this->redirectToHome();
+//       $this->redirectToHome();
 
         // 🚫 Bloquear si el usuario es editor
         if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'EDITOR') {
@@ -114,7 +114,14 @@ class PartidaController
         
         // Obtener la siguiente pregunta que no haya sido jugada
 
-        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID'], $categoria);
+        $idJugador = $_SESSION['id_usuario'];
+
+        if(!$idJugador){
+            $this->redirectToLogin();
+        }
+        $usuario = $this->usuarioModel->getById($idJugador);
+
+        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID'], $categoria, $usuario['nivel_usuario']);
 
         if($pregunta === null){
             $this->finalizar(['estado_partida' => 'TERMINADO_POR_RECARGA', 'puntaje_final' => $estado['puntaje_final']]);
@@ -225,6 +232,8 @@ class PartidaController
             'id_partida' => $estado['id_partida'] ?? ($_SESSION['partidaId'] ?? null),
             'basePath' => $this->basePath
         ];
+
+        $this->usuarioModel->actualizarNivelDeUsuario($id_usuario);
 
         // Limpiar sesión y renderizar
         unset($_SESSION['partidaId']);

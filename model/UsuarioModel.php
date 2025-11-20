@@ -4,10 +4,18 @@ class UsuarioModel
 {
     private $conexion;
 
+//    private $partidaModel;
+
     public function __construct($conexion){
         $this->conexion = $conexion;
+//        $this->partidaModel = new PartidaModel($this->conexion);
     }
 
+
+    public function getById($idUsuario){
+        $sql = "SELECT * FROM usuario WHERE id_usuario = $idUsuario";
+        return $this->conexion->query($sql);
+    }
 
    public function listarUsuarios(){
     $stmt = $this->conexion->prepare("
@@ -20,7 +28,6 @@ class UsuarioModel
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 
     // Nuevo método para obtener el puntaje máximo del usuario
     public function getPuntajeMaximo($id_usuario)
@@ -89,4 +96,48 @@ class UsuarioModel
         $stmt->execute();
     }
 
+    public function obtenerPartidasDelUsuario($idUsuario){
+        return $this->conexion->query("SELECT * FROM historial_partidas_usuario h WHERE h.id_usuario = $idUsuario");
+    }
+
+    public function obtenerPromedioDePuntosDePartidas($idUsuario){
+        $partidas = $this->obtenerPartidasDelUsuario($idUsuario);
+
+        if($partidas <= 5){
+            return 0;
+        }
+
+        $puntajeTotalDePartidas = 0;
+        $cantidadPartidas = 0;
+
+        foreach ($partidas as $partida) {
+            $puntajeTotalDePartidas += $partida['puntaje_final'];
+            $cantidadPartidas++;
+        }
+
+        return ($puntajeTotalDePartidas / 5) / $cantidadPartidas;
+    }
+
+    public function actualizarNivelDeUsuario($id_usuario){
+        $puntajeAActualizar = $this->obtenerPromedioDePuntosDePartidas($id_usuario);
+
+        if ($puntajeAActualizar == 0){
+            return;
+        }
+
+        if($puntajeAActualizar <= 2.5){
+            $nivelDeUsuario = 'APRENDIZ';
+        } elseIf ($puntajeAActualizar > 2.5 && $puntajeAActualizar <= 4) {
+            $nivelDeUsuario = 'NOVATO';
+        } elseif ($puntajeAActualizar > 4 && $puntajeAActualizar <= 6) {
+            $nivelDeUsuario = 'INTERMEDIO';
+        } elseif ($puntajeAActualizar > 6 && $puntajeAActualizar <= 9) {
+            $nivelDeUsuario = 'PROFESIONAL';
+        } else {
+            $nivelDeUsuario = 'ENTIDAD';
+        }
+
+        $sql = "UPDATE usuario u SET u.nivel_usuario = '$nivelDeUsuario' WHERE u.id_usuario = $id_usuario";
+        $this->conexion->query($sql);
+    }
 }
