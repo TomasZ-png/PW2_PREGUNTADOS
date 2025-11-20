@@ -23,7 +23,7 @@ class PreguntaController {
 
     public function mostrarFormularioSugerir() {
         $this->redirectToLogin();
-        $this->renderer->renderWoHaF("sugerirPregunta", ['respuestas' => [1, 2, 3, 4]]);
+        $this->renderer->renderWoHaF("sugerirPregunta", ['respuestas' => [1, 2, 3, 4], 'BASE_URL' => BASE_URL]);
     }
 
    public function guardarSugerencia() {
@@ -46,7 +46,7 @@ class PreguntaController {
     $this->preguntaModel->guardarSugerencia($idUsuario, $pregunta, $categoria, $respuestas, $correcta);
 
     // redige al homeController
-    header("Location: " . BASE_URL . "/?success=sugerencia_enviada");
+    header("Location: " . BASE_URL . "?success=sugerencia_enviada");
 exit();
 }
 

@@ -31,7 +31,6 @@ ADD CONSTRAINT fk_direccion_usuario
 FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 ON DELETE CASCADE;
 
-
 -- INSERTO DE USUARIO ADMIN (ID: 1)
 INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
 VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'ADMIN', 1);
@@ -49,12 +48,49 @@ CREATE TABLE partida(
     id_jugador INT NOT NULL,
     estado_partida VARCHAR(25), -- 'ACTIVA' o 'PERDIDA, POR TIEMPO'
     puntaje_final INT DEFAULT 0,
-    -- COLUMNA MODIFICADA: Guarda IDs de preguntas jugadas (separados por comas)
     preguntas_jugadas VARCHAR(1000) DEFAULT '',
     fecha_creacion DATE,
     fecha_fin DATETIME,
     FOREIGN KEY (id_jugador) REFERENCES usuario(id_usuario)
 );
+
+CREATE TABLE historial_partidas_usuario(
+   id_historial INT AUTO_INCREMENT PRIMARY KEY,
+   id_usuario  INT NOT NULL,
+   id_partida INT NOT NULL UNIQUE,
+   estado_partida VARCHAR(25),
+   fecha_creacion DATETIME,
+   fecha_finalizacion DATETIME,
+   FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+   FOREIGN KEY (id_partida) REFERENCES partida(id_partida)
+);
+
+-- Creamos un trigger para que inserte/actualice en el historial de partidas automaticamente
+-- cada vez que la tabla partida se altere
+
+DELIMITER //
+
+CREATE TRIGGER insert_on_partida
+    AFTER INSERT ON partida
+    FOR EACH ROW
+BEGIN
+    INSERT INTO historial_partidas_usuario (id_usuario, id_partida, estado_partida, fecha_creacion, fecha_finalizacion)
+    VALUES (NEW.id_jugador, NEW.id_partida, NEW.estado_partida, NOW(), NEW.fecha_fin);
+END;
+//
+
+CREATE TRIGGER update_on_partida
+    AFTER UPDATE ON partida
+    FOR EACH ROW
+BEGIN
+    UPDATE historial_partidas_usuario h
+    SET h.estado_partida = NEW.estado_partida,
+        h.fecha_finalizacion = COALESCE(NEW.fecha_fin, NEW.fecha_creacion)
+    WHERE h.id_partida = NEW.id_partida;
+END;
+//
+
+DELIMITER ;
 
 -- TABLA CATEGORIA
 CREATE TABLE categoria_pregunta(

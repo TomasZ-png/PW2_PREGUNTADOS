@@ -203,7 +203,7 @@
     </div>
 
     <div class="form-card">
-        <form action="http://localhost:8012/PROYECTO_PREGUNTADOS/PreguntaController/guardarSugerencia" method="POST">
+        <form action="{{BASE_URL}}PreguntaController/guardarSugerencia" method="POST">
 
             <div class="mb-4">
                 <label class="form-label">Categoría</label>
@@ -245,7 +245,7 @@
 
             <div class="botones-container">
                 <button type="submit" class="btn btn-success">Enviar sugerencia</button>
-                <a href="http://localhost:8012/PROYECTO_PREGUNTADOS" class="btn btn-secondary">Volver a Home</a>
+                <a href="{{BASE_URL}}" class="btn btn-secondary">Volver a Home</a>
             </div>
         </form>
     </div>

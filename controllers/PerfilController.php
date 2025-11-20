@@ -32,7 +32,7 @@ class PerfilController {
     $usuarioPerfil = $this->perfilModel->obtenerUsuarioPorId($idUsuario);
 
     $direccionUsuario = $this->perfilModel->obtenerDireccionByIdUsuario($idUsuario);
-    if (!$usuarioPerfil || !$direccionUsuario) {
+    if (!$usuarioPerfil) {
         die("Error: no se encontró el usuario.");
     }
 
