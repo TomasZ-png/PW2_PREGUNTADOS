@@ -1,34 +1,226 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/html">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Home - Preguntados</title>
-    <link rel="stylesheet" href="{{basePath}}public/css/resultadoStyles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado - Preguntame</title>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
             rel="stylesheet"
             integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
             crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: #1a237e;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .container-resultado {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .resultado-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 550px;
+            width: 100%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .resultado-card h1 {
+            color: #732eae;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .puntajes {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .puntajes p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .puntajes p:last-child {
+            margin-bottom: 0;
+        }
+
+        .puntaje-final {
+            color: #4ade80;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .puntaje-maximo {
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .botones-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1a237e;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.5);
+            color: #1a237e;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .resultado-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .resultado-card h1 {
+                font-size: 1.6rem;
+            }
+
+            .puntajes p {
+                font-size: 1rem;
+            }
+
+            .puntaje-final,
+            .puntaje-maximo {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
+<body>
 
+<div class="container-resultado">
+    <div class="resultado-card">
+        <h1>{{mensaje}}</h1>
 
-<body class="conteneodr-body">
-<div class="resultado-card">
-    <h1>{{mensaje}}</h1>
+        <div class="puntajes">
+            <p>Puntaje Final Obtenido: <span class="puntaje-final">{{puntaje}}</span></p>
+            <p>Tu Puntaje Máximo Personal: <span class="puntaje-maximo">{{puntajeMaximo}}</span></p>
+        </div>
 
-    <div class="puntajes">
-        <p>Puntaje Final Obtenido: <span class="puntaje-final">{{puntaje}}</span></p>
-        <p>Tu Puntaje Máximo Personal: <span class="puntaje-maximo">{{puntajeMaximo}}</span></p>
+        <div class="botones-container">
+            <a href="{{basePath}}PartidaController/iniciar" class="btn btn-success">Jugar de Nuevo</a>
+            <a href="{{basePath}}ReportarPreguntaController/mostrarFormulario?id_partida={{id_partida}}"
+            class="btn btn-danger">🚨 Reportar Pregunta</a>
+            <a href="{{basePath}}" class="btn btn-warning">Volver al Home</a>
+        </div>
     </div>
-
-    <a href="{{basePath}}PartidaController/iniciar" class=" btn btn-success">Jugar de Nuevo</a>
-    <a href="{{basePath}}ReportarPreguntaController/mostrarFormulario?id_partida={{id_partida}}" 
-   class="btn btn-danger">🚨 Reportar Pregunta</a>
-
-
-    <a href="{{basePath}}" class=" btn btn-warning">Volver al Home</a>
 </div>
+
 </body>
-
-
 </html>
