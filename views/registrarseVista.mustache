@@ -2,116 +2,146 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Preguntame</title>
     <link rel="stylesheet" href="{{BASE_URL}}public/css/loginStyles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 </head>
-
 <body>
-<div class="animated-bg">
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-</div>
 
-<div id="form-container">
-    <div id="left-container">
-        <div id="logo-conteiner">
-            <img src="{{BASE_URL}}public/img/preguntame-logo.png" width="400">
-        </div>
+
+
+<div class="form-wrapper">
+    <div class="logo-container">
+        <img src="{{BASE_URL}}public/img/preguntame-logo.png" alt="Preguntame Logo">
     </div>
 
-    <div class="right-container glass">
-        <div id="title-conteiner">
-            <h1>Bienvenido!</h1>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>¡Creá tu cuenta!</h1>
+            <p>Unite a la comunidad de Preguntame</p>
         </div>
-        <form action="{{BASE_URL}}LoginController/registrarse" method="post" enctype="multipart/form-data">
 
-            <div id="inputs-conteiner">
-                <label for="name">Nombre completo</label>
-                <input type="text" name="name" id="name" placeholder="Nombre completo">
-                <div class="flex">
-                    <div class="flex-column">
-                        <label for="fecha_nac">Fecha de nacimiento</label>
-                        <input type="date" name="fecha_nac" id="fecha_nac" placeholder="Fecha de nacimiento">
+        <form action="{{BASE_URL}}LoginController/registrarse" method="post" enctype="multipart/form-data">
+            <div class="form-grid">
+                <!-- Columna Izquierda -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="name">Nombre completo</label>
+                        <input type="text" name="name" id="name" placeholder="Ingresá tu nombre" required>
                     </div>
-                    <div class="flex-column">
-                        <label for="sexo">Sexo</label>
-                        <select name="sexo" id="sexo">
-                            <option value="" disabled selected>-- Seleccione su sexo --</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
-                            <option value="no-aclarado">Prefiero no cargarlo</option>
-                        </select>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fecha_nac">Fecha de nacimiento</label>
+                            <input type="date" name="fecha_nac" id="fecha_nac" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sexo">Sexo</label>
+                            <select name="sexo" id="sexo" required>
+                                <option value="" disabled selected>Seleccioná</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                                <option value="no-aclarado">Prefiero no cargarlo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" name="email" id="email" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" name="password" id="password" placeholder="Mínimo 8 caracteres, un numero y una mayuscula" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Foto de perfil</label>
+                        <div class="file-input-wrapper">
+                            <div class="file-input-label">
+                                <span>📷</span>
+                                <span id="file-name">Elegir imagen</span>
+                            </div>
+                            <input type="file" name="user_photo" id="foto-perfil" accept="image/*">
+                        </div>
                     </div>
                 </div>
-                <label for="email">Correo</label>
-                <input type="text" name="email" id="email" placeholder="Email">
-                <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password" placeholder="Contraseña">
-                <label for="foto-perfil">Foto de perfil</label>
-                <input type="file" name="user_photo" id="foto-perfil">
+
+                <!-- Columna Derecha - Mapa -->
+                <div class="form-section">
+                    <div class="map-container">
+                        <label style="color: #2d3748; font-weight: 600; font-size: 14px; margin-bottom: 10px; display: block;">
+                            📍 Seleccioná tu ubicación
+                        </label>
+                        <div id="map"></div>
+
+                        <input type="hidden" id="latitud" name="latitud">
+                        <input type="hidden" id="longitud" name="longitud">
+                        <input type="hidden" id="inputCiudad" name="ciudad">
+                        <input type="hidden" id="inputPais" name="pais">
+
+                        <div class="location-info">
+                            <div class="location-badge">
+                                <strong>Ciudad</strong>
+                                <span id="ciudad">Hacé clic en el mapa</span>
+                            </div>
+                            <div class="location-badge">
+                                <strong>País</strong>
+                                <span id="pais">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Errores -->
+                <div id="errores-contenedor"></div>
+                {{#errores}}
+                    <p class="errores">{{.}}</p>
+                {{/errores}}
+
+                <!-- Botón Submit -->
+                <button type="submit" class="btn-submit">Crear cuenta</button>
             </div>
 
-            {{#errores}}
-                <p class="errores">{{.}}</p>
-            {{/errores}}
-
-            <div id="errores-contenedor"></div>
-
-
-            <div id="buttons-conteiner">
-                <button type="submit" class="btn">Registrarse</button>
-            </div>
-
-            <div id="registrar-conteiner">
-                <p>Ya tenes una cuenta? <a href="{{BASE_URL}}LoginController/login">Inicia sesion</a></p>
+            <div class="login-link">
+                ¿Ya tenés una cuenta? <a href="{{BASE_URL}}LoginController/login">Iniciá sesión</a>
             </div>
         </form>
     </div>
-
-
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=places"></script>
-
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    // Mostrar nombre de archivo seleccionado
+    document.getElementById('foto-perfil').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name || 'Elegir imagen';
+        document.getElementById('file-name').textContent = fileName;
+    });
 
+    // AJAX Form Submit
+    document.addEventListener('DOMContentLoaded', () => {
         const BASE_URL = "{{{BASE_URL}}}";
         const form = document.querySelector('form');
         const errores_container = document.querySelector('#errores-contenedor');
 
-        console.log(BASE_URL);
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            // Limpio errores anteriores SIEMPRE
             errores_container.innerHTML = '';
 
             const dataFormulario = new FormData(form);
 
-
-
             try {
-                const res = await fetch(BASE_URL+"LoginController/registrarseConAjax", {
+                const res = await fetch(BASE_URL + "LoginController/registrarseConAjax", {
                     method: 'POST',
                     body: dataFormulario
                 });
 
                 const data = await res.json();
 
-                // Si hubo errores → los muestro
                 if (!data.exito) {
                     if (data.errores && Array.isArray(data.errores)) {
                         data.errores.forEach(err => {
@@ -121,18 +151,52 @@
                             errores_container.appendChild(p);
                         });
                     }
-                    return; // corto acá
+                    return;
                 }
 
-                // Si salió
-                window.location.href = BASE_URL+"LoginController/registroExitoso";
+                window.location.href = BASE_URL + "LoginController/registroExitoso";
 
             } catch (error) {
                 console.error("Error en fetch:", error);
             }
         });
+    });
 
+    // Mapa Leaflet
+    let map = L.map('map').setView([-34.6037, -58.3816], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', function(e) {
+        let lat = e.latlng.lat;
+        let lng = e.latlng.lng;
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map);
+
+        document.getElementById("latitud").value = lat;
+        document.getElementById("longitud").value = lng;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                .then(response => response.json())
+                .then(data => {
+                    const ciudad = data.address.city || data.address.town || data.address.village || "Desconocida";
+                    const pais = data.address.country || "Desconocido";
+
+                    document.getElementById("ciudad").innerText = ciudad;
+                    document.getElementById("pais").innerText = pais;
+                    document.getElementById("inputCiudad").value = ciudad;
+                    document.getElementById("inputPais").value = pais;
+                });
     });
 </script>
+
 </body>
 </html>

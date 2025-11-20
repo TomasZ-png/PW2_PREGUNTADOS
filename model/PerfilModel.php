@@ -20,4 +20,13 @@ class PerfilModel {
         $result = $stmt->get_result();
         return $result->fetch_assoc() ?: null;
     }
+
+    public function obtenerDireccionByIdUsuario($id_usuario) {
+        $sql = "SELECT id_usuario, longitud, latitud, ciudad, pais FROM direccion_usuario WHERE id_usuario = ?";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc() ?: null;
+    }
 }

@@ -18,6 +18,20 @@ CREATE TABLE usuario(
     verificado BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE direccion_usuario(
+    id_usuario INT NOT NULL PRIMARY KEY ,
+    latitud DOUBLE,
+    longitud DOUBLE,
+    pais VARCHAR(255),
+    ciudad VARCHAR(255)
+);
+
+ALTER TABLE direccion_usuario
+ADD CONSTRAINT fk_direccion_usuario
+FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+ON DELETE CASCADE;
+
+
 -- INSERTO DE USUARIO ADMIN (ID: 1)
 INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
 VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'ADMIN', 1);

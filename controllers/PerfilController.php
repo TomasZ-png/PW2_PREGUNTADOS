@@ -31,7 +31,8 @@ class PerfilController {
     $idUsuario = $_SESSION["id_usuario"];
     $usuarioPerfil = $this->perfilModel->obtenerUsuarioPorId($idUsuario);
 
-    if (!$usuarioPerfil) {
+    $direccionUsuario = $this->perfilModel->obtenerDireccionByIdUsuario($idUsuario);
+    if (!$usuarioPerfil || !$direccionUsuario) {
         die("Error: no se encontró el usuario.");
     }
 
@@ -44,6 +45,7 @@ class PerfilController {
     $data = [
         "usuario" => $usuarioPerfil, // nav + datos del mismo usuario
         "perfil" => $usuarioPerfil,  // perfil del usuario
+        "direccion" => $direccionUsuario,
         "BASE_URL" => BASE_URL
     ];
 
@@ -59,6 +61,8 @@ class PerfilController {
     }
 
     $id = intval($_GET["id"]);
+
+    $direccionUsuario = $this->perfilModel->obtenerDireccionByIdUsuario($id);
 
     $perfil = $this->perfilModel->obtenerUsuarioPorId($id);
 
@@ -81,7 +85,8 @@ class PerfilController {
 
     $data = [
         "usuario" => $usuarioLogueado, // nav siempre usa este
-        "perfil" => $perfil,           // perfil del usuario visitado
+        "perfil" => $perfil,
+        "direccion" => $direccionUsuario,
         "BASE_URL" => BASE_URL
     ];
 
