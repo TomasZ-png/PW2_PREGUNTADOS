@@ -7,15 +7,24 @@
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Marca “Preguntame” */
+/* Marca "Preguntame" */
 .custom-navbar .navbar-brand {
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
+    gap: 0.5rem;
 }
 
 .custom-navbar .navbar-brand:hover {
     color: #00ffff; /* cian brillante */
+}
+
+.custom-navbar .navbar-brand img {
+    transition: transform 0.3s ease;
+}
+
+.custom-navbar .navbar-brand:hover img {
+    transform: scale(1.1);
 }
 
 /* Menú desplegable */
@@ -32,13 +41,24 @@
     background-color: #1a22c5;
     border: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1051; /* Asegura que esté por encima de todo */
 }
 
 .custom-navbar .dropdown-item {
     color: #fff;
+    transition: all 0.3s ease;
 }
 
 .custom-navbar .dropdown-item:hover {
     background-color: #302bff;
     color: #00ffff;
+}
+
+/* Botón toggler para móvil */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.95)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }

@@ -23,7 +23,7 @@ class PreguntaController {
 
     public function mostrarFormularioSugerir() {
         $this->redirectToLogin();
-        $this->renderer->render("sugerirPregunta", ['respuestas' => [1, 2, 3, 4]]);
+        $this->renderer->renderWoHaF("sugerirPregunta", ['respuestas' => [1, 2, 3, 4]]);
     }
 
    public function guardarSugerencia() {

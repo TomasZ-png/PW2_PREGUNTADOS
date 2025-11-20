@@ -49,7 +49,7 @@ class ReportarPreguntaController {
         ];
 
         // render con datos
-        $this->renderer->render("reportarPregunta", $data);
+        $this->renderer->renderWoHaF("reportarPregunta", $data);
     }
 
     // Guardar el reporte

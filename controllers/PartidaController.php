@@ -142,7 +142,7 @@ class PartidaController
         // Limpiar feedback después de mostrarlo
         unset($_SESSION['feedback']);
 
-        $this->renderer->render("jugarPartida", $datos, [
+        $this->renderer->renderWoHaF("jugarPartida", $datos, [
             "BASE_URL" => BASE_URL]);
         $_SESSION['numeroDePreguntasPorCategoria']++;
     }
@@ -232,7 +232,7 @@ class PartidaController
         unset($_SESSION['preguntaID']);
         unset($_SESSION['tiempoPartidaIniciada']);
 
-        $this->renderer->render("resultadoPartida", $datos, [
+        $this->renderer->renderWoHaF("resultadoPartida", $datos, [
             "BASE_URL" => BASE_URL]);
     }
     
