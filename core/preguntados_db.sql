@@ -37,11 +37,24 @@ INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
 VALUES ('admin', 'admin@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'ADMIN', 1);
 -- INSERTO UN JUGADOR POR DEFECTO (ID: 2)
 INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
-VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'JUGADOR', 1);
+VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'USER', 1);
 
 -- INSERTO UN EDITOR POR DEFECTO (ID: 3)
 INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
 VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'EDITOR', 1);
+
+INSERT INTO usuario (nombre_completo, correo, password, sexo, rol, nivel_usuario, puntaje_global, puntaje_maximo_obtenido, verificado)
+VALUES
+    ('Guest02', 'jugador02@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 523, 0, 1),
+    ('Guest03', 'jugador03@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 812, 1, 1),
+    ('Guest04', 'jugador04@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 235, 2, 1),
+    ('Guest05', 'jugador05@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 678, 3, 1),
+    ('Guest06', 'jugador06@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 149, 4, 1),
+    ('Guest07', 'jugador07@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 990, 5, 1),
+    ('Guest08', 'jugador08@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 456, 6, 1),
+    ('Guest09', 'jugador09@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'MUJER', 'USER', 'APRENDIZ', 321, 7, 1),
+    ('Guest10', 'jugador10@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'Prefiero no decirlo', 'USER', 'APRENDIZ', 754, 8, 1),
+    ('Guest11', 'jugador11@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 618, 9, 1);
 
 -- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(

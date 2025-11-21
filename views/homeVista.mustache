@@ -62,13 +62,25 @@
             <h2><i class="material-icons">leaderboard</i> Ranking Global</h2>
             <ul class="ranking-list">
                 {{#usuarios}}
-                    <a href="{{BASE_URL}}PerfilController/verPerfilPublico?id={{id_usuario}}" class="ranking-item">
+                    <!-- Ingreso al Modal-->
+                    <a href="#"
+                       class="ranking-item"
+                       data-id="{{id_usuario}}"
+                       data-nombre="{{nombre_completo}}"
+                       data-puntos="{{puntaje_maximo_obtenido}}"
+                       data-qr="{{BASE_URL}}?controller=QRCodeController&method=generar&id={{id_usuario}}"
+                    data-perfil="{{BASE_URL}}PerfilController/verPerfilPublico?id={{id_usuario}}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalQR">
+
                     <img src="{{BASE_URL}}public/img/user-img/{{foto_perfil}}"
                          alt="{{nombre_completo}}"
                          class="ranking-avatar">
+
                     <div class="ranking-info">
                         <span class="ranking-name">{{nombre_completo}}</span>
                     </div>
+
                     <span class="ranking-score">{{puntaje_maximo_obtenido}} pts</span>
                     </a>
                 {{/usuarios}}
@@ -80,6 +92,22 @@
         </div>
     </main>
 </div>
+
+<!-- MODAL ÚNICO -->
+<div class="modal fade" id="modalQR" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <a href="#" class="modal-perfil-link" style="color: inherit; text-decoration: none;">
+            <div class="modal-body text-center">
+                <p class="modal-username fw-bold fs-4"></p>
+                <p class="modal-puntos fs-5"></p>
+                <img class="modal-qr img-fluid" style="max-width: 500px;">
+            </div>
+            </a>
+        </div>
+    </div>
+</div>
+
 
 <!-- Alertas -->
 {{#error}}
@@ -128,6 +156,28 @@
             setTimeout(() => errorAlert.remove(), 400);
         }, 5000);
     }
+</script>
+
+<script>
+    // Ingreso al Modal
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("modalQR");
+
+        modal.addEventListener("show.bs.modal", event => {
+            const item = event.relatedTarget;
+
+            const nombre = item.getAttribute("data-nombre");
+            const qr = item.getAttribute("data-qr");
+            const linkPerfil = item.getAttribute("data-perfil");
+            const puntos = item.getAttribute("data-puntos");
+
+            modal.querySelector(".modal-username").textContent = nombre;
+            modal.querySelector(".modal-puntos").textContent = `${puntos} pts`;
+            modal.querySelector(".modal-qr").src = qr;
+            modal.querySelector(".modal-perfil-link").href = linkPerfil;
+
+        });
+    });
 </script>
 
 </body>

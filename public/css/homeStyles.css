@@ -321,6 +321,13 @@ body {
     flex-shrink: 0;
 }
 
+.modal-puntos {
+    font-size: 32px !important;
+    color: #667eea;
+    font-weight: 700;
+
+}
+
 .no-users {
     text-align: center;
     color: #718096;
@@ -433,4 +440,10 @@ body {
         right: 20px;
         max-width: none;
     }
+
+    .ranking-item {
+        text-decoration: none;
+        color: inherit;
+    }
+
 }

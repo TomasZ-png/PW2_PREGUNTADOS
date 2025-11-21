@@ -1,6 +1,7 @@
 <?php
 
 include_once(__DIR__ . "/../model/PerfilModel.php");
+echo "ENTRE A verQR";
 
 class PerfilController {
 
@@ -53,8 +54,6 @@ class PerfilController {
 
     $this->renderer->render("perfilUsuario", $data);
 }
-
-
 
     public function verPerfilPublico() {
 
