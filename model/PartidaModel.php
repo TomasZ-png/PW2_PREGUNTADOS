@@ -42,14 +42,15 @@ class PartidaModel
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
 
         $dificultad_pregunta = $this->obtenerDificultad($nivelUsuario);
-        $indice = array_rand($dificultad_pregunta);
-        $dificultad_sorteada = $dificultad_pregunta[$indice];
+        $lista_dificultades = implode("','", $dificultad_pregunta);
+//        $indice = array_rand($dificultad_pregunta);
+//        $dificultad_sorteada = $dificultad_pregunta[$indice];
 
         $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
                         FROM pregunta p
-                        WHERE -- p.id_pregunta NOT IN ($preguntasExcluir) 
-                           p.categoria = '$categoria' 
-                          AND p.dificultad = '$dificultad_sorteada'
+                        WHERE  p.id_pregunta NOT IN ($preguntasExcluir) 
+                          AND p.categoria = '$categoria' 
+                          AND p.dificultad IN ('$lista_dificultades')
                         ORDER BY RAND() LIMIT 1";
 
 
