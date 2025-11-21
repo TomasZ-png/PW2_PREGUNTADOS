@@ -83,7 +83,9 @@ class PreguntaModel
         $diferencia = abs($aciertos - $errores);
         $masAciertos = $aciertos > $errores;
 
-        If($interacciones >= 5 && $interacciones <= 9){
+        if($interacciones <= 5){
+            return $masAciertos? 'FACIL' : 'MEDIO';
+        } elseIf($interacciones >= 6 && $interacciones <= 9){
             if($masAciertos){
                 return $diferencia >= 5 ? 'FACIL' : 'MEDIO';
             } else {

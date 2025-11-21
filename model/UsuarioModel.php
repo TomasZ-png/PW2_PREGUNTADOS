@@ -13,8 +13,9 @@ class UsuarioModel
 
 
     public function getById($idUsuario){
-        $sql = "SELECT * FROM usuario WHERE id_usuario = $idUsuario";
-        return $this->conexion->query($sql);
+        $sql = "SELECT id_usuario, rol, correo, nivel_usuario, verificado FROM usuario WHERE id_usuario = $idUsuario";
+        $res = $this->conexion->query($sql);
+        return $res[0] ?? null;
     }
 
    public function listarUsuarios(){
