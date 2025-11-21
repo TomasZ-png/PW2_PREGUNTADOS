@@ -34,7 +34,7 @@ class PartidaController
     }
 
     public function iniciar(){
-       $this->redirectToHome();
+//       $this->redirectToHome();
 
         // 🚫 Bloquear si el usuario es editor
         if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'EDITOR') {
@@ -76,7 +76,6 @@ class PartidaController
     public function jugar(){
         $this->redirectToHome();
 
-        // 🚫 Bloquear si el usuario es editor
         if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'EDITOR') {
             $_SESSION['feedback'] = "No tienes permiso para jugar partidas (rol: Editor).";
             $this->redirectToRoute('HomeController', 'mostrarHome');
@@ -105,7 +104,7 @@ class PartidaController
         $estado = $this->model->getEstadoPartida($partidaId);
         
         // El juego termina si el estado es PERDIDA
-        if ($estado['estado_partida'] === 'PERDIDA' || $estado['estado_partida'] === 'PERDIDA_POR_TIEMPO') {
+        if ($estado['estado_partida'] === 'PERDIDA' || $estado['estado_partida'] === 'PERDIDA_POR_TIEMPO' || $estado['estado_partida'] === 'PARDIDA_POR_RECARGA') {
             $this->finalizar($estado);
             return;
         }
@@ -115,10 +114,18 @@ class PartidaController
         
         // Obtener la siguiente pregunta que no haya sido jugada
 
-        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID'], $categoria);
+        $idJugador = $_SESSION['id_usuario'];
+
+        if(!$idJugador){
+            $this->redirectToLogin();
+        }
+        $usuario = $this->usuarioModel->getById($idJugador);
+
+        $pregunta = $this->model->obtenerPreguntaAleatoria($preguntasJugadas, $_SESSION['preguntaID'], $categoria, $usuario['nivel_usuario']);
 
         if($pregunta === null){
             $this->finalizar(['estado_partida' => 'TERMINADO_POR_RECARGA', 'puntaje_final' => $estado['puntaje_final']]);
+            $this->model->verificarRespuesta($partidaId, 0, true, true);
             return;
         }
 
@@ -225,6 +232,8 @@ class PartidaController
             'id_partida' => $estado['id_partida'] ?? ($_SESSION['partidaId'] ?? null),
             'basePath' => $this->basePath
         ];
+
+        $this->usuarioModel->actualizarNivelDeUsuario($id_usuario);
 
         // Limpiar sesión y renderizar
         unset($_SESSION['partidaId']);

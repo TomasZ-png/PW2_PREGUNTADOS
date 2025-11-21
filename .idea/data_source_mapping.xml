@@ -3,6 +3,7 @@
   <component name="DataSourcePerFileMappings">
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/f5fae917-0440-4a7a-b117-b81b3285620b/console_4.sql" value="f5fae917-0440-4a7a-b117-b81b3285620b" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/f5fae917-0440-4a7a-b117-b81b3285620b/console_5.sql" value="f5fae917-0440-4a7a-b117-b81b3285620b" />
+    <file url="file://$PROJECT_DIR$/core/preguntados_db.sql" value="f5fae917-0440-4a7a-b117-b81b3285620b" />
     <file url="file://$PROJECT_DIR$/model/UsuarioModel.php" value="f5fae917-0440-4a7a-b117-b81b3285620b" />
   </component>
 </project>

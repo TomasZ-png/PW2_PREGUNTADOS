@@ -74,7 +74,7 @@ class ReportarPreguntaController {
             exit();
         }
 
-        header("Location: " . BASE_URL . "/?success=reporte_enviado");
+        header("Location: " . BASE_URL . "?success=reporte_enviado");
         exit();
     }
 }

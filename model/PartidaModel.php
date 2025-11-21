@@ -29,7 +29,7 @@ class PartidaModel
     }
 
     // Obtiene una pregunta aleatoria que NO haya sido jugada en esta partida.
-    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta, $categoria){
+    public function obtenerPreguntaAleatoria($preguntasJugadas, $idPregunta, $categoria, $nivelUsuario){
 
         if(isset($idPregunta)){
             return null;
@@ -40,9 +40,16 @@ class PartidaModel
 
         // 1. Obtener una Pregunta aleatoria que no esté en la lista $preguntasExcluir
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
+
+        $dificultad_pregunta = $this->obtenerDificultad($nivelUsuario);
+        $indice = array_rand($dificultad_pregunta);
+        $dificultad_sorteada = $dificultad_pregunta[$indice];
+
         $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
                         FROM pregunta p
-                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria'
+                        WHERE -- p.id_pregunta NOT IN ($preguntasExcluir) 
+                           p.categoria = '$categoria' 
+                          AND p.dificultad = '$dificultad_sorteada'
                         ORDER BY RAND() LIMIT 1";
 
 
@@ -69,26 +76,34 @@ class PartidaModel
         }
     return null;
 
-//        $pregunta = $this->conexion->query($sqlPregunta);
-//
-//        if (empty($pregunta)) {
-//            return null; // No hay más preguntas disponibles en toda la base de datos
-//        }
-//
-//        $idPregunta = $pregunta[0]['id_pregunta'];
-//
-//        // 2. Obtener las 4 respuestas para esa pregunta
-//        $sqlRespuestas = "SELECT id_respuesta, respuesta, es_correcta FROM respuesta
-//                          WHERE id_pregunta = $idPregunta ORDER BY RAND()";
-//        $respuestas = $this->conexion->query($sqlRespuestas);
-//
-//        $pregunta[0]['respuestas'] = $respuestas;
-//
-//        return $pregunta[0];
     }
+
+    public function obtenerDificultad($nivelUsuario){
+
+        switch($nivelUsuario){
+            case 'NOVATO':
+                $dificultad_pregunta = ['NUEVA', 'FACIL', 'MEDIO'];
+                break;
+            case 'INTERMEDIO':
+                $dificultad_pregunta = ['FACIL', 'MEDIO', 'DIFICIL'];
+                break;
+            case 'PROFESIONAL':
+                $dificultad_pregunta = ['MEDIO', 'DIFICIL', 'IMPOSIBLE'];
+                break;
+            case 'ENTIDAD':
+                $dificultad_pregunta = ['DIFICIL', 'IMPOSIBLE'];
+                break;
+            default:
+                $dificultad_pregunta = ['NUEVA', 'FACIL'];
+                break;
+        }
+
+        return $dificultad_pregunta;
+    }
+
     
     // Verifica si la respuesta es correcta y actualiza la partida.
-    public function verificarRespuesta($idPartida, $idRespuesta, $partidaFinalizada){
+    public function verificarRespuesta($idPartida, $idRespuesta, $partidaFinalizada, $recarga = false){
         if($partidaFinalizada){
             $sqlVerif2 = "SELECT p.id_pregunta, pa.puntaje_final AS puntaje_actual
                       FROM pregunta p
@@ -101,9 +116,15 @@ class PartidaModel
 
             $puntajeFinalObtenido2 = $puntajeActual2;
 
-            $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA_POR_TIEMPO', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido2
-                        WHERE id_partida = $idPartida";
-            $this->conexion->query($sqlAct);
+            if($recarga){
+                $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA_POR_RECARGA', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido2
+                            WHERE id_partida = $idPartida";
+                $this->conexion->query($sqlAct);
+            } else {
+                $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA_POR_TIEMPO', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido2
+                            WHERE id_partida = $idPartida";
+                $this->conexion->query($sqlAct);
+            }
             return false;
         }
 
@@ -125,13 +146,6 @@ class PartidaModel
         $idJugador = $resultado[0]['id_jugador'];
 
         $puntajeFinalObtenido = $puntajeActual; // El puntaje actual es el final (no suma la fallida)
-
-//        if($partidaFinalizada){
-//            $sqlAct = "UPDATE partida SET estado_partida = 'PERDIDA_POR_TIEMPO', fecha_fin = NOW(), puntaje_final = $puntajeFinalObtenido
-//                        WHERE id_partida = $idPartida";
-//            $this->conexion->query($sqlAct);
-//            return false;
-//        }
 
         // 2. Actualizar Partida
         if ($esCorrecta) {
@@ -179,6 +193,7 @@ class PartidaModel
         return $esCorrecta;
     }
 
+
     // Obtiene el estado actual de la partida (MODIFICADO para lógica infinita)
     public function getEstadoPartida($idPartida)
     {
@@ -187,4 +202,7 @@ class PartidaModel
         $resultado = $this->conexion->query($sql);
         return $resultado[0] ?? null;
     }
+
+
+
 }
