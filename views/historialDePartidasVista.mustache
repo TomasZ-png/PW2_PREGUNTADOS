@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Historial de Partidas - Preguntame</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: #1a237e;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .container-historial {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem 3rem;
+        }
+
+        .header-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header-card h1 {
+            color: #667eea;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Estadísticas resumidas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Lista de partidas */
+        .partidas-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .partidas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .partidas-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Estilos para el select */
+        #ordenarSelect {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat, no-repeat;
+            background-position: left center, right 0.75rem center;
+            background-size: 100%, 12px;
+            padding-right: 2.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #ordenarSelect:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat, no-repeat;
+            background-position: left center, right 0.75rem center;
+            background-size: 100%, 12px;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        #ordenarSelect:focus {
+            outline: none;
+            border-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        #ordenarSelect option {
+            padding: 0.5rem;
+            background: white;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .filter-section {
+            margin-bottom: 1rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Tarjeta individual de partida */
+        .partida-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #e8ecff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .partida-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .partida-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .partida-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .estado-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .estado-completada {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .estado-abandonada {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+        }
+
+        .estado-en-curso {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1a237e;
+            box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .puntaje-grande {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .partida-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .duracion-badge {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Estado vacío */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            color: #666;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-description {
+            color: #999;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .header-card h1 {
+                font-size: 1.6rem;
+                flex-direction: column;
+            }
+
+            .partida-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .filter-buttons {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .filter-btn {
+                flex: 1;
+                min-width: 100px;
+            }
+
+            .partida-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <a href="{{BASE_URL}}" class="navbar-brand">
+        <span class="logo"></span>
+        Preguntame
+    </a>
+</nav>
+
+<div class="container-historial">
+    <div class="header-card">
+        {{#usuario}}
+        <h1>
+            📜 Historial de Partidas de {{nombre_completo}}
+        </h1>
+        {{/usuario}}
+        <p class="subtitle">Revisa todas tus partidas y tu progreso en el juego</p>
+    </div>
+
+    <!-- Estadísticas resumidas (opcional - puedes calcularlo en el controller) -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🎮</div>
+            <div class="stat-value">{{total_partidas}}</div>
+            <div class="stat-label">Total Partidas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">{{mejor_puntaje}}</div>
+            <div class="stat-label">Mejor Puntaje</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value">{{promedio_puntaje}}</div>
+            <div class="stat-label">Promedio</div>
+        </div>
+    </div>
+
+    <div class="partidas-container">
+        <div class="partidas-header">
+            <h2>Mis Partidas</h2>
+            <div class="filter-buttons">
+                <button id="filtroTodasBtn" class="filter-btn active">Todas</button>
+
+                <select id="ordenarSelect" class="filter-btn" style="padding: .5rem 1rem;">
+                    <option value="default">Ordenar por...</option>
+                    <option value="duracion_desc">Mayor duración</option>
+                    <option value="duracion_asc">Menor duración</option>
+                    <option value="puntaje_desc">Mayor puntaje</option>
+                    <option value="puntaje_asc">Menor puntaje</option>
+                    <option value="fecha_oldest">Más viejo</option>
+                    <option value="fecha_newest">Más nuevo</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div id="listaPartidas">
+        {{#partidas}}
+            <div class="partida-card" data-duracion-segundos="{{duracion_segundos}}"
+                 data-puntaje="{{puntaje_final}}"
+                 data-fecha-inicio="{{fecha_creacion}}"
+                 data-index="{{@index}}">
+                <div class="partida-header">
+                    <span class="estado-badge estado-{{estado_partida}}">
+                        {{icono_estado}} {{estado_partida}}
+                    </span>
+                    <span class="puntaje-grande">{{puntaje_final}} pts</span>
+                </div>
+
+                <div class="partida-info">
+                    <div class="info-item">
+                        <span class="info-label">📅 Fecha de inicio</span>
+                        <span class="info-value">{{fecha_creacion}}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🏁 Fecha de finalización</span>
+                        <span class="info-value">{{fecha_finalizacion}}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">⏱️ Duración</span>
+                        <span class="duracion-badge">{{duracion}}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🎯 Partida #</span>
+                        <span class="info-value">{{id_partida}}</span>
+                    </div>
+                </div>
+            </div>
+        {{/partidas}}
+
+        {{^partidas}}
+            <div class="empty-state">
+                <div class="empty-icon">🎮</div>
+                <h3 class="empty-title">No hay partidas registradas aún</h3>
+                <p class="empty-description">¡Comienza a jugar y tus partidas aparecerán aquí!</p>
+                <a href="{{BASE_URL}}PartidaController/iniciar" class="btn-primary-custom">
+                    🚀 Jugar Ahora
+                </a>
+            </div>
+        {{/partidas}}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Funcionalidad de filtros (opcional)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.textContent.toLowerCase();
+            // Aquí podrías implementar lógica de filtrado o hacer una petición AJAX
+            console.log('Filtrar por:', filter);
+        });
+    });
+</script>
+<script>
+    document.getElementById("ordenarSelect").addEventListener("change", function () {
+        const criterio = this.value;
+        const contenedor = document.querySelector(".partidas-container");
+        const tarjetas = Array.from(document.querySelectorAll(".partida-card"));
+
+        const obtenerSegundos = tarjeta =>
+                parseInt(tarjeta.dataset.duracionSegundos || 0);
+
+        const obtenerPuntaje = tarjeta =>
+                parseInt(tarjeta.dataset.puntaje || 0);
+
+        const obtenerFecha = tarjeta =>
+                new Date(tarjeta.dataset.fechaInicio).getTime();
+
+        switch (criterio) {
+            case "duracion_desc":
+                tarjetas.sort((a, b) => obtenerSegundos(b) - obtenerSegundos(a));
+                break;
+            case "duracion_asc":
+                tarjetas.sort((a, b) => obtenerSegundos(a) - obtenerSegundos(b));
+                break;
+            case "puntaje_desc":
+                tarjetas.sort((a, b) => obtenerPuntaje(b) - obtenerPuntaje(a));
+                break;
+            case "puntaje_asc":
+                tarjetas.sort((a, b) => obtenerPuntaje(a) - obtenerPuntaje(b));
+                break;
+            case "fecha_oldest":
+                tarjetas.sort((a, b) => obtenerFecha(a) - obtenerFecha(b));
+                break;
+            case "fecha_newest":
+                tarjetas.sort((a, b) => obtenerFecha(b) - obtenerFecha(a));
+                break;
+            default:
+                return;
+        }
+
+        tarjetas.forEach(t => contenedor.appendChild(t));
+    });
+</script>
+<script>
+    // Resetear filtros al tocar "Todas"
+    document.getElementById("filtroTodasBtn").addEventListener("click", function () {
+        const select = document.getElementById("ordenarSelect");
+        select.value = "default";
+
+        const contenedor = document.getElementById("listaPartidas");
+        const tarjetas = Array.from(contenedor.querySelectorAll(".partida-card"));
+
+        tarjetas.forEach(t => t.style.display = "block");
+
+        const ordenOriginal = tarjetas.sort((a, b) =>
+                a.dataset.index - b.dataset.index
+        );
+
+        ordenOriginal.forEach(t => contenedor.appendChild(t));
+    });
+
+</script>
+</body>
+</html>

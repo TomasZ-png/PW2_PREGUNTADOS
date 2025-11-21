@@ -244,7 +244,11 @@ class PartidaController
         $this->renderer->renderWoHaF("resultadoPartida", $datos, [
             "BASE_URL" => BASE_URL]);
     }
-    
+
+
+
+
+
     // --- Utilidades ---
 
     private function redirectToLogin(){
