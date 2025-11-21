@@ -48,8 +48,8 @@ class AdminController {
         $resultados = $this->usuarioModel->contarPorSexo();
 
         $data = [
-            'Masculino' => 0,
-            'Femenino' => 0,
+            'Hombre' => 0,
+            'Mujer' => 0,
             'No aclarado' => 0
         ];
 
@@ -57,8 +57,8 @@ class AdminController {
             $sexo = strtolower(trim($row['sexo']));
             $total = (int)$row['total'];
 
-            if ($sexo === 'masculino') $data['Masculino'] = $total;
-            elseif ($sexo === 'femenino') $data['Femenino'] = $total;
+            if ($sexo === 'hombre') $data['Hombre'] = $total;
+            elseif ($sexo === 'mujer') $data['Mujer'] = $total;
             else $data['No aclarado'] = $total;
         }
 
