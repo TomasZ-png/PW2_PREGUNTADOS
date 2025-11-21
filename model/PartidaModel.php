@@ -42,12 +42,14 @@ class PartidaModel
         // Se selecciona la pregunta de cualquier categoría, aleatoriamente.
 
         $dificultad_pregunta = $this->obtenerDificultad($nivelUsuario);
-
-
+        $indice = array_rand($dificultad_pregunta);
+        $dificultad_sorteada = $dificultad_pregunta[$indice];
 
         $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
                         FROM pregunta p
-                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) AND p.categoria = '$categoria' AND p.dificultad = '$dificultad_pregunta'
+                        WHERE -- p.id_pregunta NOT IN ($preguntasExcluir) 
+                           p.categoria = '$categoria' 
+                          AND p.dificultad = '$dificultad_sorteada'
                         ORDER BY RAND() LIMIT 1";
 
 
@@ -80,19 +82,19 @@ class PartidaModel
 
         switch($nivelUsuario){
             case 'NOVATO':
-                $dificultad_pregunta = 'FACIL';
+                $dificultad_pregunta = ['NUEVA', 'FACIL', 'MEDIO'];
                 break;
             case 'INTERMEDIO':
-                $dificultad_pregunta = 'MEDIO';
+                $dificultad_pregunta = ['FACIL', 'MEDIO', 'DIFICIL'];
                 break;
             case 'PROFESIONAL':
-                $dificultad_pregunta = 'DIFICIL';
+                $dificultad_pregunta = ['MEDIO', 'DIFICIL', 'IMPOSIBLE'];
                 break;
             case 'ENTIDAD':
-                $dificultad_pregunta = 'IMPOSIBLE';
+                $dificultad_pregunta = ['DIFICIL', 'IMPOSIBLE'];
                 break;
             default:
-                $dificultad_pregunta = 'NUEVA';
+                $dificultad_pregunta = ['NUEVA', 'FACIL'];
                 break;
         }
 
