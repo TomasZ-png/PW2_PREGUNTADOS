@@ -45,7 +45,7 @@ class PerfilController {
     $usuarioPerfil["puntaje_maximo_obtenido"] = $usuarioPerfil["puntaje_maximo_obtenido"] ?: 0;
 
     $data = [
-        "usuario" => $usuarioPerfil, // nav + datos del mismo usuario
+//        "usuario" => $usuarioPerfil, // nav + datos del mismo usuario
         "perfil" => $usuarioPerfil,  // perfil del usuario
         "direccion" => $direccionUsuario,
         "BASE_URL" => BASE_URL
