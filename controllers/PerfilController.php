@@ -95,10 +95,11 @@ class PerfilController {
     $this->renderer->render("perfilUsuario", $data);
 }
 
-    public function mostrarHistorialDePartidas() {
+    public function historial() {
         $this->verificarLogin();
 
         $idUsuario = $_GET["id_usuario"];
+        $usuario = $this->perfilModel->obtenerUsuarioPorId($idUsuario);
         $partidasJugadas = $this->usuarioModel->obtenerPartidasDelUsuario($idUsuario);
 
         foreach ($partidasJugadas as &$partida) {
@@ -155,6 +156,7 @@ class PerfilController {
             'total_partidas' => count($partidasJugadas),
             'mejor_puntaje' => $mejor_puntaje,
             'promedio_puntaje' => $promedio_puntaje,
+            'usuario' => $usuario
         ];
 
         $this->renderer->render("historialDePartidas", $data);

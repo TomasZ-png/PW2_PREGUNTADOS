@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Preguntame</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{{BASE_URL}}public/css/homeStyles.css">
 </head>
 <body>
-
-
 
 <div class="home-wrapper">
     <!-- Header -->
@@ -28,44 +27,39 @@
     <main class="main-content">
         <!-- Sección de acciones -->
         <div class="actions-card">
-            <h2>🎯 Menú Principal</h2>
-
+            <h2><i class="material-icons">apps</i> Menú Principal</h2>
             <div class="buttons-grid">
                 {{#esEditor}}
                     <a href="{{BASE_URL}}EditorController/home" class="action-btn btn-editor">
-                        🛠 Panel de Editor
+                        <i class="material-icons">construction</i> Panel de Editor
                     </a>
                 {{/esEditor}}
 
                 {{#esAdmin}}
                     <a href="{{BASE_URL}}AdminController/dashboardGraficos" class="action-btn btn-admin">
-                        📊 Ver Gráficos
+                        <i class="material-icons">analytics</i> Ver Gráficos
                     </a>
                 {{/esAdmin}}
 
-                {{#esAdmin}}
+                {{^esEditor}}
                     <a href="{{BASE_URL}}PartidaController/iniciar" class="action-btn btn-play">
-                        🎮 Jugar
+                        <i class="material-icons">play_circle</i> Jugar
                     </a>
                     <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class="action-btn btn-suggest">
-                        💡 Sugerir Pregunta
+                        <i class="material-icons">lightbulb</i> Sugerir Pregunta
                     </a>
-                {{/esAdmin}}
-
-                {{#esJugador}}
-                    <a href="{{BASE_URL}}PartidaController/iniciar" class="action-btn btn-play">
-                        🎮 Jugar
+                    {{#usuario}}
+                    <a href="{{BASE_URL}}PerfilController/historial?id_usuario={{id_usuario}}" class="action-btn btn-admin">
+                        <i class="material-icons">history</i> Historial de Partidas
                     </a>
-                    <a href="{{BASE_URL}}PreguntaController/mostrarFormularioSugerir" class="action-btn btn-suggest">
-                        💡 Sugerir Pregunta
-                    </a>
-                {{/esJugador}}
+                    {{/usuario}}
+                {{/esEditor}}
             </div>
         </div>
 
         <!-- Ranking -->
         <div class="ranking-card">
-            <h2>🏆 Ranking Global</h2>
+            <h2><i class="material-icons">leaderboard</i> Ranking Global</h2>
             <ul class="ranking-list">
                 {{#usuarios}}
                     <a href="{{BASE_URL}}PerfilController/verPerfilPublico?id={{id_usuario}}" class="ranking-item">
@@ -90,7 +84,7 @@
 <!-- Alertas -->
 {{#error}}
     <div class="alert alert-danger" id="errorAlert">
-        ❌ {{error}}
+        <i class="material-icons">cancel</i> {{error}}
     </div>
 {{/error}}
 
