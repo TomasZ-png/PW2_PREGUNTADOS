@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{BASE_URL}}public/css/ruletaStyles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Ruleta - Preguntados</title>
 </head>
 <body >
+
+{{#categoriaGanada}}
+    <script>
+        Swal.fire({
+            title: "¡Categoría completada!",
+            html: "Ganaste la categoría <b>{{categoriaGanada}}</b> 🎉",
+            icon: "success",
+            background: "{{colorCategoria}}",
+            color: "#fff",
+            iconColor: "#fff",
+            showConfirmButton: false,   // quita botón
+            timer: 2000,                // se cierra solo
+            timerProgressBar: true      // barra de tiempo
+        });
+    </script>
+{{/categoriaGanada}}
 
 <div class="container">
     <h1>🎯 Ruleta de Categorías</h1>

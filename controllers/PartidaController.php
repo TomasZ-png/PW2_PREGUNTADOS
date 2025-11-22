@@ -63,6 +63,14 @@ class PartidaController
 
     public function mostrarRuleta(){
 
+        $categoriaGanada = $_SESSION['categoriaGanada'] ?? null;
+        unset($_SESSION['categoriaGanada']);
+
+        $colorCategoria = null;
+        if ($categoriaGanada !== null) {
+            $colorCategoria = \helpers\CategoryColorHelper::getColorFor($categoriaGanada);
+        }
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categoria'])){
             error_log('mostrarRuleta: categoria recibida -> ' . $_POST['categoria']);
             $_SESSION['categoria'] = $_POST['categoria'];
@@ -72,7 +80,10 @@ class PartidaController
         }
 
         $this->renderer->renderWoHaF("ruleta", [
-            "BASE_URL" => BASE_URL]);
+            "BASE_URL" => BASE_URL,
+            "categoriaGanada" => $categoriaGanada,
+            "colorCategoria" => $colorCategoria
+        ]);
     }
 
     // Muestra la pregunta actual o finaliza el juego
@@ -91,6 +102,7 @@ class PartidaController
         }
 
         if($_SESSION['numeroDePreguntasPorCategoria'] == 5){
+            $_SESSION['categoriaGanada'] = $_SESSION['categoria'];
             $this->redirectToRoute('PartidaController', 'mostrarRuleta');
         }
 
