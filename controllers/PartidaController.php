@@ -103,6 +103,7 @@ class PartidaController
 
         if($_SESSION['numeroDePreguntasPorCategoria'] == 5){
             $_SESSION['categoriaGanada'] = $_SESSION['categoria'];
+            $_SESSION['numeroDePreguntasPorCategoria'] = 0;
             $this->redirectToRoute('PartidaController', 'mostrarRuleta');
         }
 

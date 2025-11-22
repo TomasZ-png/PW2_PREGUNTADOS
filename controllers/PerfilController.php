@@ -125,7 +125,7 @@ class PerfilController {
                     $partida['icono_estado'] = '⏳';
                     break;
                 default:
-                    $partida['icono_estado'] = '❌';
+                    $partida['icono_estado'] = '✅';
             }
 
             // Calcular duración si tienes las fechas
