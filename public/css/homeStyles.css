@@ -328,6 +328,18 @@ body {
 
 }
 
+.max-score {
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.max-score-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: #ff9800;
+    text-shadow: 0 0 5px rgba(255, 152, 0, 0.8);
+}
 .no-users {
     text-align: center;
     color: #718096;

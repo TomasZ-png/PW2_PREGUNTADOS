@@ -17,9 +17,24 @@
             <img src="{{BASE_URL}}public/img/preguntame-logo-solo.png" alt="Logo Preguntame">
             <h1>Preguntame</h1>
         </div>
-        {{#usuario}}
+{{#usuario}}
+    {{^esEditor}}
             <h2 class="welcome-message">¡Bienvenido, {{nombre_completo}}! 👋</h2>
-        {{/usuario}}
+            <p class="max-score">
+                🏆 Máximo puntaje obtenido:
+                <span class="max-score-number">{{puntaje_maximo_obtenido}}</span>
+            </p>
+    {{/esEditor}}
+{{/usuario}}
+
+        {{#esEditor}}
+            <h2 class="welcome-message">¡Bienvenido, {{nombre_completo}}! 👋</h2>
+            <p class="max-score">
+                🏆 Soy :
+                <span class="max-score-number">El editor</span>
+            </p>
+        {{/esEditor}}
+
         <p class="subtitle">¡Es hora de poner a prueba tu conocimiento!</p>
     </header>
 
