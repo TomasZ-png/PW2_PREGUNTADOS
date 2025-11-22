@@ -234,6 +234,8 @@ class PartidaController
             'basePath' => $this->basePath
         ];
 
+        $this->usuarioModel->actualizarNivelDeUsuario($id_usuario);
+
         // limpiar sesión
         unset($_SESSION['partidaId']);
         unset($_SESSION['feedback']);
@@ -244,10 +246,6 @@ class PartidaController
             "BASE_URL" => BASE_URL
         ]);
     }
-
-
-
-
 
     // --- Utilidades ---
 
