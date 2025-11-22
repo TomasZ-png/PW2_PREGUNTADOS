@@ -84,7 +84,7 @@ class PreguntaModel
         $masAciertos = $aciertos > $errores;
 
         if($interacciones <= 5){
-            return $masAciertos? 'FACIL' : 'MEDIO';
+            return $masAciertos? 'NUEVA' : 'FACIL';
         } elseIf($interacciones >= 6 && $interacciones <= 9){
             if($masAciertos){
                 return $diferencia >= 5 ? 'FACIL' : 'MEDIO';
@@ -160,7 +160,30 @@ class PreguntaModel
         return true;
     }
 
-    
+    public function obtenerCategorias() {
+        $sql = "SELECT id_categoria, categoria FROM categoria_pregunta";
+
+        $stmt = $this->conexion->prepare($sql);
+
+        if (!$stmt) {
+            error_log("Error preparando consulta de categorías: " . $this->conexion->error);
+            return [];
+        }
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $categorias = [];
+
+        while ($fila = $result->fetch_assoc()) {
+            $categorias[] = $fila;
+        }
+
+        $stmt->close();
+
+        return $categorias;
+    }
+
 
     public function obtenerPreguntasDeFacilesADificiles(){
         $stmt = $this->conexion->prepare("SELECT p.pregunta, SUM(p.cant_erroneas) AS erroneas, SUM(p.cant_acertadas) AS acertadas

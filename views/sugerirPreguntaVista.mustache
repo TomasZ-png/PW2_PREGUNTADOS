@@ -209,13 +209,15 @@
                 <label class="form-label">Categoría</label>
                 <select name="categoria" class="form-select" required>
                     <option value="">Seleccioná una categoría</option>
-                    <option value="HISTORIA">Historia</option>
-                    <option value="DEPORTE">Deporte</option>
-                    <option value="ARTE">Arte</option>
-                    <option value="GEOGRAFIA">Geografía</option>
-                    <option value="CIENCIA">Ciencia</option>
+
+                    {{#categorias}}
+                        <option value="{{categoria}}">{{categoria}}</option>
+                    {{/categorias}}
                 </select>
+
             </div>
+
+
 
             <div class="mb-4">
                 <label class="form-label">Pregunta</label>
