@@ -1,9 +1,12 @@
 <?php
 
 // Asegúrate de que las rutas son correctas
+use helpers\CategoryColorHelper;
+
 include_once(__DIR__."/../model/UsuarioModel.php");
 include_once(__DIR__."/../model/PartidaModel.php");
 include_once(__DIR__."/../config/config.php");
+include_once (__DIR__ ."/../helpers/CategoryColorHelper.php");
 
 class PartidaController
 {
@@ -137,9 +140,12 @@ class PartidaController
             return;
         }
 
+        $colorCategoria = CategoryColorHelper::getColorFor($pregunta['categoria']);
+
         $datos = [
             'pregunta' => $pregunta['pregunta'],
             'categoria' => $pregunta['categoria'],
+            'colorCategoria' => $colorCategoria,
             'puntaje' => $estado['puntaje_final'],
             'respuestas' => $pregunta['respuestas'],
             'feedback' => $_SESSION['feedback'] ?? null,

@@ -22,7 +22,7 @@ include_once(__DIR__.'/../model/PerfilModel.php');
 include_once(__DIR__.'/../phpqrcode/qrlib.php');
 include_once(__DIR__.'/../controllers/QRCodeController.php');
 include_once(__DIR__.'/../public/vendor/amenadiel/jpgraph/src/graph.inc.php');
-
+include_once(__DIR__ .'/../helpers/CategoryColorHelper.php');
 
 class ConfigFactory{
     private $clases;
