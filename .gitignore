@@ -1,6 +1,7 @@
 # Ignorar la carpeta de dependencias de Composer
 /vendor/
 /phpqrcode/
+/public/img/user-img
 # Ignorar logs, archivos de caché y configuración local
 /cache/
 /logs/
