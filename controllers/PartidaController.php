@@ -144,6 +144,7 @@ class PartidaController
 
         $datos = [
             'pregunta' => $pregunta['pregunta'],
+            'dificultad' => $pregunta['dificultad'],
             'categoria' => $pregunta['categoria'],
             'colorCategoria' => $colorCategoria,
             'puntaje' => $estado['puntaje_final'],
@@ -210,22 +211,22 @@ class PartidaController
         $puntajeFinal = $estado['puntaje_final'];
         $id_usuario = $_SESSION['id_usuario'];
 
-        // Se actualiza el puntaje global del usuario con el puntaje obtenido
+        // SUMAMOS PUNTOS
         $this->usuarioModel->sumarPuntosUsuario($id_usuario, $puntajeFinal);
 
-        // El puntaje máximo ya se actualizó en el PartidaModel si la partida terminó por fallo.
-
-//        $mensaje = $estado['estado_partida'] === 'PERDIDA' ?
-//                    "¡Juego Terminado! Fallaste una pregunta." :
-//                    "¡Increíble! Has respondido todas las preguntas de la base de datos.";
+        // NUEVO: obtener respuesta correcta si perdió por falla
+        $respuestaCorrecta = null;
+        if ($estado['estado_partida'] === 'PERDIDA') {
+            $respuestaCorrecta = $this->model->obtenerRespuestaCorrecta($_SESSION['partidaId']);
+        }
 
         if ($estado['estado_partida'] === 'PERDIDA') {
             $mensaje = "¡Juego Terminado! Fallaste una pregunta.";
         } elseif ($estado['estado_partida'] === 'TERMINADO_POR_RECARGA') {
             $mensaje = "Perdiste la partida por recargar la página o salir del juego.";
-        } elseif($estado['estado_partida'] === 'PERDIDA_POR_TIEMPO') {
-            $mensaje = 'Perdiste!, el tiempo se agotó.';
-        }else {
+        } elseif ($estado['estado_partida'] === 'PERDIDA_POR_TIEMPO') {
+            $mensaje = "Perdiste!, el tiempo se agotó.";
+        } else {
             $mensaje = "¡Increíble! Has respondido todas las preguntas de la base de datos.";
         }
 
@@ -235,25 +236,23 @@ class PartidaController
             'mensaje' => $mensaje,
             'puntaje' => $puntajeFinal,
             'puntajeMaximo' => $puntajeMaximo,
+            'respuestaCorrecta' => $respuestaCorrecta,   // ⬅⬅⬅ AGREGADO
             'id_partida' => $estado['id_partida'] ?? ($_SESSION['partidaId'] ?? null),
             'basePath' => $this->basePath
         ];
 
         $this->usuarioModel->actualizarNivelDeUsuario($id_usuario);
 
-        // Limpiar sesión y renderizar
+        // limpiar sesión
         unset($_SESSION['partidaId']);
         unset($_SESSION['feedback']);
         unset($_SESSION['preguntaID']);
         unset($_SESSION['tiempoPartidaIniciada']);
 
         $this->renderer->renderWoHaF("resultadoPartida", $datos, [
-            "BASE_URL" => BASE_URL]);
+            "BASE_URL" => BASE_URL
+        ]);
     }
-
-
-
-
 
     // --- Utilidades ---
 

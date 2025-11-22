@@ -101,6 +101,10 @@ class UsuarioModel
         return $this->conexion->query("SELECT * FROM historial_partidas_usuario h WHERE h.id_usuario = $idUsuario");
     }
 
+    public function obtenerCantidadDePartidasJugadasDelUsuario($idUsuario){
+        return count($this->obtenerPartidasDelUsuario($idUsuario));
+    }
+
     public function obtenerPromedioDePuntosDePartidas($idUsuario){
         $partidas = $this->obtenerPartidasDelUsuario($idUsuario);
 
@@ -114,6 +118,10 @@ class UsuarioModel
         foreach ($partidas as $partida) {
             $puntajeTotalDePartidas += $partida['puntaje_final'];
             $cantidadPartidas++;
+        }
+
+        if ($cantidadPartidas == 0) {
+            return 0;
         }
 
         return ($puntajeTotalDePartidas / 5) / $cantidadPartidas;

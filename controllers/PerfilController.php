@@ -39,11 +39,16 @@ class PerfilController {
         die("Error: no se encontró el usuario.");
     }
 
+    $promedioDeUsuario = $this->usuarioModel->obtenerPromedioDePuntosDePartidas($idUsuario);
+    $cantidadPartidas = $this->usuarioModel->obtenerCantidadDePartidasJugadasDelUsuario($idUsuario);
+
     // defaults
     $usuarioPerfil["foto_perfil"] = $usuarioPerfil["foto_perfil"] ?: "default.png";
     $usuarioPerfil["anio_nacimiento"] = $usuarioPerfil["anio_nacimiento"] ?: "—";
     $usuarioPerfil["sexo"] = $usuarioPerfil["sexo"] ?: "—";
     $usuarioPerfil["puntaje_maximo_obtenido"] = $usuarioPerfil["puntaje_maximo_obtenido"] ?: 0;
+    $usuarioPerfil['promedio'] = $promedioDeUsuario;
+    $usuarioPerfil['cantidad'] = $cantidadPartidas;
 
     $data = [
 //        "usuario" => $usuarioPerfil, // nav + datos del mismo usuario
@@ -64,20 +69,27 @@ class PerfilController {
     $id = intval($_GET["id"]);
 
     $direccionUsuario = $this->perfilModel->obtenerDireccionByIdUsuario($id);
-
+    $promedioDeUsuario = $this->usuarioModel->obtenerPromedioDePuntosDePartidas($id);
+    $cantidadPartidas = $this->usuarioModel->obtenerCantidadDePartidasJugadasDelUsuario($id);
     $perfil = $this->perfilModel->obtenerUsuarioPorId($id);
+
 
     if (!$perfil) {
         die("El usuario no existe.");
     }
 
     // defaults
+    $perfil['promedio'] = $promedioDeUsuario;
     $perfil["foto_perfil"] = $perfil["foto_perfil"] ?: "default.png";
     $perfil["anio_nacimiento"] = $perfil["anio_nacimiento"] ?: "—";
     $perfil["sexo"] = $perfil["sexo"] ?: "—";
     $perfil["puntaje_maximo_obtenido"] = $perfil["puntaje_maximo_obtenido"] ?: 0;
+    $perfil['nivel_usuario'] = $perfil['nivel_usuario'] ?: '';
+    $perfil['cantidad'] = $cantidadPartidas;
 
-    // usuario logueado → PARA EL NAV
+
+
+        // usuario logueado → PARA EL NAV
     session_start();
     $usuarioLogueado = null;
     if (isset($_SESSION["id_usuario"])) {
