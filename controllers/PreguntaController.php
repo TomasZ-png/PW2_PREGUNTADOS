@@ -23,10 +23,18 @@ class PreguntaController {
 
     public function mostrarFormularioSugerir() {
         $this->redirectToLogin();
-        $this->renderer->renderWoHaF("sugerirPregunta", ['respuestas' => [1, 2, 3, 4], 'BASE_URL' => BASE_URL]);
+
+        $categorias = $this->preguntaModel->obtenerCategorias();
+
+        $this->renderer->renderWoHaF("sugerirPregunta", [
+            'respuestas' => [1, 2, 3, 4],
+            'categorias' => $categorias,
+            'BASE_URL' => BASE_URL
+        ]);
     }
 
-   public function guardarSugerencia() {
+
+    public function guardarSugerencia() {
     $this->redirectToLogin();
 
     $idUsuario = $_SESSION['id_usuario'];

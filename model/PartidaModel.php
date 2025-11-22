@@ -43,12 +43,10 @@ class PartidaModel
 
         $dificultad_pregunta = $this->obtenerDificultad($nivelUsuario);
         $lista_dificultades = implode("','", $dificultad_pregunta);
-//        $indice = array_rand($dificultad_pregunta);
-//        $dificultad_sorteada = $dificultad_pregunta[$indice];
 
         $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
                         FROM pregunta p
-                        WHERE  p.id_pregunta NOT IN ($preguntasExcluir) 
+                        WHERE p.id_pregunta NOT IN ($preguntasExcluir) 
                           AND p.categoria = '$categoria' 
                           AND p.dificultad IN ('$lista_dificultades')
                         ORDER BY RAND() LIMIT 1";
@@ -193,6 +191,31 @@ class PartidaModel
 
         return $esCorrecta;
     }
+
+
+    public function obtenerRespuestaCorrecta($idPartida) {
+        // 1) Obtener la última pregunta jugada
+        $sql = "SELECT preguntas_jugadas FROM partida WHERE id_partida = $idPartida";
+        $res = $this->conexion->query($sql);
+
+        if (empty($res) || empty($res[0]['preguntas_jugadas'])) {
+            return null;
+        }
+
+        // Lista: "3,5,18,"
+        $lista = explode(",", rtrim($res[0]['preguntas_jugadas'], ","));
+        $ultimaPregunta = end($lista);
+
+        // 2) Obtener la respuesta correcta
+        $sql2 = "SELECT respuesta 
+             FROM respuesta 
+             WHERE id_pregunta = $ultimaPregunta AND es_correcta = 1";
+
+        $respuesta = $this->conexion->query($sql2);
+
+        return $respuesta[0]['respuesta'] ?? null;
+    }
+
 
 
     // Obtiene el estado actual de la partida (MODIFICADO para lógica infinita)

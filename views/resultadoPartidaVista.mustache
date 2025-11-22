@@ -211,6 +211,11 @@
         <div class="puntajes">
             <p>Puntaje Final Obtenido: <span class="puntaje-final">{{puntaje}}</span></p>
             <p>Tu Puntaje Máximo Personal: <span class="puntaje-maximo">{{puntajeMaximo}}</span></p>
+            {{#respuestaCorrecta}}
+                <div class="alert alert-warning mt-3">
+                    <strong>Respuesta correcta:</strong> {{respuestaCorrecta}}
+                </div>
+            {{/respuestaCorrecta}}
         </div>
 
         <div class="botones-container">
