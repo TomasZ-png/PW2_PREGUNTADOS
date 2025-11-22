@@ -139,6 +139,7 @@ class PartidaController
 
         $datos = [
             'pregunta' => $pregunta['pregunta'],
+            'dificultad' => $pregunta['dificultad'],
             'categoria' => $pregunta['categoria'],
             'puntaje' => $estado['puntaje_final'],
             'respuestas' => $pregunta['respuestas'],

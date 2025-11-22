@@ -44,7 +44,7 @@ class PartidaModel
         $dificultad_pregunta = $this->obtenerDificultad($nivelUsuario);
         $lista_dificultades = implode("','", $dificultad_pregunta);
 
-        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje
+        $sqlPregunta = "SELECT p.id_pregunta, p.pregunta, p.categoria, p.puntaje, p.dificultad
                         FROM pregunta p
                         WHERE p.id_pregunta NOT IN ($preguntasExcluir) 
                           AND p.categoria = '$categoria' 

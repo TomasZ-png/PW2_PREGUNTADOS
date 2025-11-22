@@ -9,109 +9,510 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header del perfil */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .profile-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        /* Layout principal en dos columnas */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Columna izquierda - Tarjeta de perfil */
+        .profile-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .profile-image-wrapper {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+            linear-gradient(135deg, #667eea, #764ba2) border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            font-size: 1.3rem;
+            margin-right: 12px;
+            min-width: 25px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        /* Columna derecha - Stats y mapa */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Stats mega destacados */
+        .mega-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .mega-stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeIn 0.8s ease backwards;
+        }
+
+
+
+        .mega-stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-icon-mega {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+            animation: bounce 2s ease infinite;
+        }
+
+
+
+        .mega-stat-card:hover .stat-icon-mega {
+            animation: spin 0.6s ease;
+        }
+
+        .stat-label-mega {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value-mega {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        /* Contenedor del mapa */
+        .map-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .map-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         #map {
             width: 100%;
-            height: 350px;
-            border-radius: 10px;
-            margin-top: 15px;
-            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             z-index: 10;
         }
-        .animated-bg { z-index: -1 !important; }
+
+        /* Botones */
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-custom {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            font-size: 1rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary-custom {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .mega-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-header h1 {
+                font-size: 2rem;
+            }
+
+            .mega-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value-mega {
+                font-size: 2.5rem;
+            }
+
+            #map {
+                height: 350px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn-custom {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-
-<div class="container mt-5">
-
-    <h1 class="text-center mb-4" style="margin-top: 100px;">👤 Perfil de Usuario</h1>
-
-    <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
-        <div class="text-center">
-            <img src="{{BASE_URL}}public/img/user-img/{{perfil.foto_perfil}}"
-                 alt="Foto de perfil"
-                 class="rounded-circle mb-3"
-                 width="150" height="150">
-        </div>
-
-        <h3 class="text-center mb-3"> <strong>Usuario:</strong> {{perfil.nombre_completo}} </h3>
-
-        <ul class="list-group">
-            <li class="list-group-item">
-                <strong>📧 Correo:</strong> {{perfil.correo}}
-            </li>
-
-            <li class="list-group-item">
-                <strong>🎂 Año de nacimiento:</strong> {{perfil.anio_nacimiento}}
-            </li>
-
-            <li class="list-group-item">
-                <strong>🧬 Sexo:</strong> {{perfil.sexo}}
-            </li>
-
-            <li class="list-group-item">
-                <strong>🏆 Puntaje Máximo:</strong>
-                <span class="text-success fw-bold">{{perfil.puntaje_maximo_obtenido}}</span>
-            </li>
-
-            <li class="list-group-item">
-                <strong>📍 Dirección:</strong>
-                <span class="text-success fw-bold">{{direccion.ciudad}}, {{direccion.pais}}</span>
-            </li>
-
-            <li class="list-group-item">
-                <a href="{{BASE_URL}}PerfilController/historial?id_usuario={{perfil.id_usuario}}"><strong> Historial de Partidas</strong></a>
-            </li>
-        </ul>
-
-        <div id="map" class="mt-3"></div>
-
-        <div class="text-center mt-4">
-            <a href="{{BASE_URL}}" class="btn btn-primary">⬅ Volver al Home 🏠</a>
-        </div>
+<div class="container-fluid">
+    <div class="profile-header">
+        <h1>👤 Perfil de Usuario</h1>
     </div>
 
-</div>
+    <div class="main-layout">
+        <!-- Sidebar izquierdo -->
+        <div class="profile-sidebar">
+            <div class="profile-image-wrapper">
+                <img src="{{BASE_URL}}public/img/user-img/{{perfil.foto_perfil}}"
+                     alt="Foto de perfil"
+                     class="profile-image">
+            </div>
 
+            <h2 class="profile-name">{{perfil.nombre_completo}}</h2>
+
+            <div class="info-item">
+                <span class="info-icon">📧</span>
+                <div>
+                    <div class="info-label">Correo</div>
+                    <div class="info-value">{{perfil.correo}}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-icon">🎂</span>
+                <div>
+                    <div class="info-label">Edad</div>
+                    <div class="info-value" id="edad-display">{{perfil.anio_nacimiento}}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-icon">🧬</span>
+                <div>
+                    <div class="info-label">Sexo</div>
+                    <div class="info-value">{{perfil.sexo}}</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-icon">📍</span>
+                <div>
+                    <div class="info-label">Ubicación</div>
+                    <div class="info-value">{{direccion.ciudad}}, {{direccion.pais}}</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="{{BASE_URL}}PerfilController/historial?id_usuario={{perfil.id_usuario}}"
+                class="btn-custom btn-primary-custom">
+                📜 Historial
+                </a>
+                <a href="{{BASE_URL}}" class="btn-custom btn-secondary-custom">
+                    🏠 Home
+                </a>
+            </div>
+        </div>
+
+        <!-- Área de contenido principal -->
+        <div class="content-area">
+            <!-- Stats mega destacados -->
+            <div class="mega-stats">
+                <div class="mega-stat-card">
+                    <div class="stat-icon-mega">🏆</div>
+                    <div class="stat-label-mega">Mejor Puntaje</div>
+                    <div class="stat-value-mega">{{perfil.puntaje_maximo_obtenido}}</div>
+                </div>
+
+                <div class="mega-stat-card">
+                    <div class="stat-icon-mega">📊</div>
+                    <div class="stat-label-mega">Promedio</div>
+                    <div class="stat-value-mega" id="promedio-display">{{perfil.promedio}}</div>
+                </div>
+
+                <div class="mega-stat-card">
+                    <div class="stat-icon-mega">🎮</div>
+                    <div class="stat-label-mega">Partidas</div>
+                    <div class="stat-value-mega">{{perfil.cantidad}}</div>
+                </div>
+
+                <div class="mega-stat-card">
+                    <div class="stat-icon-mega">⭐</div>
+                    <div class="stat-label-mega">Nivel</div>
+                    <div class="stat-value-mega" style="font-size: 2rem;">{{perfil.nivel_usuario}}</div>
+                </div>
+            </div>
+
+            <!-- Mapa -->
+            <div class="map-container">
+                <h3 class="map-title">
+                    <span>🗺️</span>
+                    <span>Ubicación en el Mapa</span>
+                </h3>
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const latRaw = {{direccion.latitud}} || 'null';
-const lngRaw = {{direccion.longitud}} || 'null';
-
-if (latRaw === null || lngRaw === null) {
-    console.warn("No hay coordenadas para este usuario.");
-    document.getElementById('map').innerHTML = "<p class='text-center mt-3'>Ubicación no cargada.</p>";
-return;
-}
-
-    const lat = parseFloat(latRaw);
-    const lng = parseFloat(lngRaw);
-
-    const map = L.map('map').setView([lat, lng], 13);
-
-    // capa base
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // marcador
-    L.marker([lat, lng]).addTo(map)
-    .bindPopup("📍 Ubicación del usuario")
-    .openPopup();
-
-    setTimeout(function() {
-        try {
-            map.invalidateSize();
-        } catch (e) {
-            console.error("invalidateSize error", e);
+        // Calcular edad a partir del año de nacimiento
+        const anioNacimiento = parseInt('{{perfil.anio_nacimiento}}');
+        if (anioNacimiento && anioNacimiento !== 0) {
+            const anioActual = new Date().getFullYear();
+            const edad = anioActual - anioNacimiento;
+            document.getElementById('edad-display').textContent = edad + ' años';
+        } else {
+            document.getElementById('edad-display').textContent = '—';
         }
-    }, 400);
+
+        // Redondear promedio
+        const promedio = parseFloat('{{perfil.promedio}}');
+        if (!isNaN(promedio)) {
+            document.getElementById('promedio-display').textContent = Math.round(promedio);
+        }
+
+        // Mapa
+        const latRaw = {{direccion.latitud}} || 'null';
+        const lngRaw = {{direccion.longitud}} || 'null';
+
+        if (latRaw === null || lngRaw === null) {
+            console.warn("No hay coordenadas para este usuario.");
+            document.getElementById('map').innerHTML = "<div style='display: flex; align-items: center; justify-content: center; height: 100%; color: #999; font-size: 1.2rem;'>📍 Ubicación no disponible</div>";
+            return;
+        }
+
+        const lat = parseFloat(latRaw);
+        const lng = parseFloat(lngRaw);
+
+        const map = L.map('map').setView([lat, lng], 13);
+
+        // Capa base
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Marcador con icono personalizado
+        const customIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 35px; height: 35px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.3); border: 3px solid white;"><span style="transform: rotate(45deg); font-size: 18px;">📍</span></div>',
+            iconSize: [35, 35],
+            iconAnchor: [17, 35]
+        });
+
+        L.marker([lat, lng], {icon: customIcon}).addTo(map)
+                .bindPopup("<div style='text-align: center; padding: 5px;'><strong>📍 {{perfil.nombre_completo}}</strong><br>{{direccion.ciudad}}, {{direccion.pais}}</div>")
+                .openPopup();
+
+        setTimeout(function() {
+            try {
+                map.invalidateSize();
+            } catch (e) {
+                console.error("invalidateSize error", e);
+            }
+        }, 400);
     });
 </script>
 

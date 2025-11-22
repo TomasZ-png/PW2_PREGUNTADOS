@@ -9,7 +9,7 @@ class PerfilModel {
     }
 
     public function obtenerUsuarioPorId($id) {
-        $sql = "SELECT id_usuario, nombre_completo, correo, anio_nacimiento, sexo, foto_perfil, puntaje_maximo_obtenido
+        $sql = "SELECT id_usuario, nombre_completo, correo, anio_nacimiento, sexo, foto_perfil, puntaje_maximo_obtenido, nivel_usuario
                 FROM usuario
                 WHERE id_usuario = ?";
 
