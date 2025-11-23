@@ -117,7 +117,7 @@ $pregunta['respuestas'] = $this->fetchAllSafe($resultRespuestas);
 
         $stmt2 = $this->conexion->prepare("
             INSERT INTO pregunta (pregunta, categoria, dificultad, puntaje, cant_acertadas, cant_erroneas, fecha_creacion)
-            VALUES (?, ?, 'MEDIA', 10, 0, 0, CURDATE())
+            VALUES (?, ?, 'NUEVA', 10, 0, 0, CURDATE())
         ");
         if (!$stmt2) {
             return false;
