@@ -39,8 +39,8 @@ class AdminController {
         $datosPreguntasDificiles = $this->crearGraficoPreguntasDificilesYFaciles();
         $puntajeGlobal = $this->crearGraficoPuntajeGlobal();
         $cantidadUsuarios = $this->crearGraficoUsuariosTotales();
-
-
+        $cantidadPartidas = $this->crearGraficoPartidasTotales();
+        $cantidadPreguntasCreadas = $this->crearGraficoPreguntasCreadas();
 
 
         $this->renderer->render('adminGraficos', [
@@ -48,6 +48,8 @@ class AdminController {
             'datosPreguntas' => json_encode($datosPreguntasDificiles, JSON_UNESCAPED_UNICODE),
             'puntajeGlobal' => json_encode($puntajeGlobal, JSON_UNESCAPED_UNICODE),
             'cantidadUsuarios' => $cantidadUsuarios,
+            'cantidadPartidas' => $cantidadPartidas,
+            'cantidadPreguntasCreadas' => $cantidadPreguntasCreadas,
             'BASE_URL' => BASE_URL
         ]);
     }
@@ -126,6 +128,25 @@ class AdminController {
         $cantidadUsuarios = $usuariosTotales[0]['total'];
 
         return $cantidadUsuarios;
+    }
+
+    public function crearGraficoPartidasTotales(){
+        $this->validarAdmin();
+
+        $adminModel = new AdminModel($this->conexion);
+        $partidasTotales = $adminModel->obtenerCantidadPartidas();
+        $cantidadPartidas = $partidasTotales[0]['total'];
+
+        return $cantidadPartidas;
+    }
+
+    public function crearGraficoPreguntasCreadas(){
+        $this->validarAdmin();
+
+        $preguntasCreadasTotales =  $this->adminModel->obtenerCantidadPreguntasCreadas();
+        $cantidadPreguntasCreadas = $preguntasCreadasTotales[0]['total'];
+
+        return $cantidadPreguntasCreadas;
     }
 
 }

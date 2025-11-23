@@ -265,7 +265,6 @@
                 <div id="grafico_preguntas" style="width:100%;height:500px"></div>
             </div>
         </div>
-    </div>
 
         <!-- GRÁFICO DE USUARIOS TOTALES -->
         <div class="chart-card">
@@ -280,6 +279,34 @@
             </div>
         </div>
 
+
+        <!-- GRÁFICO DE PARTIDAS TOTALES -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">🎮</span>
+                    Partidas Jugadas Totales
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="grafico_partidas_totales" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+        <!-- GRÁFICO DE PREGUNTAS CREADAS -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">❓</span>
+                    Preguntas Creadas Totales
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="grafico_preguntas_creadas" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <!-- Google Charts -->
@@ -294,6 +321,9 @@
     const datosPreguntas = {{{datosPreguntas}}};
     const datosPuntaje = {{{puntajeGlobal}}};
     const cantidadUsuarios = {{cantidadUsuarios}};
+    const cantidadPartidas = {{cantidadPartidas}};
+    const cantidadPreguntasCreadas = {{cantidadPreguntasCreadas}};
+
 
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(dibujarGraficos);
@@ -378,7 +408,7 @@
             hAxis: { textStyle: { fontSize: 12 } },
             vAxis: { textStyle: { fontSize: 12 } }
         });
-        
+
         // ------------------------------
         // GRAFICO DE USUARIOS TOTALES
         // ------------------------------
@@ -388,7 +418,7 @@
             ['Registrados', cantidadUsuarios]
         ]);
 
-        let chartUsuarios = new google.visualization.PieChart(
+        let chartUsuarios = new google.visualization.ColumnChart(
                 document.getElementById('grafico_usuarios_totales')
         );
 
@@ -400,6 +430,51 @@
             pieSliceTextStyle: { color: 'white', fontSize: 16 },
             chartArea: { width: '90%', height: '80%' }
         });
+
+        // ------------------------------
+        // GRAFICO DE PARTIDAS TOTALES
+        // ------------------------------
+
+        let dataPartidas = google.visualization.arrayToDataTable([
+            ['Partidas', 'Cantidad'],
+            ['Jugadas', cantidadPartidas]
+        ]);
+
+        let chartPartidas = new google.visualization.ColumnChart(
+                document.getElementById('grafico_partidas_totales')
+        );
+
+        chartPartidas.draw(dataPartidas, {
+            title: 'Partidas Totales',
+            pieHole: 0.4,
+            colors: ['#FF6384'],
+            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+            pieSliceTextStyle: { color: 'white', fontSize: 16 },
+            chartArea: { width: '90%', height: '80%' }
+        });
+
+        // ------------------------------
+        // GRAFICO DE PREGUNTAS CREADAS
+        // ------------------------------
+
+        let dataPreguntasCreadas = google.visualization.arrayToDataTable([
+            ['Pregunta', 'Cantidad'],
+            ['Creadas', cantidadPreguntasCreadas]
+        ]);
+
+        let chartPreguntasCreadas = new google.visualization.ColumnChart(
+                document.getElementById('grafico_preguntas_creadas')
+        );
+
+        chartPreguntasCreadas.draw(dataPreguntasCreadas, {
+            title: 'Preguntas Creadas',
+            pieHole: 0.4,
+            colors: ['#FF6384'],
+            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+            pieSliceTextStyle: { color: 'white', fontSize: 16 },
+            chartArea: { width: '90%', height: '80%' }
+        });
+
     }
 
 
@@ -464,6 +539,7 @@
         if (chartSexo) chartSexo.draw(dataSexo, chartSexo.getOptions());
         if (chartPreg) chartPreg.draw(dataPreg, chartPreg.getOptions());
         if (chartPuntaje) chartPuntaje.draw(dataPuntaje, chartPuntaje.getOptions());
+
     });
 
 
