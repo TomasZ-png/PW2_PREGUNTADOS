@@ -7,18 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
-        * {
+    * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
+            margin-top:80px;
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 40px 20px;
-            margin: 60px;
+            /* Se ha reducido el padding y eliminado el margin fijo para ser responsive */
+            padding: 20px; 
         }
 
         .container {
@@ -30,7 +31,7 @@
             background: white;
             border-radius: 20px;
             padding: 30px 40px;
-            margin: 30px 0;
+            margin-bottom: 30px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
@@ -55,9 +56,11 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            color: white; /* Color del ícono blanco para contraste */
         }
 
         .dashboard-grid {
+            /* Definición de la grilla para escritorio (dos columnas, mínimo 500px) */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 30px;
@@ -106,6 +109,13 @@
             justify-content: center;
             align-items: center;
         }
+        
+        /* Asegurar que el div del gráfico es fluido */
+        #grafico_sexo, #grafico_puntaje, #grafico_preguntas {
+            width: 100% !important;
+            height: 100% !important; /* Permitir que el contenedor maneje la altura */
+            min-height: 350px; 
+        }
 
         .btn-pdf {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -120,6 +130,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none; /* Asegurar que se ve como botón y no link */
         }
 
         .btn-pdf:hover {
@@ -132,7 +143,8 @@
         }
 
         .full-width-card {
-            grid-column: 1 / -1;
+            /* Asegura que estas tarjetas ocupen el ancho completo en escritorio */
+            grid-column: 1 / -1; 
         }
 
         .stats-summary {
@@ -140,6 +152,7 @@
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            /* Grid dinámico para las estadísticas */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
@@ -166,40 +179,67 @@
             font-weight: 600;
         }
 
+        /* --- RESPONSIVE MOBILE (<= 768px) --- */
         @media (max-width: 768px) {
+            /* Ajustar el grid principal a una columna */
             .dashboard-grid {
                 grid-template-columns: 1fr;
+                gap: 20px; /* Reducir gap en móvil */
             }
 
             .header {
                 flex-direction: column;
                 text-align: center;
                 gap: 20px;
+                padding: 20px 20px; /* Reducir padding del header */
             }
 
             .header h2 {
                 font-size: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .header-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
             }
 
             .chart-card {
-                padding: 20px;
+                padding: 20px; /* Reducir padding del card */
+            }
+
+            .chart-card h3 {
+                font-size: 20px;
             }
 
             .chart-card-header {
-                flex-direction: column;
+                /* Permitir que el botón se apile debajo del título si es necesario */
+                flex-direction: column; 
                 gap: 15px;
-                align-items: flex-start;
+                align-items: flex-start; /* Alinear título e ícono a la izquierda */
             }
-        }
+            
+            .btn-pdf {
+                width: 100%; /* El botón ocupa todo el ancho */
+                justify-content: center;
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+            
+            /* Asegurar que el resumen estadístico se ajusta bien */
+            .stats-summary {
+                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                 gap: 10px;
+            }
 
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-            color: #667eea;
-            font-size: 18px;
-            font-weight: 600;
+            .stat-value {
+                font-size: 28px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+            }
         }
     </style>
 </head>

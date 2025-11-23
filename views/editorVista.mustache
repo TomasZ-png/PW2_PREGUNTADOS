@@ -5,7 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel del Editor</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <style>
 
+@media (max-width: 768px) {
+            
+            .container {
+                max-width: 100%;
+            }
+
+            /* Botones principales de la UI se estiran a pantalla completa */
+            .btn-primary.mb-3, .text-center .btn-lg {
+                display: block;
+                width: 100%;
+                font-size: 1.1rem;
+                padding: 0.75rem;
+                margin-bottom: 1rem !important;
+            }
+
+            /* --- Mantiene las tablas scrollables horizontalmente --- */
+            .table-responsive-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 600px;
+            }
+            
+            .table th, .table td { 
+                padding: 0.4rem 0.3rem;
+                font-size: 0.8rem;
+                vertical-align: middle;
+            }
+            
+            /* TABLA DE PREGUNTAS (1ra Tabla) */
+            /* OCULTAMOS la columna de Acción y su encabezado en la tabla de Preguntas */
+            .table.table-bordered th:nth-child(5), /* Encabezado Acción */
+            .table.table-bordered td:nth-child(5) { /* Columna Acción (la última) */
+                display: none;
+            }
+            
+            /* MOSTRAR los botones duplicados en móvil */
+            .desktop-hidden {
+                display: flex; /* Usamos flex para que los botones estén en línea, pero con espacio */
+                gap: 0.5rem; /* Espacio entre los botones */
+                margin-top: 0.5rem; 
+            }
+            
+            /* Hacemos que los botones apilados sean full width y más grandes */
+            .desktop-hidden a.btn-sm {
+                flex-grow: 1; /* Permite que ambos botones crezcan por igual */
+                width: auto; /* Ancho automático gestionado por flex */
+                margin-bottom: 0; /* Sin margen vertical entre ellos */
+                padding: 0.4rem;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            /* Estilo para las celdas de Pregunta (2da columna) */
+            .table.table-bordered td:nth-child(2) {
+                white-space: normal; /* Permitir que la pregunta se envuelva */
+                min-width: 200px;
+            }
+            
+            /* Forzamos nowrap en las columnas que NO son pregunta/acción para mantenerlas compactas */
+            .table.table-bordered tr th:not(:nth-child(2)):not(:nth-child(5)), 
+            .table.table-bordered tr td:not(:nth-child(2)):not(:nth-child(5)) {
+                white-space: nowrap; 
+            }
+            
+            /* TABLAS DE SUGERIDAS Y REPORTADAS (2da y 3ra Tabla) */
+            /* Se mantiene el apilamiento vertical de botones en la última columna para estas tablas */
+            .table-hover tr td:last-child a.btn-sm, 
+            .table-dark tr td:last-child a.btn-sm {
+                display: block;
+                width: 100%;
+                margin: 0.2rem 0;
+                padding: 0.4rem 0.2rem;
+                font-size: 0.9rem;
+            }
+
+            /* Permitimos que Respuestas/Comentario y Acción se envuelvan */
+            .table-hover tr td:nth-child(4), 
+            .table-dark tr td:nth-child(4),
+            .table-hover tr td:last-child, 
+            .table-dark tr td:last-child {
+                white-space: normal; 
+                min-width: 120px;
+            }
+            
+            /* El formulario de Crear Categoría */
+            .card.p-4 { padding: 1rem !important; }
+            .form-control { padding: 0.5rem 0.75rem; }
+            
+        }
+        
+        /* Regla de Bootstrap para containers en escritorio */
+        @media (min-width: 576px) { .container { max-width: 540px; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } }
+        @media (min-width: 1200px) { .container { max-width: 1140px; } }
+        </style>
 </head>
 <body>
 
