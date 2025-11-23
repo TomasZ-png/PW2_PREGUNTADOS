@@ -1,17 +1,21 @@
 <?php
 include_once(__DIR__ . "/../model/UsuarioModel.php");
 require_once (__DIR__ . '/../vendor/autoload.php');
+include_once(__DIR__ . "/../model/AdminModel.php");
 class AdminController {
     private $conexion;
     private $renderer;
     private $usuarioModel;
     private $preguntaModel;
+    private $adminModel;
 
     public function __construct($conexion, $renderer){
         $this->conexion = $conexion;
         $this->renderer = $renderer;
         $this->usuarioModel = new UsuarioModel($this->conexion);
         $this->preguntaModel = new PreguntaModel($this->conexion);
+        $this->adminModel = new AdminModel($this->conexion);
+
     }
 
     private function validarAdmin() {
@@ -34,11 +38,16 @@ class AdminController {
         $datosSexo = $this->crearGraficoSexo();
         $datosPreguntasDificiles = $this->crearGraficoPreguntasDificilesYFaciles();
         $puntajeGlobal = $this->crearGraficoPuntajeGlobal();
+        $cantidadUsuarios = $this->crearGraficoUsuariosTotales();
+
+
+
 
         $this->renderer->render('adminGraficos', [
             'datosSexo' => json_encode($datosSexo, JSON_UNESCAPED_UNICODE),
             'datosPreguntas' => json_encode($datosPreguntasDificiles, JSON_UNESCAPED_UNICODE),
             'puntajeGlobal' => json_encode($puntajeGlobal, JSON_UNESCAPED_UNICODE),
+            'cantidadUsuarios' => $cantidadUsuarios,
             'BASE_URL' => BASE_URL
         ]);
     }
@@ -109,5 +118,14 @@ class AdminController {
         return $data;
     }
 
+    public function crearGraficoUsuariosTotales(){
+        $this->validarAdmin();
+
+        $adminModel = new AdminModel($this->conexion);
+        $usuariosTotales = $adminModel->obtenerCantidadUsuarios();
+        $cantidadUsuarios = $usuariosTotales[0]['total'];
+
+        return $cantidadUsuarios;
+    }
 
 }
