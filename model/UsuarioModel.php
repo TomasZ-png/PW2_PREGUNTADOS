@@ -38,7 +38,7 @@ class UsuarioModel
         return $resultado[0]['puntaje_maximo_obtenido'] ?? 0;
     }
 
-    // NUEVO MÉTODO CLAVE: Actualiza el puntaje máximo solo si es mayor
+    //  Actualiza el puntaje máximo solo si es mayor
     public function actualizarPuntajeMaximo($id_usuario, $puntaje_final)
     {
         // Se usa la función GREATEST para actualizar solo si el nuevo puntaje es mayor que el existente
@@ -60,7 +60,6 @@ class UsuarioModel
         return $usuarios;
     }
 
-    // ... (Mantener listarUsuarios y sumarPuntosUsuario si los usas para puntaje_global)
     public function sumarPuntosUsuario($id_usuario, $puntaje_final){
         $stmt = $this->conexion->prepare("UPDATE usuario 
                                            SET puntaje_global = COALESCE(puntaje_global, 0) + ? 
