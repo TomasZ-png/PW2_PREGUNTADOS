@@ -43,7 +43,7 @@ class PerfilController {
     $cantidadPartidas = $this->usuarioModel->obtenerCantidadDePartidasJugadasDelUsuario($idUsuario);
 
     // defaults
-    $usuarioPerfil["foto_perfil"] = $usuarioPerfil["foto_perfil"] ?: "default-user.png";
+    $usuarioPerfil["foto_perfil"] = $usuarioPerfil["foto_perfil"] ?: null;
     $usuarioPerfil["anio_nacimiento"] = $usuarioPerfil["anio_nacimiento"] ?: "—";
     $usuarioPerfil["sexo"] = $usuarioPerfil["sexo"] ?: "—";
     $usuarioPerfil["puntaje_maximo_obtenido"] = $usuarioPerfil["puntaje_maximo_obtenido"] ?: 0;
@@ -80,7 +80,7 @@ class PerfilController {
 
     // defaults
     $perfil['promedio'] = $promedioDeUsuario;
-    $perfil["foto_perfil"] = $perfil["foto_perfil"] ?: "default-user.png";
+    $perfil["foto_perfil"] = $perfil["foto_perfil"] ?: null;
     $perfil["anio_nacimiento"] = $perfil["anio_nacimiento"] ?: "—";
     $perfil["sexo"] = $perfil["sexo"] ?: "—";
     $perfil["puntaje_maximo_obtenido"] = $perfil["puntaje_maximo_obtenido"] ?: 0;
