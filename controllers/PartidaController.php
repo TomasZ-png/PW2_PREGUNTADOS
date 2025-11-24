@@ -81,7 +81,7 @@ class PartidaController
         foreach ($categoriasBrutas as $i => $cat) {
             $categorias[] = [
                 "nombre" => $cat,
-                "color"  => $colores[$i % count($colores)]
+                "color"  => \helpers\CategoryColorHelper::getColorFor($cat)
             ];
         }
 

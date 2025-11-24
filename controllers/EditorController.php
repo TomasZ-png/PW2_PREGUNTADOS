@@ -37,7 +37,9 @@ class EditorController {
         "preguntas" => $preguntas,
         "sugeridas" => $sugeridas,
         "reportadas" => $reportadas,
-        "BASE_URL" => BASE_URL
+        "BASE_URL" => BASE_URL,
+        "success_categoria" => isset($_GET["success_categoria"]),
+        "error_categoria" => isset($_GET["error_categoria"])
     ];
 
     $this->renderer->render("editor", $data);
@@ -204,10 +206,15 @@ public function crearCategoria()
     }
 
     $categoria = trim($_POST['categoria'] ?? '');
+    $color = trim($_POST['color'] ?? '');
 
     if ($categoria === '') {
         header("Location: ".BASE_URL."EditorController/home?error_categoria=1");
         exit();
+    }
+
+    if (!$color || $color === "#000000") {
+        $color = null;
     }
 
     if ($this->editorModel->categoriaExiste($categoria)) {
@@ -216,6 +223,8 @@ public function crearCategoria()
     }
 
     $this->editorModel->crearCategoria($categoria);
+
+    \helpers\CategoryColorHelper::asignarColor($categoria, $color);
 
     header("Location: ".BASE_URL."EditorController/home?success_categoria=1");
     exit();

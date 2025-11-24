@@ -16,58 +16,14 @@
     <h1 class="text-center">Panel del Editor</h1>
     <h4 class="text-center">Bienvenido {{usuario}}</h4>
 
-    <hr>
-
-
-<a href="{{BASE_URL}}EditorController/crearPregunta" class="btn btn-primary mb-3">
-    ➕ Crear Pregunta Nueva
-</a>
-
-    <h2>Preguntas</h2>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Pregunta</th>
-                <th>Categoría</th>
-                <th>Puntaje</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#preguntas}}
-            <tr>
-                <td>{{id_pregunta}}</td>
-                <td>{{pregunta}}</td>
-                <td>{{categoria}}</td>
-                <td>{{puntaje}}</td>
-
-                <td>
-                    <a href="{{BASE_URL}}EditorController/editarPregunta?id={{id_pregunta}}"
-                       class="btn btn-warning btn-sm">
-                       Editar
-                    </a>
-
-                    <a href="{{BASE_URL}}EditorController/eliminarPregunta?id={{id_pregunta}}" 
-               class="btn btn-danger btn-sm"
-               onclick="return confirm('¿Seguro que querés eliminar esta pregunta?');">
-                Eliminar
-            </a>
-                </td>
-            </tr>
-            {{/preguntas}}
-        </tbody>
-    </table>
-
-    <hr>
-
     <h2>Crear Nueva Categoría</h2>
 
 <form action="{{BASE_URL}}EditorController/crearCategoria" method="POST" class="card p-4 shadow-sm mt-3">
     <div class="mb-3">
         <label class="form-label">Nombre de la categoría</label>
         <input type="text" name="categoria" class="form-control" required>
+        <label class="form-label">Color (opcional)</label>
+        <input type="color" name="color" class="form-control form-control-color">
     </div>
 
     <button type="submit" class="btn btn-success">Agregar Categoría</button>
@@ -84,6 +40,8 @@
     alert("❌ Error: Ya existe una categoría con ese nombre.");
 </script>
 {{/error_categoria}}
+
+    <hr>
 
     <h2>Preguntas Sugeridas (Pendientes)</h2>
 
@@ -169,6 +127,50 @@
             {{/reportadas}}
         </tbody>
     </table>
+
+    <hr>
+
+    <a href="{{BASE_URL}}EditorController/crearPregunta" class="btn btn-primary mb-3">
+        ➕ Crear Pregunta Nueva
+    </a>
+
+    <h2>Preguntas</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Pregunta</th>
+            <th>Categoría</th>
+            <th>Puntaje</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#preguntas}}
+            <tr>
+                <td>{{id_pregunta}}</td>
+                <td>{{pregunta}}</td>
+                <td>{{categoria}}</td>
+                <td>{{puntaje}}</td>
+
+                <td>
+                    <a href="{{BASE_URL}}EditorController/editarPregunta?id={{id_pregunta}}"
+                    class="btn btn-warning btn-sm">
+                    Editar
+                    </a>
+
+                    <a href="{{BASE_URL}}EditorController/eliminarPregunta?id={{id_pregunta}}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('¿Seguro que querés eliminar esta pregunta?');">
+                    Eliminar
+                    </a>
+                </td>
+            </tr>
+        {{/preguntas}}
+        </tbody>
+    </table>
+
 
     <div class="text-center mt-4 mb-5">
         <a href="{{BASE_URL}}" class="btn btn-primary btn-lg">
