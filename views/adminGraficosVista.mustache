@@ -206,27 +206,27 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h2>
-            <div class="header-icon">📊</div>
-            Estadísticas del Sistema
-        </h2>
+<div class="header">
+    <h2>
+        <div class="header-icon">📊</div>
+        Estadísticas del Sistema
+    </h2>
 
+    <div style="display: flex; gap: 15px; align-items: center;">
+
+        <!-- SELECT DE FILTRO -->
         <form id="filtroForm" method="GET" action="{{BASE_URL}}AdminController/dashboardGraficos">
-
             <select name="filtro" id="filtroTiempo" class="form-select">
-
                 <option value="dia" {{#select.isDia}}selected{{/select.isDia}}>Día</option>
                 <option value="semana" {{#select.isSemana}}selected{{/select.isSemana}}>Semana</option>
                 <option value="mes" {{#select.isMes}}selected{{/select.isMes}}>Mes</option>
                 <option value="anio" {{#select.isAnio}}selected{{/select.isAnio}}>Año</option>
-
             </select>
-
         </form>
 
+
     </div>
+</div>
 
 
     <div class="dashboard-grid">
@@ -708,8 +708,83 @@
         if (chartSexo) chartSexo.draw(dataSexo, chartSexo.getOptions());
         if (chartPreg) chartPreg.draw(dataPreg, chartPreg.getOptions());
         if (chartPuntaje) chartPuntaje.draw(dataPuntaje, chartPuntaje.getOptions());
+        if (chartUsuarios) chartUsuarios.draw(dataPuntaje, chartUsuarios.getOptions());
 
     });
+
+    // ------------------------------
+    // DESCARGA DE PDF (USUARIOS TOTALES)
+    // ------------------------------
+    document.getElementById("btn_pdf_usuarios_totales").addEventListener("click", function () {
+        const imgURI = chartUsuarios.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("l", "mm", "a4");
+
+        pdf.setFontSize(18);
+        pdf.text("Usuarios Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("usuarios_totales.pdf");
+
+    });
+
+    // ------------------------------
+    // DESCARGA DE PDF (PARTIDAS TOTALES)
+    // ------------------------------
+    document.getElementById("btn_pdf_partidas_totales").addEventListener("click", function () {
+        const imgURI = chartPartidas.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.setFontSize(18);
+        pdf.text("Partidas Jugadas Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("partidas_totales.pdf");
+    });
+
+    // ------------------------------
+    // DESCARGA DE PDF (PREGUNTAS CREADAS)
+    // ------------------------------
+    document.getElementById("btn_pdf_preguntas_creadas").addEventListener("click", function () {
+        const imgURI = chartPreguntasCreadas.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.setFontSize(18);
+        pdf.text("Preguntas Creadas Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("preguntas_creadas_totales.pdf");
+    });
+
+    // ------------------------------
+    // DESCARGA DE PDF (PREGUNTAS TOTALES)
+    // ------------------------------
+    document.getElementById("btn_pdf_preguntas_totales").addEventListener("click", function () {
+        const imgURI = chartPreguntasTotales.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.setFontSize(18);
+        pdf.text("Preguntas Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("preguntas_totales.pdf");
+    });
+
 
 
 

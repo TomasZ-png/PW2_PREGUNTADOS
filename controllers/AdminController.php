@@ -31,11 +31,10 @@ class AdminController {
         }
 
     }
-
     public function dashboardGraficos(){
         $this->validarAdmin();
 
-        $filtro = $_GET['filtro'] ?? 'mes'; // por ejemplo
+        $filtro = $_GET['filtro'] ?? 'mes';
 
         $selectData = [
             'isDia' => $filtro == 'dia',
@@ -44,6 +43,7 @@ class AdminController {
             'isAnio' => $filtro == 'anio'
         ];
 
+        $selectData["filtroSeleccionado"] = $filtro;
 
 
         $datosSexo = $this->crearGraficoSexo($filtro);
