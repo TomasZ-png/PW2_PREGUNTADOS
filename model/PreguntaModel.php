@@ -184,6 +184,46 @@ class PreguntaModel
         return $categorias;
     }
 
+    public function obtenerCantidadDePreguntasDeCategoria($categoria) {
+        $sql = "SELECT COUNT(id_pregunta) AS total FROM pregunta WHERE categoria = ?";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("s", $categoria);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'];
+    }
+
+    public function obtenerCategoriasParaRuleta(){
+        $sql = "SELECT categoria FROM categoria_pregunta";
+        $stmt = $this->conexion->prepare($sql);
+
+        if (!$stmt) {
+            error_log("Error preparando consulta de categorías: " . $this->conexion->error);
+            return [];
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $categorias = [];
+
+        while ($fila = $result->fetch_assoc()) {
+            $categorias[] = $fila['categoria'];
+        }
+
+        $categoriasADevolver = [];
+
+        foreach ($categorias as $categoria) {
+            $preguntasXCategoria = $this->obtenerCantidadDePreguntasDeCategoria($categoria);
+
+            if($preguntasXCategoria >= 5){
+                $categoriasADevolver[] = $categoria;
+            }
+        }
+
+        $stmt->close();
+        return $categoriasADevolver;
+    }
 
     public function obtenerPreguntasDeFacilesADificiles(){
         $stmt = $this->conexion->prepare("SELECT p.pregunta, SUM(p.cant_erroneas) AS erroneas, SUM(p.cant_acertadas) AS acertadas

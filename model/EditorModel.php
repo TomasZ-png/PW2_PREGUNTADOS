@@ -117,7 +117,7 @@ $pregunta['respuestas'] = $this->fetchAllSafe($resultRespuestas);
 
         $stmt2 = $this->conexion->prepare("
             INSERT INTO pregunta (pregunta, categoria, dificultad, puntaje, cant_acertadas, cant_erroneas, fecha_creacion)
-            VALUES (?, ?, 'NUEVA', 10, 0, 0, CURDATE())
+            VALUES (?, ?, 'NUEVA', 5, 0, 0, CURDATE())
         ");
         if (!$stmt2) {
             return false;
@@ -266,8 +266,9 @@ public function categoriaExiste($nombre)
 
 public function crearCategoria($nombre)
 {
+    $nombreCategoria = strtoupper($nombre);
     $query = $this->conexion->prepare("INSERT INTO categoria_pregunta (categoria) VALUES (?)");
-    return $query->execute([$nombre]);
+    return $query->execute([$nombreCategoria]);
 }
 
 

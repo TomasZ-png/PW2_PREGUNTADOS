@@ -15,6 +15,7 @@ class PartidaController
     private $renderer;
     private $basePath = BASE_URL;
     private $conexion;
+    private $preguntaModel;
 
     // CONSTRUCTOR: Asegúrate de que tu ConfigFactory te inyecte estos 3:
     public function __construct($partidaModel, $renderer, $conexion)
@@ -24,6 +25,7 @@ class PartidaController
         $this->conexion = $conexion;
         // Asumiendo que UsuarioModel ya está incluido o disponible
         $this->usuarioModel = new UsuarioModel($this->conexion);
+        $this->preguntaModel = new PreguntaModel($this->conexion);
     }
     
     public function mostrarHome()
@@ -71,6 +73,18 @@ class PartidaController
             $colorCategoria = \helpers\CategoryColorHelper::getColorFor($categoriaGanada);
         }
 
+        $categoriasBrutas = $this->preguntaModel->obtenerCategoriasParaRuleta();
+
+        $colores = ["#fc8448", "#73bd58", "#ba87d1", "#fb4551", "#3d9bd0"];
+        $categorias = [];
+
+        foreach ($categoriasBrutas as $i => $cat) {
+            $categorias[] = [
+                "nombre" => $cat,
+                "color"  => $colores[$i % count($colores)]
+            ];
+        }
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categoria'])){
             error_log('mostrarRuleta: categoria recibida -> ' . $_POST['categoria']);
             $_SESSION['categoria'] = $_POST['categoria'];
@@ -82,7 +96,8 @@ class PartidaController
         $this->renderer->renderWoHaF("ruleta", [
             "BASE_URL" => BASE_URL,
             "categoriaGanada" => $categoriaGanada,
-            "colorCategoria" => $colorCategoria
+            "colorCategoria" => $colorCategoria,
+            "categorias" => json_encode($categorias)
         ]);
     }
 
