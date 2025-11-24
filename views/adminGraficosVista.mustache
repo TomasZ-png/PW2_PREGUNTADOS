@@ -180,68 +180,121 @@
             font-weight: 600;
         }
 
-        /* --- RESPONSIVE MOBILE (<= 768px) --- */
-        @media (max-width: 768px) {
-            /* Ajustar el grid principal a una columna */
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-                gap: 20px; /* Reducir gap en móvil */
-            }
+       /* --- RESPONSIVE GENERAL <= 768px --- */
+@media (max-width: 768px) {
 
-            .header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-                padding: 20px 20px; /* Reducir padding del header */
-            }
+    body {
+        padding: 10px;
+        margin-top: 60px;
+    }
 
-            .header h2 {
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
-            
-            .header-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-            }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
 
-            .chart-card {
-                padding: 20px; /* Reducir padding del card */
-            }
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 20px;
+    }
 
-            .chart-card h3 {
-                font-size: 20px;
-            }
+    .header h2 {
+        font-size: 24px;
+    }
 
-            .chart-card-header {
-                /* Permitir que el botón se apile debajo del título si es necesario */
-                flex-direction: column; 
-                gap: 15px;
-                align-items: flex-start; /* Alinear título e ícono a la izquierda */
-            }
-            
-            .btn-pdf {
-                width: 100%; /* El botón ocupa todo el ancho */
-                justify-content: center;
-                font-size: 16px;
-                padding: 10px 20px;
-            }
-            
-            /* Asegurar que el resumen estadístico se ajusta bien */
-            .stats-summary {
-                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                 gap: 10px;
-            }
+    .header-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
 
-            .stat-value {
-                font-size: 28px;
-            }
+    .chart-card {
+        padding: 20px;
+    }
 
-            .stat-label {
-                font-size: 12px;
-            }
-        }
+    .chart-card h3 {
+        font-size: 20px;
+    }
+
+    .chart-card-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .btn-pdf {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+
+    .stats-summary {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .stat-value {
+        font-size: 26px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+    }
+
+    .chart-container {
+        min-height: 300px;
+    }
+
+    #grafico_sexo,
+    #grafico_puntaje,
+    #grafico_preguntas {
+        min-height: 300px !important;
+    }
+}
+
+/* --- SUPER RESPONSIVE PARA iPhone SE (<= 390px) --- */
+@media (max-width: 390px) {
+
+    .header {
+        padding: 15px;
+    }
+
+    .header h2 {
+        font-size: 20px;
+    }
+
+    .chart-card {
+        padding: 15px;
+    }
+
+    .chart-card h3 {
+        font-size: 18px;
+    }
+
+    .btn-pdf {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .chart-container,
+    #grafico_sexo,
+    #grafico_puntaje,
+    #grafico_preguntas {
+        min-height: 250px !important;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -328,6 +381,10 @@
                     <span class="chart-icon">👤</span>
                     Usuarios Totales
                 </h3>
+                <button id="btn_pdf_usuarios_totales" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="grafico_usuarios_totales" style="width:100%;height:400px;"></div>
@@ -342,6 +399,10 @@
                     <span class="chart-icon">🎮</span>
                     Partidas Jugadas Totales
                 </h3>
+                <button id="btn_pdf_partidas_totales" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="grafico_partidas_totales" style="width:100%;height:400px;"></div>
@@ -355,6 +416,10 @@
                     <span class="chart-icon">❓</span>
                     Preguntas Creadas Totales
                 </h3>
+                <button id="btn_pdf_preguntas_creadas" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="grafico_preguntas_creadas" style="width:100%;height:400px;"></div>
@@ -368,6 +433,10 @@
                     <span class="chart-icon">❓</span>
                     Preguntas Totales
                 </h3>
+                <button id="btn_pdf_preguntas_totales" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="grafico_preguntas_totales" style="width:100%;height:400px;"></div>
@@ -382,6 +451,10 @@
                     <span class="chart-icon">👶🧑👴</span>
                     Usuarios por Grupo de Edades
                 </h3>
+                <button id="btn_pdf_edades" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="graficoEdad" style="width: 600px; height: 400px;"></div>
@@ -395,6 +468,10 @@
                     <span class="chart-icon">🌍</span>
                     Jugadores por País
                 </h3>
+                <button id="btn_pdf_pais" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="graficoPais" style="width:100%;height:400px;"></div>
@@ -408,6 +485,10 @@
                     <span class="chart-icon">🆕</span>
                     Usuarios Nuevos por Día
                 </h3>
+                <button id="btn_pdf_usuarios_nuevos" class="btn-pdf">
+    <span>📄</span> Descargar PDF
+</button>
+
             </div>
             <div class="chart-container">
                 <div id="graficoUsuariosNuevos" style="width: 600px; height: 400px;"></div>
@@ -445,246 +526,248 @@
     google.charts.setOnLoadCallback(dibujarGraficos);
 
     let chartSexo, chartPreg, chartPuntaje;
+let chartUsuarios, chartPartidas, chartPreguntasCreadas, chartPreguntasTotales;
+let chartEdades, chartPais, chartUsuariosNuevos;
+
 
     function dibujarGraficos() {
 
-        // ------------------------------
-        // GRAFICO DE SEXO
-        // ------------------------------
+    // ------------------------------
+    // GRAFICO DE SEXO
+    // ------------------------------
 
-        let dataSexo = new google.visualization.DataTable();
-        dataSexo.addColumn('string', 'Sexo');
-        dataSexo.addColumn('number', 'Cantidad');
+    let dataSexo = new google.visualization.DataTable();
+    dataSexo.addColumn('string', 'Sexo');
+    dataSexo.addColumn('number', 'Cantidad');
 
-        for (let key in datosSexo) {
-            dataSexo.addRow([key, datosSexo[key]]);
-        }
-
-        chartSexo = new google.visualization.PieChart(
-                document.getElementById('grafico_sexo')
-        );
-
-        chartSexo.draw(dataSexo, {
-            title: '',
-            pieHole: 0.4,
-            colors: ['#667eea', '#764ba2', '#f6ad55', '#fc8181'],
-            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
-            pieSliceTextStyle: { color: 'white', fontSize: 16 },
-            chartArea: { width: '90%', height: '80%' }
-        });
-
-        // ------------------------------
-        // GRAFICO DE PREGUNTAS
-        // ------------------------------
-        let dataPreg = new google.visualization.DataTable();
-        dataPreg.addColumn('string', 'Pregunta');
-        dataPreg.addColumn('number', 'Errores');
-        dataPreg.addColumn('number', 'Acertadas');
-
-        datosPreguntas.forEach(p => {
-            dataPreg.addRow([p.pregunta, p.erroneas, p.acertadas]);
-        });
-
-        chartPreg = new google.visualization.ColumnChart(
-                document.getElementById('grafico_preguntas')
-        );
-
-        chartPreg.draw(dataPreg, {
-            title: '',
-            legend: { position: 'top', textStyle: { fontSize: 14 } },
-            bar: { groupWidth: "70%" },
-            colors: ['#e74c3c', '#2ecc71'],
-            chartArea: { width: '85%', height: '70%' },
-            hAxis: { textStyle: { fontSize: 12 } },
-            vAxis: { textStyle: { fontSize: 12 } }
-        });
-
-        // ------------------------------
-        // GRAFICO DE PUNTAJE GLOBAL
-        // ------------------------------
-        let dataPuntaje = new google.visualization.DataTable();
-        dataPuntaje.addColumn('string', 'Usuario');
-        dataPuntaje.addColumn('number', 'Puntaje');
-
-        for (let i = 1; i < datosPuntaje.length; i++) {
-            let fila = datosPuntaje[i];
-            dataPuntaje.addRow([fila[0], fila[1]]);
-        }
-
-        chartPuntaje = new google.visualization.ColumnChart(
-                document.getElementById('grafico_puntaje')
-        );
-
-        chartPuntaje.draw(dataPuntaje, {
-            title: '',
-            legend: { position: 'none' },
-            colors: ['#667eea'],
-            bar: { groupWidth: "70%" },
-            chartArea: { width: '85%', height: '75%' },
-            hAxis: { textStyle: { fontSize: 12 } },
-            vAxis: { textStyle: { fontSize: 12 } }
-        });
-
-        // ------------------------------
-        // GRAFICO DE USUARIOS TOTALES
-        // ------------------------------
-
-        let dataUsuarios = google.visualization.arrayToDataTable([
-            ['Usuarios', 'Cantidad'],
-            ['Registrados', cantidadUsuarios]
-        ]);
-
-        let chartUsuarios = new google.visualization.ColumnChart(
-                document.getElementById('grafico_usuarios_totales')
-        );
-
-        chartUsuarios.draw(dataUsuarios, {
-            title: 'Usuarios Totales',
-            pieHole: 0.4,
-            colors: ['#36A2EB'],
-            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
-            pieSliceTextStyle: { color: 'white', fontSize: 16 },
-            chartArea: { width: '90%', height: '80%' }
-        });
-
-        // ------------------------------
-        // GRAFICO DE PARTIDAS TOTALES
-        // ------------------------------
-
-        let dataPartidas = google.visualization.arrayToDataTable([
-            ['Partidas', 'Cantidad'],
-            ['Jugadas', cantidadPartidas]
-        ]);
-
-        let chartPartidas = new google.visualization.ColumnChart(
-                document.getElementById('grafico_partidas_totales')
-        );
-
-        chartPartidas.draw(dataPartidas, {
-            title: 'Partidas Totales',
-            pieHole: 0.4,
-            colors: ['#FF6384'],
-            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
-            pieSliceTextStyle: { color: 'white', fontSize: 16 },
-            chartArea: { width: '90%', height: '80%' }
-        });
-
-        // ------------------------------
-        // GRAFICO DE PREGUNTAS CREADAS
-        // ------------------------------
-
-        let dataPreguntasCreadas = google.visualization.arrayToDataTable([
-            ['Pregunta', 'Cantidad'],
-            ['Creadas', cantidadPreguntasCreadas]
-        ]);
-
-        let chartPreguntasCreadas = new google.visualization.ColumnChart(
-                document.getElementById('grafico_preguntas_creadas')
-        );
-
-        chartPreguntasCreadas.draw(dataPreguntasCreadas, {
-            title: 'Preguntas Creadas',
-            pieHole: 0.4,
-            colors: ['#FF6384'],
-            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
-            pieSliceTextStyle: { color: 'white', fontSize: 16 },
-            chartArea: { width: '90%', height: '80%' }
-        });
-
-        // ------------------------------
-        // GRAFICO DE PREGUNTAS TOTALES
-        // ------------------------------
-
-        let dataPreguntasTotales = google.visualization.arrayToDataTable([
-            ['Pregunta', 'Cantidad'],
-            ['Totales', cantidadPreguntasTotales]
-        ]);
-
-        let chartPreguntasTotales = new google.visualization.PieChart(
-                document.getElementById('grafico_preguntas_totales')
-        );
-
-        chartPreguntasTotales.draw(dataPreguntasTotales, {
-            title: 'Preguntas Creadas Totales',
-            pieHole: 0.4,
-            colors: ['#FF6384'],
-            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
-            pieSliceTextStyle: { color: 'white', fontSize: 16 },
-            chartArea: { width: '90%', height: '80%' }
-        });
-
-
-        // ------------------------------
-        // GRAFICO DE EDADES
-        // ------------------------------
-
-        let dataEdades = google.visualization.arrayToDataTable(datosEdades);
-
-        let options = {
-            title: 'Usuarios por Grupo de Edad',
-            legend: { position: 'none' },
-            hAxis: { title: 'Grupo' },
-            vAxis: { title: 'Cantidad' },
-            colors: ['#4285F4']
-        };
-
-        let chartEdades = new google.visualization.ColumnChart(
-                document.getElementById('graficoEdad')
-        );
-        chartEdades.draw(dataEdades, options);
-
-
-        // ------------------------------
-        // GRAFICO DE JUGADORES POR PAÍS
-        // ------------------------------
-        let dataPais = google.visualization.arrayToDataTable(datosPais);
-
-        let opcionesPais = {
-            title: 'Jugadores por País',
-            legend: { position: 'none' },
-            hAxis: {
-                title: 'País',
-                textStyle: { fontSize: 12 }
-            },
-            vAxis: {
-                title: 'Cantidad',
-                minValue: 0
-            },
-            colors: ['#34a853'], // verde estilo Google
-            chartArea: { width: '85%', height: '70%' }
-        };
-
-        let chartPais = new google.visualization.ColumnChart(
-                document.getElementById('graficoPais')
-        );
-
-        chartPais.draw(dataPais, opcionesPais);
-
-        // ------------------------------
-        // GRAFICO DE USUARIOS NUEVOS
-        // ------------------------------
-        let dataUsuariosNuevos = new google.visualization.DataTable();
-        dataUsuariosNuevos.addColumn('string', 'Día');
-        dataUsuariosNuevos.addColumn('number', 'Usuarios Nuevos');
-
-        datosUsuariosNuevos.forEach(row => {
-            dataUsuariosNuevos.addRow([row.dia, parseInt(row.cantidad)]);
-        });
-
-        let chartUsuariosNuevos = new google.visualization.ColumnChart(
-                document.getElementById('graficoUsuariosNuevos')
-        );
-
-        chartUsuariosNuevos.draw(dataUsuariosNuevos, {
-            title: '',
-            legend: { position: 'none' },
-            colors: ['#1E88E5'],
-            hAxis: { title: 'Día' },
-            vAxis: { title: 'Usuarios Nuevos', minValue: 0 },
-            chartArea: { width: '85%', height: '70%' }
-        });
-
+    for (let key in datosSexo) {
+        dataSexo.addRow([key, datosSexo[key]]);
     }
+
+    chartSexo = new google.visualization.PieChart(
+        document.getElementById('grafico_sexo')
+    );
+
+    chartSexo.draw(dataSexo, {
+        title: '',
+        pieHole: 0.4,
+        colors: ['#667eea', '#764ba2', '#f6ad55', '#fc8181'],
+        legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+        pieSliceTextStyle: { color: 'white', fontSize: 16 },
+        chartArea: { width: '90%', height: '80%' }
+    });
+
+    // ------------------------------
+    // GRAFICO DE PREGUNTAS
+    // ------------------------------
+    let dataPreg = new google.visualization.DataTable();
+    dataPreg.addColumn('string', 'Pregunta');
+    dataPreg.addColumn('number', 'Errores');
+    dataPreg.addColumn('number', 'Acertadas');
+
+    datosPreguntas.forEach(p => {
+        dataPreg.addRow([p.pregunta, p.erroneas, p.acertadas]);
+    });
+
+    chartPreg = new google.visualization.ColumnChart(
+        document.getElementById('grafico_preguntas')
+    );
+
+    chartPreg.draw(dataPreg, {
+        title: '',
+        legend: { position: 'top', textStyle: { fontSize: 14 } },
+        bar: { groupWidth: "70%" },
+        colors: ['#e74c3c', '#2ecc71'],
+        chartArea: { width: '85%', height: '70%' },
+        hAxis: { textStyle: { fontSize: 12 } },
+        vAxis: { textStyle: { fontSize: 12 } }
+    });
+
+    // ------------------------------
+    // GRAFICO DE PUNTAJE GLOBAL
+    // ------------------------------
+    let dataPuntaje = new google.visualization.DataTable();
+    dataPuntaje.addColumn('string', 'Usuario');
+    dataPuntaje.addColumn('number', 'Puntaje');
+
+    for (let i = 1; i < datosPuntaje.length; i++) {
+        let fila = datosPuntaje[i];
+        dataPuntaje.addRow([fila[0], fila[1]]);
+    }
+
+    chartPuntaje = new google.visualization.ColumnChart(
+        document.getElementById('grafico_puntaje')
+    );
+
+    chartPuntaje.draw(dataPuntaje, {
+        title: '',
+        legend: { position: 'none' },
+        colors: ['#667eea'],
+        bar: { groupWidth: "70%" },
+        chartArea: { width: '85%', height: '75%' },
+        hAxis: { textStyle: { fontSize: 12 } },
+        vAxis: { textStyle: { fontSize: 12 } }
+    });
+
+    // ------------------------------
+    // GRAFICO DE USUARIOS TOTALES
+    // ------------------------------
+
+    let dataUsuarios = google.visualization.arrayToDataTable([
+        ['Usuarios', 'Cantidad'],
+        ['Registrados', cantidadUsuarios]
+    ]);
+
+    chartUsuarios = new google.visualization.ColumnChart(
+        document.getElementById('grafico_usuarios_totales')
+    );
+
+    chartUsuarios.draw(dataUsuarios, {
+        title: 'Usuarios Totales',
+        pieHole: 0.4,
+        colors: ['#36A2EB'],
+        legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+        pieSliceTextStyle: { color: 'white', fontSize: 16 },
+        chartArea: { width: '90%', height: '80%' }
+    });
+
+    // ------------------------------
+    // GRAFICO DE PARTIDAS TOTALES
+    // ------------------------------
+
+    let dataPartidas = google.visualization.arrayToDataTable([
+        ['Partidas', 'Cantidad'],
+        ['Jugadas', cantidadPartidas]
+    ]);
+
+    chartPartidas = new google.visualization.ColumnChart(
+        document.getElementById('grafico_partidas_totales')
+    );
+
+    chartPartidas.draw(dataPartidas, {
+        title: 'Partidas Totales',
+        pieHole: 0.4,
+        colors: ['#FF6384'],
+        legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+        pieSliceTextStyle: { color: 'white', fontSize: 16 },
+        chartArea: { width: '90%', height: '80%' }
+    });
+
+    // ------------------------------
+    // GRAFICO DE PREGUNTAS CREADAS
+    // ------------------------------
+
+    let dataPreguntasCreadas = google.visualization.arrayToDataTable([
+        ['Pregunta', 'Cantidad'],
+        ['Creadas', cantidadPreguntasCreadas]
+    ]);
+
+    chartPreguntasCreadas = new google.visualization.ColumnChart(
+        document.getElementById('grafico_preguntas_creadas')
+    );
+
+    chartPreguntasCreadas.draw(dataPreguntasCreadas, {
+        title: 'Preguntas Creadas',
+        pieHole: 0.4,
+        colors: ['#FF6384'],
+        legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+        pieSliceTextStyle: { color: 'white', fontSize: 16 },
+        chartArea: { width: '90%', height: '80%' }
+    });
+
+    // ------------------------------
+    // GRAFICO DE PREGUNTAS TOTALES
+    // ------------------------------
+
+    let dataPreguntasTotales = google.visualization.arrayToDataTable([
+        ['Pregunta', 'Cantidad'],
+        ['Totales', cantidadPreguntasTotales]
+    ]);
+
+    chartPreguntasTotales = new google.visualization.PieChart(
+        document.getElementById('grafico_preguntas_totales')
+    );
+
+    chartPreguntasTotales.draw(dataPreguntasTotales, {
+        title: 'Preguntas Creadas Totales',
+        pieHole: 0.4,
+        colors: ['#FF6384'],
+        legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+        pieSliceTextStyle: { color: 'white', fontSize: 16 },
+        chartArea: { width: '90%', height: '80%' }
+    });
+
+    // ------------------------------
+    // GRAFICO DE EDADES
+    // ------------------------------
+
+    let dataEdades = google.visualization.arrayToDataTable(datosEdades);
+
+    let options = {
+        title: 'Usuarios por Grupo de Edad',
+        legend: { position: 'none' },
+        hAxis: { title: 'Grupo' },
+        vAxis: { title: 'Cantidad' },
+        colors: ['#4285F4']
+    };
+
+    chartEdades = new google.visualization.ColumnChart(
+        document.getElementById('graficoEdad')
+    );
+
+    chartEdades.draw(dataEdades, options);
+
+    // ------------------------------
+    // GRAFICO DE JUGADORES POR PAÍS
+    // ------------------------------
+    let dataPais = google.visualization.arrayToDataTable(datosPais);
+
+    let opcionesPais = {
+        title: 'Jugadores por País',
+        legend: { position: 'none' },
+        hAxis: {
+            title: 'País',
+            textStyle: { fontSize: 12 }
+        },
+        vAxis: {
+            title: 'Cantidad',
+            minValue: 0
+        },
+        colors: ['#34a853'],
+        chartArea: { width: '85%', height: '70%' }
+    };
+
+    chartPais = new google.visualization.ColumnChart(
+        document.getElementById('graficoPais')
+    );
+
+    chartPais.draw(dataPais, opcionesPais);
+
+    // ------------------------------
+    // GRAFICO DE USUARIOS NUEVOS
+    // ------------------------------
+    let dataUsuariosNuevos = new google.visualization.DataTable();
+    dataUsuariosNuevos.addColumn('string', 'Día');
+    dataUsuariosNuevos.addColumn('number', 'Usuarios Nuevos');
+
+    datosUsuariosNuevos.forEach(row => {
+        dataUsuariosNuevos.addRow([row.dia, parseInt(row.cantidad)]);
+    });
+
+    chartUsuariosNuevos = new google.visualization.ColumnChart(
+        document.getElementById('graficoUsuariosNuevos')
+    );
+
+    chartUsuariosNuevos.draw(dataUsuariosNuevos, {
+        title: '',
+        legend: { position: 'none' },
+        colors: ['#1E88E5'],
+        hAxis: { title: 'Día' },
+        vAxis: { title: 'Usuarios Nuevos', minValue: 0 },
+        chartArea: { width: '85%', height: '70%' }
+    });
+
+}
 
 
 
@@ -742,6 +825,91 @@
 
         pdf.save("preguntame_puntaje_global.pdf");
     });
+
+    document.getElementById("btn_pdf_usuarios_totales").addEventListener("click", function () {
+    const imgURI = chartUsuarios.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Usuarios Totales - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_usuarios_totales.pdf");
+});
+
+document.getElementById("btn_pdf_partidas_totales").addEventListener("click", function () {
+    const imgURI = chartPartidas.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Partidas Totales - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_partidas_totales.pdf");
+});
+
+document.getElementById("btn_pdf_preguntas_creadas").addEventListener("click", function () {
+    const imgURI = chartPreguntasCreadas.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Preguntas Creadas Totales - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_preguntas_creadas.pdf");
+});
+
+document.getElementById("btn_pdf_preguntas_totales").addEventListener("click", function () {
+    const imgURI = chartPreguntasTotales.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Preguntas Totales - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_preguntas_totales.pdf");
+});
+
+document.getElementById("btn_pdf_edades").addEventListener("click", function () {
+    const imgURI = chartEdades.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Usuarios por Grupo de Edad - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_edades.pdf");
+});
+
+document.getElementById("btn_pdf_pais").addEventListener("click", function () {
+    const imgURI = chartPais.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Jugadores por País - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_paises.pdf");
+});
+
+document.getElementById("btn_pdf_usuarios_nuevos").addEventListener("click", function () {
+    const imgURI = chartUsuariosNuevos.getImageURI();
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(18);
+    pdf.text("Usuarios Nuevos por Día - Preguntame", 105, 15, { align: "center" });
+    pdf.addImage(imgURI, "PNG", 10, 25, 180, 120);
+
+    pdf.save("preguntame_usuarios_nuevos.pdf");
+});
+
 
     // Hacer los gráficos responsive
     window.addEventListener('resize', () => {

@@ -172,7 +172,7 @@ class PartidaModel
                WHERE id_partida = $idPartida";
     $this->conexion->query($sqlAdd);
 
-    // actualizar cantidad de erróneas (OJO, acá tenías un bug también)
+    // actualizar cantidad de erróneas
     $actualizarCantidadErroneas = "UPDATE pregunta
                                        SET cant_erroneas = COALESCE(cant_erroneas, 0) + 1
                                        WHERE id_pregunta = $idPregunta";
@@ -218,7 +218,7 @@ class PartidaModel
 
 
 
-    // Obtiene el estado actual de la partida (MODIFICADO para lógica infinita)
+    // Obtiene el estado actual de la partida 
     public function getEstadoPartida($idPartida)
     {
         $sql = "SELECT estado_partida, preguntas_jugadas, puntaje_final, id_jugador 

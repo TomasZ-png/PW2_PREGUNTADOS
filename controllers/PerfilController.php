@@ -90,7 +90,10 @@ class PerfilController {
 
 
         // usuario logueado → PARA EL NAV
+    if (session_status() === PHP_SESSION_NONE) {
     session_start();
+}
+
     $usuarioLogueado = null;
     if (isset($_SESSION["id_usuario"])) {
         $usuarioLogueado = $this->perfilModel->obtenerUsuarioPorId($_SESSION["id_usuario"]);
