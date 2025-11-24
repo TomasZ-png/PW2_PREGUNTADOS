@@ -6,6 +6,7 @@
     <title>Estadísticas - Admin Preguntame</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <style>
     * {
             margin: 0;
@@ -245,13 +246,28 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h2>
-            <div class="header-icon">📊</div>
-            Estadísticas del Sistema
-        </h2>
+<div class="header">
+    <h2>
+        <div class="header-icon">📊</div>
+        Estadísticas del Sistema
+    </h2>
+
+    <div style="display: flex; gap: 15px; align-items: center;">
+
+        <!-- SELECT DE FILTRO -->
+        <form id="filtroForm" method="GET" action="{{BASE_URL}}AdminController/dashboardGraficos">
+            <select name="filtro" id="filtroTiempo" class="form-select">
+                <option value="dia" {{#select.isDia}}selected{{/select.isDia}}>Día</option>
+                <option value="semana" {{#select.isSemana}}selected{{/select.isSemana}}>Semana</option>
+                <option value="mes" {{#select.isMes}}selected{{/select.isMes}}>Mes</option>
+                <option value="anio" {{#select.isAnio}}selected{{/select.isAnio}}>Año</option>
+            </select>
+        </form>
+
+
     </div>
+</div>
+
 
     <div class="dashboard-grid">
         <!-- GRÁFICO DE SEXO -->
@@ -304,6 +320,101 @@
                 <div id="grafico_preguntas" style="width:100%;height:500px"></div>
             </div>
         </div>
+
+        <!-- GRÁFICO DE USUARIOS TOTALES -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">👤</span>
+                    Usuarios Totales
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="grafico_usuarios_totales" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+
+        <!-- GRÁFICO DE PARTIDAS TOTALES -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">🎮</span>
+                    Partidas Jugadas Totales
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="grafico_partidas_totales" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+        <!-- GRÁFICO DE PREGUNTAS CREADAS -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">❓</span>
+                    Preguntas Creadas Totales
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="grafico_preguntas_creadas" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+        <!-- GRÁFICO DE PREGUNTAS TOTALES -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">❓</span>
+                    Preguntas Totales
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="grafico_preguntas_totales" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+
+        <!-- GRÁFICO DE EDADES  -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">👶🧑👴</span>
+                    Usuarios por Grupo de Edades
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="graficoEdad" style="width: 600px; height: 400px;"></div>
+            </div>
+        </div>
+
+        <!-- GRÁFICO DE JUGADORES POR PAÍS -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">🌍</span>
+                    Jugadores por País
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="graficoPais" style="width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+        <!-- GRÁFICO DE USUARIOS NUEVOS -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>
+                    <span class="chart-icon">🆕</span>
+                    Usuarios Nuevos por Día
+                </h3>
+            </div>
+            <div class="chart-container">
+                <div id="graficoUsuariosNuevos" style="width: 600px; height: 400px;"></div>
+            </div>
+        </div>
+
+
     </div>
 </div>
 
@@ -314,10 +425,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
+    document.getElementById('filtroTiempo').addEventListener('change', function () {
+        document.getElementById('filtroForm').submit();
+    });
+
     // Recibir datos desde PHP ya codificados como JSON
     const datosSexo = {{{datosSexo}}};
     const datosPreguntas = {{{datosPreguntas}}};
     const datosPuntaje = {{{puntajeGlobal}}};
+    const cantidadUsuarios = {{cantidadUsuarios}};
+    const cantidadPartidas = {{cantidadPartidas}};
+    const cantidadPreguntasCreadas = {{cantidadPreguntasCreadas}};
+    const cantidadPreguntasTotales = {{cantidadPreguntasTotales}};
+    const datosEdades = {{{usuariosPorEdad}}};
+    const datosPais = {{{usuariosPorPais}}};
+    const datosUsuariosNuevos = {{{usuariosNuevos}}};
 
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(dibujarGraficos);
@@ -325,9 +447,11 @@
     let chartSexo, chartPreg, chartPuntaje;
 
     function dibujarGraficos() {
+
         // ------------------------------
         // GRAFICO DE SEXO
         // ------------------------------
+
         let dataSexo = new google.visualization.DataTable();
         dataSexo.addColumn('string', 'Sexo');
         dataSexo.addColumn('number', 'Cantidad');
@@ -400,7 +524,170 @@
             hAxis: { textStyle: { fontSize: 12 } },
             vAxis: { textStyle: { fontSize: 12 } }
         });
+
+        // ------------------------------
+        // GRAFICO DE USUARIOS TOTALES
+        // ------------------------------
+
+        let dataUsuarios = google.visualization.arrayToDataTable([
+            ['Usuarios', 'Cantidad'],
+            ['Registrados', cantidadUsuarios]
+        ]);
+
+        let chartUsuarios = new google.visualization.ColumnChart(
+                document.getElementById('grafico_usuarios_totales')
+        );
+
+        chartUsuarios.draw(dataUsuarios, {
+            title: 'Usuarios Totales',
+            pieHole: 0.4,
+            colors: ['#36A2EB'],
+            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+            pieSliceTextStyle: { color: 'white', fontSize: 16 },
+            chartArea: { width: '90%', height: '80%' }
+        });
+
+        // ------------------------------
+        // GRAFICO DE PARTIDAS TOTALES
+        // ------------------------------
+
+        let dataPartidas = google.visualization.arrayToDataTable([
+            ['Partidas', 'Cantidad'],
+            ['Jugadas', cantidadPartidas]
+        ]);
+
+        let chartPartidas = new google.visualization.ColumnChart(
+                document.getElementById('grafico_partidas_totales')
+        );
+
+        chartPartidas.draw(dataPartidas, {
+            title: 'Partidas Totales',
+            pieHole: 0.4,
+            colors: ['#FF6384'],
+            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+            pieSliceTextStyle: { color: 'white', fontSize: 16 },
+            chartArea: { width: '90%', height: '80%' }
+        });
+
+        // ------------------------------
+        // GRAFICO DE PREGUNTAS CREADAS
+        // ------------------------------
+
+        let dataPreguntasCreadas = google.visualization.arrayToDataTable([
+            ['Pregunta', 'Cantidad'],
+            ['Creadas', cantidadPreguntasCreadas]
+        ]);
+
+        let chartPreguntasCreadas = new google.visualization.ColumnChart(
+                document.getElementById('grafico_preguntas_creadas')
+        );
+
+        chartPreguntasCreadas.draw(dataPreguntasCreadas, {
+            title: 'Preguntas Creadas',
+            pieHole: 0.4,
+            colors: ['#FF6384'],
+            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+            pieSliceTextStyle: { color: 'white', fontSize: 16 },
+            chartArea: { width: '90%', height: '80%' }
+        });
+
+        // ------------------------------
+        // GRAFICO DE PREGUNTAS TOTALES
+        // ------------------------------
+
+        let dataPreguntasTotales = google.visualization.arrayToDataTable([
+            ['Pregunta', 'Cantidad'],
+            ['Totales', cantidadPreguntasTotales]
+        ]);
+
+        let chartPreguntasTotales = new google.visualization.PieChart(
+                document.getElementById('grafico_preguntas_totales')
+        );
+
+        chartPreguntasTotales.draw(dataPreguntasTotales, {
+            title: 'Preguntas Creadas Totales',
+            pieHole: 0.4,
+            colors: ['#FF6384'],
+            legend: { position: 'bottom', textStyle: { fontSize: 14 } },
+            pieSliceTextStyle: { color: 'white', fontSize: 16 },
+            chartArea: { width: '90%', height: '80%' }
+        });
+
+
+        // ------------------------------
+        // GRAFICO DE EDADES
+        // ------------------------------
+
+        let dataEdades = google.visualization.arrayToDataTable(datosEdades);
+
+        let options = {
+            title: 'Usuarios por Grupo de Edad',
+            legend: { position: 'none' },
+            hAxis: { title: 'Grupo' },
+            vAxis: { title: 'Cantidad' },
+            colors: ['#4285F4']
+        };
+
+        let chartEdades = new google.visualization.ColumnChart(
+                document.getElementById('graficoEdad')
+        );
+        chartEdades.draw(dataEdades, options);
+
+
+        // ------------------------------
+        // GRAFICO DE JUGADORES POR PAÍS
+        // ------------------------------
+        let dataPais = google.visualization.arrayToDataTable(datosPais);
+
+        let opcionesPais = {
+            title: 'Jugadores por País',
+            legend: { position: 'none' },
+            hAxis: {
+                title: 'País',
+                textStyle: { fontSize: 12 }
+            },
+            vAxis: {
+                title: 'Cantidad',
+                minValue: 0
+            },
+            colors: ['#34a853'], // verde estilo Google
+            chartArea: { width: '85%', height: '70%' }
+        };
+
+        let chartPais = new google.visualization.ColumnChart(
+                document.getElementById('graficoPais')
+        );
+
+        chartPais.draw(dataPais, opcionesPais);
+
+        // ------------------------------
+        // GRAFICO DE USUARIOS NUEVOS
+        // ------------------------------
+        let dataUsuariosNuevos = new google.visualization.DataTable();
+        dataUsuariosNuevos.addColumn('string', 'Día');
+        dataUsuariosNuevos.addColumn('number', 'Usuarios Nuevos');
+
+        datosUsuariosNuevos.forEach(row => {
+            dataUsuariosNuevos.addRow([row.dia, parseInt(row.cantidad)]);
+        });
+
+        let chartUsuariosNuevos = new google.visualization.ColumnChart(
+                document.getElementById('graficoUsuariosNuevos')
+        );
+
+        chartUsuariosNuevos.draw(dataUsuariosNuevos, {
+            title: '',
+            legend: { position: 'none' },
+            colors: ['#1E88E5'],
+            hAxis: { title: 'Día' },
+            vAxis: { title: 'Usuarios Nuevos', minValue: 0 },
+            chartArea: { width: '85%', height: '70%' }
+        });
+
     }
+
+
+
 
     // ------------------------------
     // DESCARGA DE PDF (SEXOS)
@@ -461,7 +748,86 @@
         if (chartSexo) chartSexo.draw(dataSexo, chartSexo.getOptions());
         if (chartPreg) chartPreg.draw(dataPreg, chartPreg.getOptions());
         if (chartPuntaje) chartPuntaje.draw(dataPuntaje, chartPuntaje.getOptions());
+        if (chartUsuarios) chartUsuarios.draw(dataPuntaje, chartUsuarios.getOptions());
+
     });
+
+    // ------------------------------
+    // DESCARGA DE PDF (USUARIOS TOTALES)
+    // ------------------------------
+    document.getElementById("btn_pdf_usuarios_totales").addEventListener("click", function () {
+        const imgURI = chartUsuarios.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("l", "mm", "a4");
+
+        pdf.setFontSize(18);
+        pdf.text("Usuarios Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("usuarios_totales.pdf");
+
+    });
+
+    // ------------------------------
+    // DESCARGA DE PDF (PARTIDAS TOTALES)
+    // ------------------------------
+    document.getElementById("btn_pdf_partidas_totales").addEventListener("click", function () {
+        const imgURI = chartPartidas.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.setFontSize(18);
+        pdf.text("Partidas Jugadas Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("partidas_totales.pdf");
+    });
+
+    // ------------------------------
+    // DESCARGA DE PDF (PREGUNTAS CREADAS)
+    // ------------------------------
+    document.getElementById("btn_pdf_preguntas_creadas").addEventListener("click", function () {
+        const imgURI = chartPreguntasCreadas.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.setFontSize(18);
+        pdf.text("Preguntas Creadas Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("preguntas_creadas_totales.pdf");
+    });
+
+    // ------------------------------
+    // DESCARGA DE PDF (PREGUNTAS TOTALES)
+    // ------------------------------
+    document.getElementById("btn_pdf_preguntas_totales").addEventListener("click", function () {
+        const imgURI = chartPreguntasTotales.getImageURI();
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        pdf.setFontSize(18);
+        pdf.text("Preguntas Totales - Preguntame", 105, 15, { align: "center" });
+        pdf.addImage(imgURI, 'PNG', 10, 25, 180, 120);
+
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${new Date().toLocaleString('es-AR')}`, 105, 280, { align: 'center' });
+
+        pdf.save("preguntas_totales.pdf");
+    });
+
+
+
+
 </script>
 
 </body>

@@ -23,6 +23,7 @@ include_once(__DIR__.'/../phpqrcode/qrlib.php');
 include_once(__DIR__.'/../controllers/QRCodeController.php');
 include_once(__DIR__.'/../public/vendor/amenadiel/jpgraph/src/graph.inc.php');
 include_once(__DIR__ .'/../helpers/CategoryColorHelper.php');
+include_once(__DIR__.'/../model/AdminModel.php');
 
 class ConfigFactory{
     private $clases;
@@ -46,7 +47,8 @@ class ConfigFactory{
         $this->clases['PerfilModel'] = new PerfilModel($this->clases['MyDatabase']);
         $this->clases['PerfilController'] = new PerfilController($this->clases['MyDatabase'], $this->renderer);
         $this->clases['QRCodeController'] = new QRCodeController($this->clases['MyDatabase'], $this->renderer);
-        
+        $this->clases['AdminModel'] = new AdminModel($this->clases['MyDatabase']);
+
         //Pasamos los 3 argumentos que espera el PartidaController
         $this->clases['PartidaController'] = new PartidaController(
             $this->clases['PartidaModel'],
