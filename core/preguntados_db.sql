@@ -16,8 +16,11 @@ CREATE TABLE usuario(
     puntaje_global INT,
     puntaje_maximo_obtenido INT DEFAULT 0,
     token_verificado VARCHAR(255),
-    verificado BOOLEAN DEFAULT FALSE
+    verificado BOOLEAN DEFAULT FALSE,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
 
 CREATE TABLE direccion_usuario(
     id_usuario INT NOT NULL PRIMARY KEY ,
@@ -43,18 +46,18 @@ VALUES ('jugador', 'jugador@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCD
 INSERT INTO usuario (nombre_completo, correo, password, rol, verificado)
 VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'EDITOR', 1);
 
-INSERT INTO usuario (nombre_completo, correo, password, sexo, rol, nivel_usuario, puntaje_global, puntaje_maximo_obtenido, verificado)
+INSERT INTO usuario (nombre_completo, correo, password, anio_nacimiento, sexo, rol, nivel_usuario, puntaje_global, puntaje_maximo_obtenido, verificado)
 VALUES
-    ('Guest02', 'jugador02@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 523, 0, 1),
-    ('Guest03', 'jugador03@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 812, 1, 1),
-    ('Guest04', 'jugador04@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 235, 2, 1),
-    ('Guest05', 'jugador05@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 678, 3, 1),
-    ('Guest06', 'jugador06@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 149, 4, 1),
-    ('Guest07', 'jugador07@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 990, 5, 1),
-    ('Guest08', 'jugador08@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 456, 6, 1),
-    ('Guest09', 'jugador09@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'MUJER', 'USER', 'APRENDIZ', 321, 7, 1),
-    ('Guest10', 'jugador10@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'Prefiero no decirlo', 'USER', 'APRENDIZ', 754, 8, 1),
-    ('Guest11', 'jugador11@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 'HOMBRE', 'USER', 'APRENDIZ', 618, 9, 1);
+    ('Guest02', 'jugador02@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2020,'masculino', 'USER', 'APRENDIZ', 523, 0, 1),
+    ('Guest03', 'jugador03@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2021,'masculino', 'USER', 'APRENDIZ', 812, 1, 1),
+    ('Guest04', 'jugador04@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2023,'masculino', 'USER', 'APRENDIZ', 235, 2, 1),
+    ('Guest05', 'jugador05@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1995,'masculino', 'USER', 'APRENDIZ', 678, 3, 1),
+    ('Guest06', 'jugador06@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1900,'masculino', 'USER', 'APRENDIZ', 149, 4, 1),
+    ('Guest07', 'jugador07@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1960,'masculino', 'USER', 'APRENDIZ', 990, 5, 1),
+    ('Guest08', 'jugador08@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2012,'masculino', 'USER', 'APRENDIZ', 456, 6, 1),
+    ('Guest09', 'jugador09@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2003,'masculino', 'USER', 'APRENDIZ', 321, 7, 1),
+    ('Guest10', 'jugador10@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2001,'Prefiero no decirlo', 'USER', 'APRENDIZ', 754, 8, 1),
+    ('Guest11', 'jugador11@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2002,'femenino', 'USER', 'APRENDIZ', 618, 9, 1);
 
 -- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(

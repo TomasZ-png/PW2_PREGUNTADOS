@@ -35,12 +35,27 @@ class AdminController {
     public function dashboardGraficos(){
         $this->validarAdmin();
 
-        $datosSexo = $this->crearGraficoSexo();
-        $datosPreguntasDificiles = $this->crearGraficoPreguntasDificilesYFaciles();
-        $puntajeGlobal = $this->crearGraficoPuntajeGlobal();
-        $cantidadUsuarios = $this->crearGraficoUsuariosTotales();
-        $cantidadPartidas = $this->crearGraficoPartidasTotales();
-        $cantidadPreguntasCreadas = $this->crearGraficoPreguntasCreadas();
+        $filtro = $_GET['filtro'] ?? 'mes'; // por ejemplo
+
+        $selectData = [
+            'isDia' => $filtro == 'dia',
+            'isSemana' => $filtro == 'semana',
+            'isMes' => $filtro == 'mes',
+            'isAnio' => $filtro == 'anio'
+        ];
+
+
+
+        $datosSexo = $this->crearGraficoSexo($filtro);
+        $datosPreguntasDificiles = $this->crearGraficoPreguntasDificilesYFaciles($filtro);
+        $puntajeGlobal = $this->crearGraficoPuntajeGlobal($filtro);
+        $cantidadUsuarios = $this->crearGraficoUsuariosTotales($filtro);
+        $cantidadPartidas = $this->crearGraficoPartidasTotales($filtro);
+        $cantidadPreguntasCreadas = $this->crearGraficoPreguntasCreadas($filtro);
+        $cantidadPreguntasTotales = $this->crearGraficoPreguntasTotales($filtro);
+        $usuariosPorEdad =  $this-> crearGraficoUsuariosPorEdad($filtro);
+        $usuariosPorPais = $this->crearGraficoUsuariosPorPais($filtro);
+        $cantUsuariosNuevos = $this->crearGraficoUsuariosNuevos($filtro);
 
 
         $this->renderer->render('adminGraficos', [
@@ -50,6 +65,12 @@ class AdminController {
             'cantidadUsuarios' => $cantidadUsuarios,
             'cantidadPartidas' => $cantidadPartidas,
             'cantidadPreguntasCreadas' => $cantidadPreguntasCreadas,
+            'cantidadPreguntasTotales' => $cantidadPreguntasTotales,
+            'usuariosPorEdad' => json_encode($usuariosPorEdad, JSON_UNESCAPED_UNICODE),
+            'usuariosPorPais' => json_encode($usuariosPorPais, JSON_UNESCAPED_UNICODE),
+            'usuariosNuevos' => json_encode($cantUsuariosNuevos, JSON_UNESCAPED_UNICODE),
+            'select' => $selectData,
+            'filtro' => $filtro, // por si hace falta en el front
             'BASE_URL' => BASE_URL
         ]);
     }
@@ -59,8 +80,8 @@ class AdminController {
         $resultados = $this->usuarioModel->contarPorSexo();
 
         $data = [
-            'Hombre' => 0,
-            'Mujer' => 0,
+            'masculino' => 0,
+            'femenino' => 0,
             'No aclarado' => 0
         ];
 
@@ -68,8 +89,8 @@ class AdminController {
             $sexo = strtolower(trim($row['sexo']));
             $total = (int)$row['total'];
 
-            if ($sexo === 'hombre') $data['Hombre'] = $total;
-            elseif ($sexo === 'mujer') $data['Mujer'] = $total;
+            if ($sexo === 'masculino') $data['masculino'] = $total;
+            elseif ($sexo === 'femenino') $data['femenino'] = $total;
             else $data['No aclarado'] = $total;
         }
 
@@ -147,6 +168,48 @@ class AdminController {
         $cantidadPreguntasCreadas = $preguntasCreadasTotales[0]['total'];
 
         return $cantidadPreguntasCreadas;
+    }
+
+    public function crearGraficoPreguntasTotales(){
+        $this->validarAdmin();
+
+        $preguntasTotales =  $this->adminModel->obtenerCantidadPreguntasTotales();
+        $cantidadPreguntasTotales = $preguntasTotales[0]['total'];
+
+        return $cantidadPreguntasTotales;
+    }
+
+    public function crearGraficoUsuariosPorEdad()
+    {
+        $this->validarAdmin();
+
+        $resultado = $this->adminModel->obtenerCantidadUsuariosPorEdad();
+
+        $data = [];
+        $data[] = ['Grupo', 'Cantidad'];
+
+        $data[] = ['Menores', (int)$resultado['menores']];
+        $data[] = ['Medios', (int)$resultado['medios']];
+        $data[] = ['Jubilados', (int)$resultado['jubilados']];
+
+        return $data;
+    }
+
+    public function crearGraficoUsuariosPorPais(){
+        $this->validarAdmin();
+
+        $datos = $this->adminModel->obtenerJugadoresPorPais();
+        return $datos;
+    }
+
+    public function crearGraficoUsuariosNuevos($filtro)
+    {
+        $this->validarAdmin();
+
+        $resultados = $this->adminModel->obtenerUsuariosNuevos($filtro);
+
+        // Google Charts necesita ARRAY DE OBJETOS
+        return $resultados;
     }
 
 }
