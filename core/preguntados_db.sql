@@ -48,16 +48,50 @@ VALUES ('editor', 'editor@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXH
 
 INSERT INTO usuario (nombre_completo, correo, password, anio_nacimiento, sexo, rol, nivel_usuario, puntaje_global, puntaje_maximo_obtenido, verificado)
 VALUES
-    ('Guest02', 'jugador02@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2020,'masculino', 'USER', 'APRENDIZ', 523, 0, 1),
-    ('Guest03', 'jugador03@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2021,'masculino', 'USER', 'APRENDIZ', 812, 1, 1),
-    ('Guest04', 'jugador04@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2023,'masculino', 'USER', 'APRENDIZ', 235, 2, 1),
-    ('Guest05', 'jugador05@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1995,'masculino', 'USER', 'APRENDIZ', 678, 3, 1),
-    ('Guest06', 'jugador06@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1900,'masculino', 'USER', 'APRENDIZ', 149, 4, 1),
-    ('Guest07', 'jugador07@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1960,'masculino', 'USER', 'APRENDIZ', 990, 5, 1),
-    ('Guest08', 'jugador08@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2012,'masculino', 'USER', 'APRENDIZ', 456, 6, 1),
-    ('Guest09', 'jugador09@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2003,'masculino', 'USER', 'APRENDIZ', 321, 7, 1),
-    ('Guest10', 'jugador10@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2001,'Prefiero no decirlo', 'USER', 'APRENDIZ', 754, 8, 1),
-    ('Guest11', 'jugador11@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2002,'femenino', 'USER', 'APRENDIZ', 618, 9, 1);
+    ('Jane Doe', 'jugador02@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2020,'masculino', 'USER', 'APRENDIZ', 523, 0, 1),
+    ('Pedro', 'jugador03@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2021,'masculino', 'USER', 'APRENDIZ', 812, 1, 1),
+    ('Carla', 'jugador04@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2023,'femenino', 'USER', 'APRENDIZ', 235, 2, 1),
+    ('Juan', 'jugador05@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1995,'masculino', 'USER', 'APRENDIZ', 678, 3, 1),
+    ('Jack', 'jugador06@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1900,'masculino', 'USER', 'APRENDIZ', 149, 4, 1),
+    ('Jennifer', 'jugador07@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1960,'femenino', 'USER', 'APRENDIZ', 990, 5, 1),
+    ('Karina', 'jugador08@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2012,'femenino', 'USER', 'APRENDIZ', 456, 6, 1),
+    ('Juanceto01', 'jugador09@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2003,'masculino', 'USER', 'APRENDIZ', 321, 7, 1),
+    ('Tiago', 'jugador10@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2001,'Prefiero no decirlo', 'USER', 'APRENDIZ', 754, 8, 1),
+    ('Merlina', 'jugador11@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2002,'femenino', 'USER', 'APRENDIZ', 618, 9, 1),
+    ('Lucía', 'jugador12@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1999, 'femenino', 'USER', 'APRENDIZ', 845, 10, 1),
+    ('Mateo', 'jugador13@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1987, 'masculino', 'USER', 'APRENDIZ', 312, 11, 1),
+    ('Sofía', 'jugador14@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2004, 'femenino', 'USER', 'APRENDIZ', 678, 12, 1),
+    ('Andrés', 'jugador15@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1990, 'masculino', 'USER', 'APRENDIZ', 459, 13, 1),
+    ('Valentina', 'jugador16@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1996, 'femenino', 'USER', 'APRENDIZ', 902, 14, 1),
+    ('Carlos', 'jugador17@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1982, 'masculino', 'USER', 'APRENDIZ', 275, 15, 1),
+    ('María', 'jugador18@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2005, 'femenino', 'USER', 'APRENDIZ', 510, 16, 1),
+    ('Esteban', 'jugador19@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1993, 'masculino', 'USER', 'APRENDIZ', 799, 17, 1),
+    ('Camila', 'jugador20@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 2000, 'femenino', 'USER', 'APRENDIZ', 624, 18, 1),
+    ('Ricardo', 'jugador21@test.com', '$2y$10$IFiN1ghfvGdg2vFHf7.wcethB0wCbUXCDXHAO0XCr4wGEmcrmn/5m', 1985, 'masculino', 'USER', 'APRENDIZ', 388, 19, 1);
+
+
+-- Direcciones para jugadores hardcodeados
+INSERT INTO direccion_usuario (id_usuario, latitud, longitud, pais, ciudad) VALUES
+                                                                                (4, 40.7128, -74.0060, 'Estados Unidos', 'New York'),         -- jugador
+                                                                                (5, 48.8566, 2.3522, 'Francia', 'París'),                     -- editor
+                                                                                (6, 35.6895, 139.6917, 'Japón', 'Tokio'),                     -- Jane Doe
+                                                                                (7, -34.6037, -58.3816, 'Argentina', 'Buenos Aires'),         -- Pedro
+                                                                                (8, 51.5074, -0.1278, 'Reino Unido', 'Londres'),              -- Carla
+                                                                                (9, -33.8688, 151.2093, 'Australia', 'Sídney'),               -- Juan
+                                                                                (10, 55.7558, 37.6173, 'Rusia', 'Moscú'),                      -- Jack
+                                                                                (11, -22.9068, -43.1729, 'Brasil', 'Río de Janeiro'),          -- Jennifer
+                                                                                (12, 19.4326, -99.1332, 'México', 'Ciudad de México'),        -- Karina
+                                                                                (13, 52.5200, 13.4050, 'Alemania', 'Berlín'),                 -- Juanceto01
+                                                                                (14, 41.3851, 2.1734, 'España', 'Barcelona'),
+                                                                                (15, 35.6762, 139.6503, 'Japón', 'Tokio'),
+                                                                                (16, -37.8136, 144.9631, 'Australia', 'Melbourne'),
+                                                                                (17, 40.4168, -3.7038, 'España', 'Madrid'),
+                                                                                (18, 45.4642, 9.1900, 'Italia', 'Milán'),
+                                                                                (19, 60.1699, 24.9384, 'Finlandia', 'Helsinki'),
+                                                                                (20, -36.8485, 174.7633, 'Nueva Zelanda', 'Auckland'),
+                                                                                (21, 1.3521, 103.8198, 'Singapur', 'Singapur'),
+                                                                                (22, 50.1109, 8.6821, 'Alemania', 'Fráncfort'),
+                                                                                (23, 34.0522, -118.2437, 'Estados Unidos', 'Los Ángeles');
 
 -- TABLA PARTIDA (MODIFICADA para Partida Infinita)
 CREATE TABLE partida(

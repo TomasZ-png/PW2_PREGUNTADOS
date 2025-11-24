@@ -88,9 +88,13 @@
                     data-bs-toggle="modal"
                     data-bs-target="#modalQR">
 
-                    <img src="{{BASE_URL}}public/img/user-img/{{foto_perfil}}"
-                         alt="{{nombre_completo}}"
-                         class="ranking-avatar">
+                    {{#foto_perfil}}
+                        <img src="{{BASE_URL}}public/img/user-img/{{foto_perfil}}" class="ranking-avatar">
+                    {{/foto_perfil}}
+
+                    {{^foto_perfil}}
+                        <img src="{{BASE_URL}}public/img/user-img/default-user.png" class="ranking-avatar">
+                    {{/foto_perfil}}
 
                     <div class="ranking-info">
                         <span class="ranking-name">{{nombre_completo}}</span>

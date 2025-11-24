@@ -9,6 +9,7 @@
             rel="stylesheet"
             integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
             crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="{{BASE_URL}}public/img/preguntame-logo-solo.png">
     <style>
         body {
             margin: 0;
@@ -212,29 +213,48 @@
     const cronometro = document.getElementById("cronometro");
     const barra = document.getElementById("barra");
 
+    // Mostrar el estado inicial sincronizado
+    cronometro.textContent = tiempoRestante;
+    barra.style.width = "100%";
+
     const intervalo = setInterval(() => {
+
+        // Descontar primero
         tiempoRestante--;
+
+        // Evitar negativos
+        if (tiempoRestante <= 0) {
+            tiempoRestante = 0;
+        }
+
+        // Actualizar cronómetro
         cronometro.textContent = tiempoRestante;
 
-        const porcentaje = ((tiempoRestante / 10) * 100);
-        barra.style.width = porcentaje + "%";
+        // Actualizar barra EXACTA según el tiempo
+        barra.style.width = (tiempoRestante * 10) + "%";
 
+        // Cambiar colores según tiempo
         if (tiempoRestante <= 3) {
             barra.style.background = "linear-gradient(90deg, #E53935 0%, #c62828 100%)";
         } else if (tiempoRestante <= 6) {
             barra.style.background = "linear-gradient(90deg, #FFB300 0%, #ff8f00 100%)";
         }
 
-        if (tiempoRestante <= -0.000000000000001) {
+        // Si llegó a cero → ejecutar automática y cortar
+        if (tiempoRestante === 0) {
             clearInterval(intervalo);
-            const botones = document.querySelectorAll('button[name="respuestaId"]');
 
+            const botones = document.querySelectorAll('button[name="respuestaId"]');
             if (botones.length > 0) {
                 const randomIndex = Math.floor(Math.random() * botones.length);
                 botones[randomIndex].click();
             }
+            return;
         }
+
     }, 1000);
+
+
 </script>
 </body>
 </html>
