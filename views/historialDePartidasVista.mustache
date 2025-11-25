@@ -454,13 +454,19 @@
                  data-fecha-inicio="{{fecha_creacion}}"
                  data-index="{{@index}}">
                 <div class="partida-header">
-                    <span class="estado-badge estado-{{estado_partida}}">
-                        {{icono_estado}} {{estado_partida}}
-                    </span>
+
                     <span class="puntaje-grande">{{puntaje_final}} pts</span>
                 </div>
-
                 <div class="partida-info">
+                <div class="info-item">
+                    <span class="info-label">🎯 Partida N°</span>
+                    <span class="info-value">{{id_partida}}</span>
+                </div>
+                    <div class="info-item">
+                        <span class="info-label">⏱️ Duración</span>
+                        <span class="duracion-badge">{{duracion}}</span>
+                    </div>
+
                     <div class="info-item">
                         <span class="info-label">📅 Fecha de inicio</span>
                         <span class="info-value">{{fecha_creacion}}</span>
@@ -469,14 +475,8 @@
                         <span class="info-label">🏁 Fecha de finalización</span>
                         <span class="info-value">{{fecha_finalizacion}}</span>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">⏱️ Duración</span>
-                        <span class="duracion-badge">{{duracion}}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">🎯 Partida #</span>
-                        <span class="info-value">{{id_partida}}</span>
-                    </div>
+
+
                 </div>
             </div>
         {{/partidas}}

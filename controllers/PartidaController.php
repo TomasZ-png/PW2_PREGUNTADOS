@@ -269,6 +269,8 @@ class PartidaController
             'basePath' => $this->basePath
         ];
 
+        $this->model->actualizarHistorialPartida($datos, $id_usuario, $estado['estado_partida']);
+
         $this->usuarioModel->actualizarNivelDeUsuario($id_usuario);
 
         // limpiar sesión
