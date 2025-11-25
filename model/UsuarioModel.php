@@ -22,7 +22,7 @@ class UsuarioModel
     $stmt = $this->conexion->prepare("
         SELECT id_usuario, nombre_completo, foto_perfil, puntaje_maximo_obtenido
         FROM usuario 
-        WHERE rol = 'USER' 
+        WHERE rol = 'USER' AND verificado = 1 
         ORDER BY puntaje_maximo_obtenido DESC
     ");
     $stmt->execute();
@@ -97,7 +97,7 @@ class UsuarioModel
     }
 
     public function obtenerPartidasDelUsuario($idUsuario){
-        return $this->conexion->query("SELECT * FROM historial_partidas_usuario h WHERE h.id_usuario = $idUsuario");
+        return $this->conexion->query("SELECT * FROM historial_partidas_usuario h WHERE h.id_usuario = $idUsuario ORDER BY h.id_partida DESC");
     }
 
     public function obtenerCantidadDePartidasJugadasDelUsuario($idUsuario){

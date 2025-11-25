@@ -120,30 +120,30 @@ CREATE TABLE historial_partidas_usuario(
 -- Creamos un trigger para que inserte/actualice en el historial de partidas automaticamente
 -- cada vez que la tabla partida se altere
 
-DELIMITER //
-
-CREATE TRIGGER insert_on_partida
-    AFTER INSERT ON partida
-    FOR EACH ROW
-BEGIN
-    INSERT INTO historial_partidas_usuario (id_usuario, id_partida, estado_partida, fecha_creacion, fecha_finalizacion)
-    VALUES (NEW.id_jugador, NEW.id_partida, NEW.estado_partida, NOW(), NEW.fecha_fin);
-END;
-//
-
-CREATE TRIGGER update_on_partida
-    AFTER UPDATE ON partida
-    FOR EACH ROW
-BEGIN
-    UPDATE historial_partidas_usuario h
-    SET h.estado_partida = NEW.estado_partida,
-        h.fecha_finalizacion = COALESCE(NEW.fecha_fin, NEW.fecha_creacion),
-        h.puntaje_final = NEW.puntaje_final
-    WHERE h.id_partida = NEW.id_partida;
-END;
-//
-
-DELIMITER ;
+# DELIMITER //
+#
+# CREATE TRIGGER insert_on_partida
+#     AFTER INSERT ON partida
+#     FOR EACH ROW
+# BEGIN
+#     INSERT INTO historial_partidas_usuario (id_usuario, id_partida, estado_partida, fecha_creacion, fecha_finalizacion)
+#     VALUES (NEW.id_jugador, NEW.id_partida, NEW.estado_partida, NOW(), NEW.fecha_fin);
+# END;
+# //
+#
+# CREATE TRIGGER update_on_partida
+#     AFTER UPDATE ON partida
+#     FOR EACH ROW
+# BEGIN
+#     UPDATE historial_partidas_usuario h
+#     SET h.estado_partida = NEW.estado_partida,
+#         h.fecha_finalizacion = COALESCE(NEW.fecha_fin, NEW.fecha_creacion),
+#         h.puntaje_final = NEW.puntaje_final
+#     WHERE h.id_partida = NEW.id_partida;
+# END;
+# //
+#
+# DELIMITER ;
 
 -- TABLA CATEGORIA
 CREATE TABLE categoria_pregunta(

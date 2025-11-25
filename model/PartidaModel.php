@@ -25,7 +25,19 @@ class PartidaModel
         
         $this->conexion->query($sql);
         // Retorna el ID de la partida recién creada
-        return $this->conexion->getConexion()->insert_id; 
+
+        $idPartida = $this->conexion->getConexion()->insert_id;
+
+        $query = "SELECT * FROM partida WHERE id_partida = $idPartida";
+        $partida = $this->conexion->query($query);
+
+        $estadoPartida = $partida[0]['estado_partida'];
+
+        $query2 = "INSERT INTO historial_partidas_usuario(id_usuario, id_partida, estado_partida, fecha_creacion, fecha_finalizacion) 
+                    VALUES ($idJugador, $idPartida, '$estadoPartida', NOW(), 'EN JUEGO...')";
+        $this->conexion->query($query2);
+
+        return $idPartida;
     }
 
     // Obtiene una pregunta aleatoria que NO haya sido jugada en esta partida.
@@ -216,8 +228,6 @@ class PartidaModel
         return $respuesta[0]['respuesta'] ?? null;
     }
 
-
-
     // Obtiene el estado actual de la partida 
     public function getEstadoPartida($idPartida)
     {
@@ -227,6 +237,17 @@ class PartidaModel
         return $resultado[0] ?? null;
     }
 
+    public function actualizarHistorialPartida($datos, $id_usuario, $estado){
+
+        $puntajeFInal = $datos['puntaje'];
+        $id_partida = $datos['id_partida'];
+
+        $sql = "UPDATE historial_partidas_usuario
+                SET puntaje_final = $puntajeFInal, fecha_finalizacion = NOW(), estado_partida = '$estado' 
+                WHERE id_partida = $id_partida AND id_usuario = $id_usuario";
+        $this->conexion->query($sql);
+
+    }
 
 
 }

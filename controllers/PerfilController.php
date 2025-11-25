@@ -118,18 +118,7 @@ class PerfilController {
 
         foreach ($partidasJugadas as &$partida) {
             // Agregar icono según estado
-            switch(strtolower($partida['estado_partida'])) {
-                case 'abandonada':
-                case 'perdida_por_recarga':
-                    $partida['icono_estado'] = '🚫';
-                    break;
-                case 'en-curso':
-                case 'en curso':
-                    $partida['icono_estado'] = '⏳';
-                    break;
-                default:
-                    $partida['icono_estado'] = '✅';
-            }
+
 
             // Calcular duración si tienes las fechas
             if (!empty($partida['fecha_creacion']) && !empty($partida['fecha_finalizacion'])) {
