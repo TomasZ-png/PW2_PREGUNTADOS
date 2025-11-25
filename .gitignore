@@ -7,3 +7,4 @@
 /logs/
 /config.ini # Si este archivo tiene credenciales sensibles
 .env
+/config/email_config.php
