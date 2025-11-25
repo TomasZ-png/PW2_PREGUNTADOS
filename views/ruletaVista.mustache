@@ -3,12 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{BASE_URL}}public/css/ruletaStyles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" type="image/png" href="{{BASE_URL}}public/img/preguntame-logo-solo.png">
     <title>Ruleta - Preguntados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: white;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .ruleta-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto 30px;
+        }
+
+        .indicador {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #ff0000;
+            z-index: 10;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            animation: pulse 2s ease-in-out infinite;
+
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        .ruleta-container {
+            position: relative;
+            background: white;
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #ruleta {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 400px;
+            aspect-ratio: 1;
+        }
+
+        .btn-girar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            color: white;
+            border: 4px solid white;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(252, 129, 129, 0.4);
+            z-index: 5;
+        }
+
+        .btn-girar:hover:not(:disabled) {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 10px 30px rgba(252, 129, 129, 0.6);
+        }
+
+        .btn-girar:active:not(:disabled) {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        .btn-girar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .resultado {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .resultado h2 {
+            color: #2d3748;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .categoria-resultado {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 26px;
+            margin-top: 10px;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* RESPONSIVE TABLET */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 36px;
+                margin-bottom: 30px;
+            }
+
+            .ruleta-wrapper {
+                max-width: 380px;
+            }
+
+            .indicador {
+                border-left: 18px solid transparent;
+                border-right: 18px solid transparent;
+                top: -12px;
+            }
+
+            .ruleta-container {
+                padding: 15px;
+            }
+
+            #ruleta {
+                max-width: 350px;
+            }
+
+            .btn-girar {
+                width: 70px;
+                height: 70px;
+                font-size: 15px;
+                border-width: 3px;
+            }
+
+            .resultado {
+                padding: 25px;
+            }
+
+            .resultado h2 {
+                font-size: 22px;
+            }
+
+            .categoria-resultado {
+                font-size: 24px;
+                padding: 7px 18px;
+            }
+        }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 28px;
+                margin-bottom: 25px;
+            }
+
+            .ruleta-wrapper {
+                max-width: 320px;
+                margin-bottom: 20px;
+            }
+
+            .indicador {
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                top: -10px;
+            }
+
+            .ruleta-container {
+                padding: 12px;
+            }
+
+            #ruleta {
+                max-width: 300px;
+            }
+
+            .btn-girar {
+                width: 60px;
+                height: 60px;
+                font-size: 13px;
+                border-width: 3px;
+            }
+
+            .resultado {
+                padding: 20px 15px;
+                border-radius: 15px;
+                margin-top: 20px;
+            }
+
+            .resultado h2 {
+                font-size: 18px;
+            }
+
+            .categoria-resultado {
+                font-size: 20px;
+                padding: 6px 15px;
+                display: block;
+                margin-top: 10px;
+            }
+        }
+
+        /* RESPONSIVE MÓVIL PEQUEÑO */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .ruleta-wrapper {
+                max-width: 280px;
+            }
+
+            .indicador {
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;
+                top: -8px;
+            }
+
+            .ruleta-container {
+                padding: 10px;
+            }
+
+            #ruleta {
+                max-width: 260px;
+            }
+
+            .btn-girar {
+                width: 55px;
+                height: 55px;
+                font-size: 12px;
+                border-width: 2px;
+            }
+
+            .resultado {
+                padding: 15px 12px;
+            }
+
+            .resultado h2 {
+                font-size: 16px;
+            }
+
+            .categoria-resultado {
+                font-size: 18px;
+                padding: 5px 12px;
+            }
+        }
+
+        /* LANDSCAPE MODE (móviles en horizontal) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+
+            .ruleta-wrapper {
+                max-width: 250px;
+                margin-bottom: 15px;
+            }
+
+            .indicador {
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;
+            }
+
+            .ruleta-container {
+                padding: 8px;
+            }
+
+            #ruleta {
+                max-width: 230px;
+            }
+
+            .btn-girar {
+                width: 50px;
+                height: 50px;
+                font-size: 11px;
+            }
+
+            .resultado {
+                padding: 15px;
+            }
+
+            .resultado h2 {
+                font-size: 16px;
+            }
+
+            .categoria-resultado {
+                font-size: 18px;
+            }
+        }
+
+        /* ANIMACIÓN DE CARGA */
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            margin: -20px 0 0 -20px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
-<body >
+<body>
 
 {{#categoriaGanada}}
     <script>
@@ -19,9 +416,9 @@
             background: "{{colorCategoria}}",
             color: "#fff",
             iconColor: "#fff",
-            showConfirmButton: false,   // quita botón
-            timer: 2000,                // se cierra solo
-            timerProgressBar: true      // barra de tiempo
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
         });
     </script>
 {{/categoriaGanada}}
@@ -32,7 +429,7 @@
     <div class="ruleta-wrapper">
         <div class="indicador"></div>
         <div class="ruleta-container">
-            <canvas id="ruleta" width="400" height="400"></canvas>
+            <canvas id="ruleta"></canvas>
             <button id="btnGirar" class="btn-girar">GIRAR</button>
         </div>
     </div>
@@ -56,21 +453,21 @@
     const categoriaInput = document.getElementById('categoriaInput');
 
     // Categorías con colores
-
     const categorias = {{{categorias}}};
-
-   /* const categorias = [
-        { nombre: 'CIENCIA', color: '#fc8448' },
-        { nombre: 'GEOGRAFIA', color: '#73bd58' },
-        { nombre: 'DEPORTES', color: '#ba87d1' },
-        { nombre: 'ARTE', color: '#fb4551' },
-        { nombre: 'HISTORIA', color: '#3d9bd0' }
-    ];*/
 
     const numSecciones = categorias.length;
     const anguloSeccion = (2 * Math.PI) / numSecciones;
     let anguloActual = 0;
     let girando = false;
+
+    // Configurar canvas responsive
+    function configurarCanvas() {
+        const container = canvas.parentElement;
+        const size = Math.min(container.clientWidth - 40, 400);
+        canvas.width = size;
+        canvas.height = size;
+        dibujarRuleta();
+    }
 
     // Dibujar la ruleta
     function dibujarRuleta() {
@@ -94,20 +491,22 @@
             ctx.lineWidth = 3;
             ctx.stroke();
 
-            // Dibujar texto
+            // Dibujar texto (ajustar tamaño según canvas)
             ctx.save();
             ctx.translate(centerX, centerY);
             ctx.rotate(anguloInicio + anguloSeccion / 2);
             ctx.textAlign = 'center';
             ctx.fillStyle = '#fff';
-            ctx.font = 'bold 20px Arial';
-            ctx.fillText(categorias[i].nombre, radio / 1.5, 8);
+            const fontSize = Math.max(12, Math.min(20, canvas.width / 20));
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.fillText(categorias[i].nombre, radio / 1.5, fontSize / 2.5);
             ctx.restore();
         }
 
         // Círculo central
+        const radioCirculo = Math.max(20, canvas.width / 13);
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
+        ctx.arc(centerX, centerY, radioCirculo, 0, 2 * Math.PI);
         ctx.fillStyle = '#333';
         ctx.fill();
         ctx.strokeStyle = '#fff';
@@ -117,7 +516,6 @@
 
     // Obtener categoría seleccionada
     function obtenerCategoriaSeleccionada() {
-        // El indicador apunta hacia arriba (270 grados o 3π/2)
         const anguloIndicador = (3 * Math.PI / 2) - anguloActual;
         let anguloNormalizado = anguloIndicador % (2 * Math.PI);
         if (anguloNormalizado < 0) anguloNormalizado += 2 * Math.PI;
@@ -134,16 +532,13 @@
         btnGirar.disabled = true;
         resultado.innerHTML = '🎲 Girando...';
 
-        // Generar rotación aleatoria (mínimo 10 vueltas completas + aleatorio entre 0 y 5 vueltas)
         const vueltasMin = 10;
         const vueltasExtra = Math.random() * 5;
         const vueltasTotal = vueltasMin + vueltasExtra;
-
-        // Agregar un offset aleatorio adicional para mayor variabilidad
         const offsetAleatorio = Math.random() * 2 * Math.PI;
         const rotacionTotal = (vueltasTotal * 2 * Math.PI) + offsetAleatorio;
 
-        const duracion = 5000; // 5 segundos para más suspenso
+        const duracion = 5000;
         const inicio = Date.now();
         const anguloInicial = anguloActual;
 
@@ -152,7 +547,6 @@
             const transcurrido = ahora - inicio;
             const progreso = Math.min(transcurrido / duracion, 1);
 
-            // Easing (desaceleración suave)
             const easing = 1 - Math.pow(1 - progreso, 3);
 
             anguloActual = anguloInicial + (rotacionTotal * easing);
@@ -161,7 +555,6 @@
             if (progreso < 1) {
                 requestAnimationFrame(animar);
             } else {
-                // Normalizar ángulo
                 anguloActual = anguloActual % (2 * Math.PI);
                 girando = false;
                 btnGirar.disabled = false;
@@ -178,18 +571,26 @@
     function mostrarResultado(categoria) {
         resultado.innerHTML = `Categoría: <span class="categoria-resultado">${categoria}</span>`;
 
-        // Esperar 2 segundos y enviar al backend
         setTimeout(() => {
             categoriaInput.value = categoria;
             formCategoria.submit();
         }, 2000);
     }
 
-    // Event listener
+    // Event listeners
     btnGirar.addEventListener('click', girarRuleta);
 
-    // Dibujar ruleta inicial
-    dibujarRuleta();
+    // Responsive: redibujar al cambiar tamaño
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            configurarCanvas();
+        }, 250);
+    });
+
+    // Inicializar
+    configurarCanvas();
 </script>
 </body>
 </html>

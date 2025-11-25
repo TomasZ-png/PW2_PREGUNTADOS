@@ -4,283 +4,883 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel del Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-@media (max-width: 768px) {
-            
-            .container {
-                max-width: 100%;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: 100px;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER DEL PANEL */
+        .panel-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel-header h1 {
+            color: #2d3748;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .panel-header h4 {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .editor-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        /* SECCIONES */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+
+        .section-header h2 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        /* FORMULARIO DE CATEGORÍA */
+        .category-form {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label::before {
+            content: "●";
+            color: #667eea;
+            font-size: 12px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+            outline: none;
+        }
+
+        .form-control-color {
+            height: 50px;
+            padding: 5px;
+        }
+
+        /* BOTONES */
+        .btn {
+            padding: 12px 24px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(246, 173, 85, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(246, 173, 85, 0.4);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(252, 129, 129, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 129, 129, 0.4);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 18px;
+        }
+
+        /* TABLAS */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .table {
+            margin-bottom: 0;
+            background: white;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .table thead th {
+            font-weight: 600;
+            padding: 16px 12px;
+            border: none;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table-hover tbody tr:hover {
+            background: #f7fafc;
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .table tbody td {
+            padding: 14px 12px;
+            vertical-align: middle;
+            border-color: #e9ecef;
+        }
+
+        .table-dark {
+            background: #2d3748;
+        }
+
+        .table-dark thead {
+            background: #1a202c;
+        }
+
+        .table-dark tbody tr:hover {
+            background: #374151;
+        }
+
+        /* BADGE PARA CATEGORÍAS */
+        .category-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #edf2f7;
+            color: #2d3748;
+        }
+
+        /* LISTA DE RESPUESTAS */
+        .answer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .answer-list li {
+            padding: 6px 0;
+            font-size: 14px;
+        }
+
+        /* ACCIONES RÁPIDAS */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .create-button {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto 30px;
+            display: block;
+        }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* RESPONSIVE TABLETS */
+        @media (max-width: 992px) {
+            .panel-header h1 {
+                font-size: 30px;
             }
 
-            /* Botones principales de la UI se estiran a pantalla completa */
-            .btn-primary.mb-3, .text-center .btn-lg {
-                display: block;
-                width: 100%;
-                font-size: 1.1rem;
-                padding: 0.75rem;
-                margin-bottom: 1rem !important;
+            .section-header h2 {
+                font-size: 24px;
             }
 
-            /* --- Mantiene las tablas scrollables horizontalmente --- */
-            .table-responsive-wrapper {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                padding-top: 80px;
+            }
+
+            .panel-header {
+                padding: 25px 20px;
+                margin-bottom: 20px;
+            }
+
+            .panel-header h1 {
+                font-size: 24px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .panel-header h4 {
+                font-size: 16px;
+            }
+
+            .editor-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+                border-radius: 15px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .section-header h2 {
+                font-size: 20px;
+            }
+
+            .section-icon {
+                font-size: 24px;
+            }
+
+            .category-form {
+                padding: 20px 15px;
+            }
+
+            /* TABLAS RESPONSIVE */
+            .table-wrapper {
+                margin: 0 -15px;
+                border-radius: 0;
             }
 
             .table {
-                min-width: 600px;
-            }
-            
-            .table th, .table td { 
-                padding: 0.4rem 0.3rem;
-                font-size: 0.8rem;
-                vertical-align: middle;
-            }
-            
-            /* TABLA DE PREGUNTAS (1ra Tabla) */
-            /* OCULTAMOS la columna de Acción y su encabezado en la tabla de Preguntas */
-            .table.table-bordered th:nth-child(5), /* Encabezado Acción */
-            .table.table-bordered td:nth-child(5) { /* Columna Acción (la última) */
-                display: none;
-            }
-            
-            /* MOSTRAR los botones duplicados en móvil */
-            .desktop-hidden {
-                display: flex; /* Usamos flex para que los botones estén en línea, pero con espacio */
-                gap: 0.5rem; /* Espacio entre los botones */
-                margin-top: 0.5rem; 
-            }
-            
-            /* Hacemos que los botones apilados sean full width y más grandes */
-            .desktop-hidden a.btn-sm {
-                flex-grow: 1; /* Permite que ambos botones crezcan por igual */
-                width: auto; /* Ancho automático gestionado por flex */
-                margin-bottom: 0; /* Sin margen vertical entre ellos */
-                padding: 0.4rem;
-                font-size: 0.9rem;
-                text-align: center;
-            }
-            
-            /* Estilo para las celdas de Pregunta (2da columna) */
-            .table.table-bordered td:nth-child(2) {
-                white-space: normal; /* Permitir que la pregunta se envuelva */
-                min-width: 200px;
-            }
-            
-            /* Forzamos nowrap en las columnas que NO son pregunta/acción para mantenerlas compactas */
-            .table.table-bordered tr th:not(:nth-child(2)):not(:nth-child(5)), 
-            .table.table-bordered tr td:not(:nth-child(2)):not(:nth-child(5)) {
-                white-space: nowrap; 
-            }
-            
-            /* TABLAS DE SUGERIDAS Y REPORTADAS (2da y 3ra Tabla) */
-            /* Se mantiene el apilamiento vertical de botones en la última columna para estas tablas */
-            .table-hover tr td:last-child a.btn-sm, 
-            .table-dark tr td:last-child a.btn-sm {
-                display: block;
-                width: 100%;
-                margin: 0.2rem 0;
-                padding: 0.4rem 0.2rem;
-                font-size: 0.9rem;
+                font-size: 14px;
+                min-width: 700px;
             }
 
-            /* Permitimos que Respuestas/Comentario y Acción se envuelvan */
-            .table-hover tr td:nth-child(4), 
-            .table-dark tr td:nth-child(4),
-            .table-hover tr td:last-child, 
-            .table-dark tr td:last-child {
-                white-space: normal; 
-                min-width: 120px;
+            .table thead th {
+                padding: 12px 8px;
+                font-size: 12px;
             }
-            
-            /* El formulario de Crear Categoría */
-            .card.p-4 { padding: 1rem !important; }
-            .form-control { padding: 0.5rem 0.75rem; }
-            
+
+            .table tbody td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+
+            /* Botones en tablas más pequeños en móvil */
+            .table .btn-sm {
+                padding: 6px 10px;
+                font-size: 12px;
+                display: block;
+                width: 100%;
+                margin: 4px 0;
+            }
+
+            /* Botones principales full width */
+            .create-button,
+            .btn-lg {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .quick-actions .btn {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+            }
         }
-        
-        /* Regla de Bootstrap para containers en escritorio */
-        @media (min-width: 576px) { .container { max-width: 540px; } }
-        @media (min-width: 768px) { .container { max-width: 720px; } }
-        @media (min-width: 992px) { .container { max-width: 960px; } }
-        @media (min-width: 1200px) { .container { max-width: 1140px; } }
-        </style>
+
+        /* RESPONSIVE MÓVIL PEQUEÑO */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                padding-top: 70px;
+            }
+
+            .panel-header {
+                padding: 20px 15px;
+            }
+
+            .panel-header h1 {
+                font-size: 20px;
+            }
+
+            .panel-header h4 {
+                font-size: 14px;
+            }
+
+            .section {
+                padding: 15px 10px;
+            }
+
+            .section-header h2 {
+                font-size: 18px;
+            }
+
+            .category-form {
+                padding: 15px 10px;
+            }
+
+            .form-control {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 10px 18px;
+            }
+
+            .btn-lg {
+                font-size: 16px;
+                padding: 14px 24px;
+            }
+
+            .table {
+                font-size: 12px;
+                min-width: 650px;
+            }
+
+            .table thead th {
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+
+            .table tbody td {
+                padding: 8px 6px;
+                font-size: 12px;
+            }
+
+            .table .btn-sm {
+                font-size: 11px;
+                padding: 5px 8px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ANIMACIONES */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* LOADING STATE */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* SCROLL SUAVE */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* TOOLTIPS PERSONALIZADOS */
+        [data-tooltip] {
+            position: relative;
+            cursor: help;
+        }
+
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
 
 {{> header}}
 
-<div class="container mt-4">
-
-    <h1 class="text-center">Panel del Editor</h1>
-    <h4 class="text-center">Bienvenido {{usuario}}</h4>
-
-    <h2>Crear Nueva Categoría</h2>
-
-<form action="{{BASE_URL}}EditorController/crearCategoria" method="POST" class="card p-4 shadow-sm mt-3">
-    <div class="mb-3">
-        <label class="form-label">Nombre de la categoría</label>
-        <input type="text" name="categoria" class="form-control" required>
-        <label class="form-label">Color (opcional)</label>
-        <input type="color" name="color" class="form-control form-control-color">
+<div class="main-container">
+    <!-- HEADER DEL PANEL -->
+    <div class="panel-header">
+        <h1>
+            <span class="editor-icon">✏️</span>
+            <span>Panel del Editor</span>
+        </h1>
     </div>
 
-    <button type="submit" class="btn btn-success">Agregar Categoría</button>
-</form>
+    <!-- SECCIÓN: CREAR CATEGORÍA -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-icon">📁</span>
+            <h2>Crear Nueva Categoría</h2>
+        </div>
 
-{{#success_categoria}}
-<script>
-    alert("✔ Categoría creada correctamente");
-</script>
-{{/success_categoria}}
+        <form action="{{BASE_URL}}EditorController/crearCategoria" method="POST" class="category-form">
+            <div class="mb-3">
+                <label class="form-label">Nombre de la categoría</label>
+                <input type="text" name="categoria" class="form-control" placeholder="Ej: Deportes, Historia, Ciencia..." required>
+            </div>
 
-{{#error_categoria}}
-<script>
-    alert("❌ Error: Ya existe una categoría con ese nombre.");
-</script>
-{{/error_categoria}}
+            <div class="mb-3">
+                <label class="form-label">Color (opcional)</label>
+                <input type="color" name="color" class="form-control form-control-color" value="#667eea">
+            </div>
 
-    <hr>
+            <button type="submit" class="btn btn-success">
+                <span>➕</span>
+                <span>Agregar Categoría</span>
+            </button>
+        </form>
+    </div>
 
-    <h2>Preguntas Sugeridas (Pendientes)</h2>
+    <!-- SECCIÓN: PREGUNTAS SUGERIDAS -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-icon">💡</span>
+            <h2>Preguntas Sugeridas (Pendientes)</h2>
+        </div>
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Pregunta</th>
-                <th>Categoría</th>
-                <th>Respuestas</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#sugeridas}}
-            <tr>
-                <td>{{id_pregunta_sugerida}}</td>
-                <td>{{pregunta}}</td>
-                <td>{{categoria}}</td>
-                  <td>
-                <ul class="mb-0">
-                    {{#respuestas}}
-                    <li>
-                        {{respuesta}}
-                        {{#es_correcta}}<strong class="text-success">(Correcta)</strong>{{/es_correcta}}
-                    </li>
-                    {{/respuestas}}
-                </ul>
-            </td>
+        <div class="table-wrapper">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Pregunta</th>
+                    <th>Categoría</th>
+                    <th>Respuestas</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#sugeridas}}
+                    <tr>
+                        <td><strong>#{{id_pregunta_sugerida}}</strong></td>
+                        <td>{{pregunta}}</td>
+                        <td><span class="category-badge">{{categoria}}</span></td>
+                        <td>
+                            <ul class="answer-list">
+                                {{#respuestas}}
+                                    <li>
+                                        {{respuesta}}
+                                        {{#es_correcta}}<strong class="text-success"> ✓ Correcta</strong>{{/es_correcta}}
+                                    </li>
+                                {{/respuestas}}
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="quick-actions">
+                                <a class="btn btn-success btn-sm"
+                                   href="{{BASE_URL}}EditorController/aceptarSugerida?id={{id_pregunta_sugerida}}">
+                                ✓ Aceptar
+                                </a>
+                                <a class="btn btn-danger btn-sm"
+                                   href="{{BASE_URL}}EditorController/rechazarSugerida?id={{id_pregunta_sugerida}}">
+                                ✗ Rechazar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/sugeridas}}
+                {{^sugeridas}}
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <p>No hay preguntas sugeridas pendientes</p>
+                            </div>
+                        </td>
+                    </tr>
+                {{/sugeridas}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                <td>
-                    <a class="btn btn-success btn-sm"
-                       href="{{BASE_URL}}EditorController/aceptarSugerida?id={{id_pregunta_sugerida}}">
-                       Aceptar
-                    </a>
+    <!-- SECCIÓN: PREGUNTAS REPORTADAS -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-icon">⚠️</span>
+            <h2>Preguntas Reportadas</h2>
+        </div>
 
-                    <a class="btn btn-danger btn-sm"
-                       href="{{BASE_URL}}EditorController/rechazarSugerida?id={{id_pregunta_sugerida}}">
-                       Rechazar
-                    </a>
-                </td>
-            </tr>
-            {{/sugeridas}}
-        </tbody>
-    </table>
+        <div class="table-wrapper">
+            <table class="table table-dark table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Pregunta</th>
+                    <th>Reportes</th>
+                    <th>Comentario</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#reportadas}}
+                    <tr>
+                        <td><strong>#{{id_pregunta}}</strong></td>
+                        <td>{{pregunta}}</td>
+                        <td><span class="badge bg-danger">{{cantidad_reportes}}</span></td>
+                        <td>{{motivo}}</td>
+                        <td>
+                            <div class="quick-actions">
+                                <a class="btn btn-success btn-sm"
+                                   href="{{BASE_URL}}EditorController/verPreguntaReportada?id={{id_reporte}}">
+                                👁️ Ver
+                                </a>
+                                <a class="btn btn-danger btn-sm"
+                                   href="{{BASE_URL}}EditorController/rechazarReporte?id={{id_reporte}}">
+                                ✗ Rechazar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/reportadas}}
+                {{^reportadas}}
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">✅</div>
+                                <p>No hay preguntas reportadas</p>
+                            </div>
+                        </td>
+                    </tr>
+                {{/reportadas}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <hr>
-
-    <h2>Preguntas Reportadas</h2>
-
-    <table class="table table-dark table-bordered">
-        <thead>
-            <tr>
-                <th>ID Pregunta</th>
-                <th>Pregunta</th>
-                <th>Reportes</th>
-                <th>Comentario del Usuario</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {{#reportadas}}
-            <tr>
-                <td>{{id_pregunta}}</td>
-                <td>{{pregunta}}</td>
-                <td>{{cantidad_reportes}}</td>
-                <td>{{motivo}}</td>
-                <td>
-                    <a class="btn btn-success btn-sm"
-   href="{{BASE_URL}}EditorController/verPreguntaReportada?id={{id_reporte}}">
-   Ver Pregunta Reportada
-</a>
-
-
-<a class="btn btn-danger btn-sm"
-   href="{{BASE_URL}}EditorController/rechazarReporte?id={{id_reporte}}">
-   Rechazar
-</a>
-
-                </td>
-            </tr>
-            {{/reportadas}}
-        </tbody>
-    </table>
-
-    <hr>
-
-    <a href="{{BASE_URL}}EditorController/crearPregunta" class="btn btn-primary mb-3">
-        ➕ Crear Pregunta Nueva
+    <!-- BOTÓN CREAR PREGUNTA -->
+    <a href="{{BASE_URL}}EditorController/crearPregunta" class="btn btn-primary create-button">
+        <span>➕</span>
+        <span>Crear Pregunta Nueva</span>
     </a>
 
-    <h2>Preguntas</h2>
+    <!-- SECCIÓN: TODAS LAS PREGUNTAS -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-icon">❓</span>
+            <h2>Todas las Preguntas</h2>
+        </div>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Pregunta</th>
-            <th>Categoría</th>
-            <th>Puntaje</th>
-            <th>Acción</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#preguntas}}
-            <tr>
-                <td>{{id_pregunta}}</td>
-                <td>{{pregunta}}</td>
-                <td>{{categoria}}</td>
-                <td>{{puntaje}}</td>
-
-                <td>
-                    <a href="{{BASE_URL}}EditorController/editarPregunta?id={{id_pregunta}}"
-                    class="btn btn-warning btn-sm">
-                    Editar
-                    </a>
-
-                    <a href="{{BASE_URL}}EditorController/eliminarPregunta?id={{id_pregunta}}"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('¿Seguro que querés eliminar esta pregunta?');">
-                    Eliminar
-                    </a>
-                </td>
-            </tr>
-        {{/preguntas}}
-        </tbody>
-    </table>
-
-
-    <div class="text-center mt-4 mb-5">
-        <a href="{{BASE_URL}}" class="btn btn-primary btn-lg">
-            ⬅ Volver al Home
-        </a>
+        <div class="table-wrapper">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Pregunta</th>
+                    <th>Categoría</th>
+                    <th>Puntaje</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#preguntas}}
+                    <tr>
+                        <td><strong>#{{id_pregunta}}</strong></td>
+                        <td>{{pregunta}}</td>
+                        <td><span class="category-badge">{{categoria}}</span></td>
+                        <td><strong>{{puntaje}}</strong> pts</td>
+                        <td>
+                            <div class="quick-actions">
+                                <a href="{{BASE_URL}}EditorController/editarPregunta?id={{id_pregunta}}"
+                                class="btn btn-warning btn-sm">
+                                ✏️ Editar
+                                </a>
+                                <a href="{{BASE_URL}}EditorController/eliminarPregunta?id={{id_pregunta}}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Seguro que querés eliminar esta pregunta?');">
+                                🗑️ Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/preguntas}}
+                {{^preguntas}}
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <p>No hay preguntas creadas todavía</p>
+                            </div>
+                        </td>
+                    </tr>
+                {{/preguntas}}
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    <!-- BOTÓN VOLVER -->
+    <div class="text-center mt-4 mb-5">
+        <a href="{{BASE_URL}}" class="btn btn-primary btn-lg">
+            <span>⬅</span>
+            <span>Volver al Home</span>
+        </a>
+    </div>
 </div>
 
 {{> footer}}
+
+<!-- ALERTAS CON ESTILO -->
+{{#success_categoria}}
+    <script>
+        const style = 'background: #48bb78; color: white; padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 600;';
+        console.log('%c✔ Categoría creada correctamente', style);
+        alert("✔ Categoría creada correctamente");
+    </script>
+{{/success_categoria}}
+
+{{#error_categoria}}
+    <script>
+        const style = 'background: #fc8181; color: white; padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 600;';
+        console.log('%c❌ Error: Ya existe una categoría con ese nombre', style);
+        alert("❌ Error: Ya existe una categoría con ese nombre.");
+    </script>
+{{/error_categoria}}
 
 </body>
 </html>
