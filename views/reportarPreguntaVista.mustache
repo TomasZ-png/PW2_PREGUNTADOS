@@ -2,83 +2,418 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportar Pregunta</title>
     <link rel="stylesheet" href="{{basePath}}public/css/estilos.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{basePath}}public/img/preguntame-logo-solo.png">
-<style>
-        .form-label, .form-select, .form-control, .btn {
-            font-size: 1.1rem; /* Base un poco más grande que el default */
+    <style>
+        :root {
+            --primary-red: #dc3545;
+            --primary-red-dark: #b02a37;
+            --bg-gradient-start: #f8f9fa;
+            --bg-gradient-end: #e9ecef;
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.15);
         }
-        
-        /* * Media Query para dispositivos pequeños (max 576px, típico de móviles)
-          * AUMENTADO EL TAMAÑO DE FUENTE DE LABELS/CONTROLES A 1.3rem
-          */
-        @media (max-width: 576px) {
-            /* 1. Ajustar el tamaño del título */
-            h1 {
-                font-size: 2rem !important; 
-                margin-top: 1rem !important;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 2rem 1rem;
+        }
+
+        .main-container {
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Título principal */
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title .subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        /* Card del formulario */
+        .report-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .report-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-5px);
+        }
+
+        /* Iconos decorativos */
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .icon-wrapper svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        /* Labels mejorados */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label::before {
+            content: "●";
+            color: var(--primary-red);
+            font-size: 0.8rem;
+        }
+
+        /* Inputs y selects */
+        .form-select,
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .form-select:focus,
+        .form-control:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
+            background-color: white;
+            outline: none;
+        }
+
+        .form-select:hover,
+        .form-control:hover {
+            border-color: #ced4da;
+            background-color: white;
+        }
+
+        /* Textarea específico */
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        /* Botones */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 160px;
+            padding: 0.875rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+            background: linear-gradient(135deg, var(--primary-red-dark) 0%, #8b1f2a 100%);
+        }
+
+        .btn-danger:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+            color: white;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: #856404;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: #664d03;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
             }
 
-            /* 2. Ajustar tamaño de labels y controles (Aumentado a 1.3rem para máxima legibilidad) */
-            .form-label, .form-select, .form-control {
-                font-size: 1.3rem !important; /* <-- FIX CLAVE: Subido a 1.3rem */
-            }
-            
-            /* 3. Ajustar el layout de los botones (div con clase .text-center) */
-            .text-center {
-                display: flex !important; 
-                flex-direction: column !important; /* Apilamos los botones verticalmente */
-                gap: 10px !important; 
-                padding-bottom: 10px !important; 
+            .page-title h1 {
+                font-size: 2rem;
             }
 
-            /* Hacemos que los botones ocupen todo el ancho y tengan buen padding */
-            .text-center .btn {
-                width: 100% !important; 
-                padding: 12px !important; /* Un poco más de padding para mejor toque */
-                font-size: 1.2rem !important;
+            .page-title .subtitle {
+                font-size: 1rem;
             }
 
-            /* Ajuste el contenedor general y el card para mejor visualización móvil */
-            .container {
-                padding-left: 10px !important; 
-                padding-right: 10px !important; 
-                margin-top: 1rem !important;
+            .report-card {
+                padding: 1.5rem;
+                border-radius: 15px;
             }
-            .card {
-                padding: 20px !important; /* Un poco más de padding interno en el card */
+
+            .icon-wrapper {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 1rem;
+            }
+
+            .icon-wrapper svg {
+                width: 30px;
+                height: 30px;
+            }
+
+            .form-label {
+                font-size: 1rem;
+            }
+
+            .form-select,
+            .form-control {
+                font-size: 1rem;
+                padding: 0.75rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .report-card {
+                padding: 1.25rem;
+            }
+
+            .form-label {
+                font-size: 0.95rem;
+            }
+
+            .form-select,
+            .form-control {
+                font-size: 0.95rem;
+            }
+
+            .btn {
+                font-size: 1rem;
+                padding: 0.75rem 1.25rem;
+            }
+        }
+
+        /* Animación de carga para el submit */
+        .btn-danger.loading {
+            pointer-events: none;
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-danger.loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spinner 0.6s linear infinite;
+        }
+
+        @keyframes spinner {
+            to {
+                transform: rotate(360deg);
             }
         }
     </style>
 </head>
 
-<body class="container mt-5">
-    <h1 class="mb-4 text-center text-danger">Reportar Pregunta</h1>
+<body>
+<div class="main-container">
+    <div class="page-title">
+        <h1>⚠️ Reportar Pregunta</h1>
+        <p class="subtitle">Ayudanos a mejorar la calidad del juego</p>
+    </div>
 
-    <form action="{{basePath}}ReportarPreguntaController/guardarReporte" method="POST" class="card p-4 shadow">
-        <input type="hidden" name="id_partida" value="{{id_partida}}">
-
-        <div class="mb-3">
-            <label for="id_pregunta" class="form-label">Seleccioná la pregunta a reportar:</label>
-            <select name="id_pregunta" id="id_pregunta" class="form-select" required>
-                <option value="">-- Elegir pregunta --</option>
-                {{#preguntas}}
-                <option value="{{id_pregunta}}">{{pregunta}}</option>
-                {{/preguntas}}
-            </select>
+    <div class="report-card">
+        <div class="icon-wrapper">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
         </div>
 
-        <div class="mb-3">
-            <label for="motivo" class="form-label">Motivo del reporte:</label>
-            <textarea name="motivo" id="motivo" class="form-control" rows="4" placeholder="Explicá por qué reportás esta pregunta..." required></textarea>
+        <div class="info-box">
+            <strong>ℹ️ Información importante</strong>
+            Tu reporte será revisado por nuestro equipo. Ayudanos siendo específico en el motivo del reporte.
         </div>
 
-        <div class="text-center">
-            <button type="submit" class="btn btn-danger">Enviar Reporte</button>
-            <a href="{{basePath}}" class="btn btn-secondary">Cancelar</a>
-        </div>
-    </form>
+        <form action="{{basePath}}ReportarPreguntaController/guardarReporte" method="POST" id="reportForm">
+            <input type="hidden" name="id_partida" value="{{id_partida}}">
+
+            <div class="mb-4">
+                <label for="id_pregunta" class="form-label">Pregunta a reportar</label>
+                <select name="id_pregunta" id="id_pregunta" class="form-select" required>
+                    <option value="">-- Seleccioná la pregunta --</option>
+                    {{#preguntas}}
+                        <option value="{{id_pregunta}}">{{pregunta}}</option>
+                    {{/preguntas}}
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="motivo" class="form-label">Motivo del reporte</label>
+                <textarea
+                        name="motivo"
+                        id="motivo"
+                        class="form-control"
+                        rows="5"
+                        placeholder="Explicá por qué esta pregunta debería ser revisada. Por ejemplo: datos incorrectos, pregunta confusa, contenido inapropiado, etc."
+                        required
+                        minlength="10"
+                ></textarea>
+                <small class="text-muted d-block mt-2">Mínimo 10 caracteres</small>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-danger" id="submitBtn">
+                    <span>📤</span>
+                    <span>Enviar Reporte</span>
+                </button>
+                <a href="{{basePath}}" class="btn btn-secondary">
+                    <span>↩️</span>
+                    <span>Cancelar</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Animación al enviar el formulario
+    document.getElementById('reportForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        btn.classList.add('loading');
+    });
+
+    // Contador de caracteres para el textarea
+    const textarea = document.getElementById('motivo');
+    const form = document.getElementById('reportForm');
+
+    textarea.addEventListener('input', function() {
+        const length = this.value.length;
+        if (length < 10) {
+            this.setCustomValidity('El motivo debe tener al menos 10 caracteres');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+</script>
 </body>
 </html>
